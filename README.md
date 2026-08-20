@@ -1,68 +1,115 @@
-# Wonderous
-<p align="center">
-<img width="215" src="https://user-images.githubusercontent.com/736973/187334196-b79e48b2-dbb8-4ea7-8aac-04dbc7e5159f.png#gh-dark-mode-only">
-<img width="215" src="https://user-images.githubusercontent.com/736973/187334195-9821c031-a566-4f8e-b4e3-3158f733c6e5.png#gh-light-mode-only">
-</p>
-<p align="center">
- <img width="800" alt="wonderous-banner-800w" src="https://user-images.githubusercontent.com/736973/187334170-d05271e9-d016-4498-8065-662c6f1124fa.png">
-</p>
+# Flutter Core Base (Riverpod + Feature-First Clean Architecture)
 
-Navigate the intersection of history, art, and culture. Wonderous will educate and entertain as you uncover information about some of the most famous structures in the world. 
+A production-grade, highly scalable Flutter starter base designed for modern cross-platform development and SDK Host / Demo applications.
 
-Built by [gskinner](https://gskinner.com/) in partnership with the Flutter team, Wonderous deliberately pushes visual fidelity, effects and transitions to showcase what Flutter is truly capable of on modern mobile hardware.
+---
 
-In addition to forking and reviewing the [MIT licensed](LICENSE) code available here, you can check out more information on the [Wonderous Showcase Website](https://wonderous.app).
+## 🌟 Architecture Highlights
 
-# App Downloads
+* **Feature-First Clean Architecture (4 Layers):**
+  - `presentation`: UI Widgets, Screens, and Riverpod `AsyncNotifier` / `Notifier` Controllers.
+  - `domain`: Pure Dart Entities, Value Objects, and Repository Interfaces (Zero framework dependencies).
+  - `data`: Repository Implementations, Remote/Local Data Sources, DTOs, and Mappers.
+  - `core`: Shared design system, networking, storage, error handling, and routing.
+* **State Management & DI:** **`flutter_riverpod` + `riverpod_generator` (`@riverpod`)**
+  - Compile-time safe dependencies.
+  - Zero memory leaks via `autoDispose` lifecycle management.
+  - Fine-grained widget rebuilds via `.select()` for 60/120 FPS performance.
+* **Declarative Routing:** **`go_router`** with deep linking, modal dialogs, and route parameters.
+* **Immutability & Modeling:** **`freezed`** + **`json_serializable`** for immutable domain models and state transitions.
+* **Functional Error Handling:** **`fpdart` (`Either<Failure, Success>`)** for predictable, non-throwing business workflows.
+* **HTTP Client:** **`dio`** with interceptors, timeouts, and automated error mapping.
+* **Build Toolchain:** **Java 21 LTS**, **Gradle 8.14**, **Android Gradle Plugin 8.11.1**, **Kotlin 2.2.20**, **Flutter 3.47+**.
 
-To try the app you can download it from your favorite app store:
-* [Google Play](https://play.google.com/store/apps/details?id=com.gskinner.flutter.wonders)
-* [Apple App Store](https://apps.apple.com/us/app/wonderous/id1612491897)
+---
 
-Or you can try it on the web at https://wonderous.app/web/
+## 📁 Project Structure
 
-# Installation
+```text
+lib/
+├── app/
+│   ├── app.dart                        # MaterialApp.router (Theme + Router setup)
+│   └── observers/
+│       └── app_provider_observer.dart  # Global state logging & telemetry
+│
+├── core/                               # Core Infrastructure (Reusable)
+│   ├── constants/                      # AppConstants, StorageKeys
+│   ├── errors/                         # Failure, AppException, ErrorHandler
+│   ├── network/                        # DioClient, LoggingInterceptor
+│   ├── routing/                        # AppRouter, RoutePaths
+│   ├── storage/                        # LocalStorageService (SharedPreferences)
+│   ├── theme/                          # AppColors, AppTheme, AppTypography, AppSpacing
+│   └── widgets/                        # AsyncValueWidget, AppButton, AppCard, AppDialog
+│
+└── features/                           # Feature Modules (Feature-First)
+    ├── catalog/                        # 🎯 Feature 1: SDK Capability Gallery (Home)
+    │   ├── data/                       # CatalogRepository
+    │   ├── domain/                     # SdkFeature entity
+    │   └── presentation/               # CatalogScreen, CatalogController, FeatureCard
+    │
+    ├── face_otp/                       # 🎯 Feature 2: Face OTP / Biometrics Demo
+    │   ├── data/
+    │   │   ├── datasources/            # FaceOtpSdkDataSource (SDK / Native Channel wrapper)
+    │   │   ├── models/                 # FaceOtpResultDto
+    │   │   └── repositories/           # FaceOtpRepositoryImpl
+    │   ├── domain/
+    │   │   ├── entities/               # FaceOtpConfig, FaceOtpResult
+    │   │   └── repositories/           # IFaceOtpRepository (Interface)
+    │   └── presentation/
+    │       ├── controllers/            # FaceOtpController (AsyncNotifier)
+    │       ├── state/                  # FaceOtpState (Freezed union states)
+    │       └── views/                  # FaceOtpScreen, VerificationResultCard
+    │
+    └── settings/                       # 🎯 Feature 3: Environment & Theme
+        ├── domain/                     # AppSettings (Environment, Mock mode)
+        └── presentation/               # SettingsScreen, SettingsController
+```
 
-If you're new to Flutter the first thing you'll need is to follow the [setup instructions](https://flutter.dev/docs/get-started/install).
+---
 
-Once Flutter is setup, you can use the latest `stable` channel:
- * `flutter channel stable`
- * `flutter upgrade`
+## 🚀 Getting Started
 
- Once on `stable` you're ready to run the app on your local device or simulator:
- * `flutter run -d ios`
- * `flutter run -d android`
+### 1. Prerequisites
+- **Flutter SDK:** `>= 3.47.0` (Dart `>= 3.13.0`)
+- **JDK:** OpenJDK 21 LTS
 
-### WASM
+### 2. Install Dependencies
+```bash
+flutter pub get
+```
 
-[Wonderous](https://wonderous.app/web/) is deployed using the Web Assembly target for Flutter Web (WASM). To test WASM locally you can use the command `flutter run -d chrome --wasm`.
+### 3. Generate Code (`.g.dart`, `.freezed.dart`)
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
 
-#### Web query parameters
+### 4. Run Code Analysis & Unit Tests
+```bash
+flutter analyze
+flutter test
+```
 
-The web bootstrap in `web/index.html` supports a small set of URL query parameters:
+### 5. Build & Run Application
+```bash
+flutter run
+```
 
-* `wasm=1` or `wasm=true`: Opt in to WASM allowlisting for Safari (WebKit) and Firefox (Gecko).
-	* By default, Safari/Firefox are not allowlisted.
-	* Chromium browsers (for example, Chrome) continue using the default Flutter behavior.
-* `mode=canvaskit`: Force the CanvasKit renderer.
-* `mode=wimp`: Enable WIMP mode.
-* `mode=skwasm-st`: Force single-threaded SKWASM.
+---
 
-Examples:
+## 🧩 How to Add a New SDK Feature
 
-* `/?wasm=1`
-* `/?wasm=1&mode=canvaskit`
-* `/?wasm=true&mode=skwasm-st`
+To add a new SDK feature (e.g. `id_card_ocr`), follow the 4-layer structure:
 
-### Impeller Rendering
-
-This app uses the new [Impeller Runtime](https://docs.flutter.dev/perf/impeller) by default on iOS.
-
-# About gskinner
-We build innovative digital experiences for smart clients, and we love how Flutter unleashes our creativity when building multi-platform apps. Don't hesitate to [stop by our site](https://gskinner.com/) to learn more about what we do, or check out other [innovative Flutter projects](https://flutter.gskinner.com) we've built. We'd love to hear from you!
-
-# License
-
-This application is released under the [MIT license](LICENSE). You can use the code for any purpose, including commercial projects.
-
-[![license](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+1. **Domain Layer (`features/id_card_ocr/domain/`):**
+   - Define entity models (e.g. `IdCardResult.dart`).
+   - Define repository interface (e.g. `IIdCardRepository.dart`).
+2. **Data Layer (`features/id_card_ocr/data/`):**
+   - Implement `IdCardSdkDataSource.dart` wrapping native `MethodChannel` or Flutter SDK plugin.
+   - Implement `IdCardRepositoryImpl.dart` with `ErrorHandler.guard()`.
+3. **Presentation Layer (`features/id_card_ocr/presentation/`):**
+   - Create `IdCardState.dart` using `@freezed`.
+   - Create `IdCardController.dart` using `@riverpod`.
+   - Create `IdCardScreen.dart` consuming state with `ref.watch(idCardControllerProvider)`.
+4. **Register in Routing & Catalog:**
+   - Add route in `lib/core/routing/app_router.dart`.
+   - Add entry in `lib/features/catalog/data/catalog_repository.dart`.
