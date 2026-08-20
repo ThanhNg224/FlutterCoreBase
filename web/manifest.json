@@ -1,0 +1,93 @@
+{
+    "name": "Wonderous: Flutter Web Example",
+    "short_name": "Wonderous",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#1e1b18",
+    "theme_color": "#1e1b18",
+    "description": "Navigate the intersection of history, art, and culture. Be educated and entertained as your learn about world-famous structures.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "screenshots/screen1.png",
+            "sizes": "800x600",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Wonderous Welcome Screen"
+        },
+        {
+            "src": "screenshots/screen2.png",
+            "sizes": "800x600",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Read about 8 amazing man-made wonders"
+        },
+        {
+            "src": "screenshots/screen3.png",
+            "sizes": "800x600",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Enjoy photos and videos from all around the world"
+        },
+        {
+            "src": "screenshots/screen4.png",
+            "sizes": "800x600",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Explore artifacts and relics from the past"
+        },
+        {
+            "src": "screenshots/mobile1.png",
+            "sizes": "864x1872",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Wonderous Welcome Screen"
+        },
+        {
+            "src": "screenshots/mobile2.png",
+            "sizes": "864x1872",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Read about 8 amazing man-made wonders"
+        },
+        {
+            "src": "screenshots/mobile3.png",
+            "sizes": "864x1872",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Enjoy photos and videos from all around the world"
+        },
+        {
+            "src": "screenshots/mobile4.png",
+            "sizes": "864x1872",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Explore artifacts and relics from the past"
+        }
+    ]
+}
