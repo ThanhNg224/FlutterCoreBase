@@ -107,19 +107,25 @@ abstract class AppLocalizations {
   /// No description provided for @catalogTitle.
   ///
   /// In en, this message translates to:
-  /// **'SDK Capability Catalog'**
+  /// **'Core Feature Catalog'**
   String get catalogTitle;
 
   /// No description provided for @catalogSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Explore integrated SDK features and capabilities in this demo host application.'**
+  /// **'Explore integrated architectural modules, state management, and Clean Architecture in this starter base.'**
   String get catalogSubtitle;
+
+  /// No description provided for @postsFeedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts & Feed Showcase'**
+  String get postsFeedTitle;
 
   /// No description provided for @developerSdkSettingsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Developer & SDK Settings'**
+  /// **'Developer & App Settings'**
   String get developerSdkSettingsTitle;
 
   /// No description provided for @sdkEnvironmentTitle.
@@ -155,13 +161,13 @@ abstract class AppLocalizations {
   /// No description provided for @mockSdkModeLabel.
   ///
   /// In en, this message translates to:
-  /// **'Mock SDK Mode'**
+  /// **'Mock API Mode'**
   String get mockSdkModeLabel;
 
   /// No description provided for @mockSdkModeDescription.
   ///
   /// In en, this message translates to:
-  /// **'Simulate native SDK responses without hardware dependencies'**
+  /// **'Simulate network responses without external dependencies'**
   String get mockSdkModeDescription;
 
   /// No description provided for @credentialsTitle.
@@ -275,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @sdkVersionLabel.
   ///
   /// In en, this message translates to:
-  /// **'Host App Version:'**
+  /// **'Base App Version:'**
   String get sdkVersionLabel;
 
   /// No description provided for @errorNetwork.

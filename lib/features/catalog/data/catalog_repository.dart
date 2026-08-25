@@ -12,37 +12,35 @@ abstract interface class ICatalogRepository {
 class CatalogRepository implements ICatalogRepository {
   @override
   Future<List<SdkFeature>> getFeatures() async {
-    // Simulated fetch (can be extended to remote config or SDK plugin reflection)
-    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
     return const [
       SdkFeature(
-        id: 'face_otp',
-        title: 'Face OTP Verification',
-        description: 'Biometric face matching with passive 3D liveness detection.',
-        routePath: RoutePaths.faceOtp,
-        category: SdkCategory.biometric,
-        icon: Icons.face_retouching_natural_rounded,
-        tags: ['Biometric', 'Liveness', 'FaceID'],
+        id: 'posts',
+        title: 'Posts & Feed Demo',
+        description: 'REST API CRUD, Riverpod AsyncNotifier, caching, pagination, and pull-to-refresh.',
+        routePath: RoutePaths.posts,
+        category: FeatureCategory.data,
+        icon: Icons.dynamic_feed_rounded,
+        tags: ['REST API', 'Riverpod', 'CRUD', 'Pagination'],
       ),
       SdkFeature(
-        id: 'id_ocr',
-        title: 'ID Card OCR',
-        description: 'Front & back national ID scanning and text extraction.',
-        routePath: '/id-ocr',
-        category: SdkCategory.identity,
-        icon: Icons.badge_outlined,
-        isEnabled: false,
-        tags: ['Identity', 'OCR', 'Coming Soon'],
+        id: 'settings',
+        title: 'Settings & Environment',
+        description: 'Dynamic theme mode, multi-language i18n, Dev/Prod environments, and credential management.',
+        routePath: RoutePaths.settings,
+        category: FeatureCategory.config,
+        icon: Icons.tune_rounded,
+        tags: ['Theme', 'i18n', 'Dev/Prod', 'Redaction'],
       ),
       SdkFeature(
-        id: 'nfc_reader',
-        title: 'Chip ID NFC Reader',
-        description: 'Read and verify cryptographic chip data from passport / ID.',
-        routePath: '/nfc-reader',
-        category: SdkCategory.security,
-        icon: Icons.nfc_rounded,
+        id: 'architecture',
+        title: 'Clean Architecture Blueprint',
+        description: 'Feature-First 3-layer architecture (Presentation, Domain, Data) with strict decoupling.',
+        routePath: RoutePaths.catalog,
+        category: FeatureCategory.ui,
+        icon: Icons.architecture_rounded,
         isEnabled: false,
-        tags: ['NFC', 'Chip', 'Coming Soon'],
+        tags: ['Clean Architecture', 'Freezed', 'fpdart'],
       ),
     ];
   }

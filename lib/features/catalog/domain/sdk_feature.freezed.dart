@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SdkFeature {
 
- String get id; String get title; String get description; String get routePath; SdkCategory get category; IconData get icon; bool get isEnabled; List<String> get tags;
+ String get id; String get title; String get description; String get routePath; FeatureCategory get category; IconData get icon; bool get isEnabled; List<String> get tags;
 /// Create a copy of SdkFeature
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $SdkFeatureCopyWith<$Res>  {
   factory $SdkFeatureCopyWith(SdkFeature value, $Res Function(SdkFeature) _then) = _$SdkFeatureCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, String routePath, SdkCategory category, IconData icon, bool isEnabled, List<String> tags
+ String id, String title, String description, String routePath, FeatureCategory category, IconData icon, bool isEnabled, List<String> tags
 });
 
 
@@ -70,7 +70,7 @@ as String,title: null == title ? _self.title : title // ignore: cast_nullable_to
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,routePath: null == routePath ? _self.routePath : routePath // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
-as SdkCategory,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as FeatureCategory,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
 as IconData,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
 as List<String>,
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  String routePath,  SdkCategory category,  IconData icon,  bool isEnabled,  List<String> tags)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  String routePath,  FeatureCategory category,  IconData icon,  bool isEnabled,  List<String> tags)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SdkFeature() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.routePath,_that.category,_that.icon,_that.isEnabled,_that.tags);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.title,_that.description,_that.routePath,_that.cat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  String routePath,  SdkCategory category,  IconData icon,  bool isEnabled,  List<String> tags)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  String routePath,  FeatureCategory category,  IconData icon,  bool isEnabled,  List<String> tags)  $default,) {final _that = this;
 switch (_that) {
 case _SdkFeature():
 return $default(_that.id,_that.title,_that.description,_that.routePath,_that.category,_that.icon,_that.isEnabled,_that.tags);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.title,_that.description,_that.routePath,_that.cat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  String routePath,  SdkCategory category,  IconData icon,  bool isEnabled,  List<String> tags)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  String routePath,  FeatureCategory category,  IconData icon,  bool isEnabled,  List<String> tags)?  $default,) {final _that = this;
 switch (_that) {
 case _SdkFeature() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.routePath,_that.category,_that.icon,_that.isEnabled,_that.tags);case _:
@@ -221,7 +221,7 @@ class _SdkFeature implements SdkFeature {
 @override final  String title;
 @override final  String description;
 @override final  String routePath;
-@override final  SdkCategory category;
+@override final  FeatureCategory category;
 @override final  IconData icon;
 @override@JsonKey() final  bool isEnabled;
  final  List<String> _tags;
@@ -262,7 +262,7 @@ abstract mixin class _$SdkFeatureCopyWith<$Res> implements $SdkFeatureCopyWith<$
   factory _$SdkFeatureCopyWith(_SdkFeature value, $Res Function(_SdkFeature) _then) = __$SdkFeatureCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, String routePath, SdkCategory category, IconData icon, bool isEnabled, List<String> tags
+ String id, String title, String description, String routePath, FeatureCategory category, IconData icon, bool isEnabled, List<String> tags
 });
 
 
@@ -286,7 +286,7 @@ as String,title: null == title ? _self.title : title // ignore: cast_nullable_to
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,routePath: null == routePath ? _self.routePath : routePath // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
-as SdkCategory,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
+as FeatureCategory,icon: null == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
 as IconData,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
 as List<String>,

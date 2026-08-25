@@ -15,6 +15,10 @@ class AppTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? initialValue;
   final ValueChanged<String>? onChanged;
+  final FormFieldValidator<String>? validator;
+  final int? maxLines;
+  final int? minLines;
+  final bool obscureText;
   final bool enabled;
 
   const AppTextField({
@@ -30,6 +34,10 @@ class AppTextField extends StatelessWidget {
     this.controller,
     this.initialValue,
     this.onChanged,
+    this.validator,
+    this.maxLines = 1,
+    this.minLines,
+    this.obscureText = false,
     this.enabled = true,
   });
 
@@ -52,6 +60,10 @@ class AppTextField extends StatelessWidget {
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       enabled: enabled,
+      validator: validator,
+      maxLines: maxLines,
+      minLines: minLines,
+      obscureText: obscureText,
       onChanged: onChanged,
     );
   }

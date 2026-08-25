@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
 import 'package:flutter_core_base/features/catalog/presentation/catalog_screen.dart';
-import 'package:flutter_core_base/features/face_otp/presentation/views/face_otp_screen.dart';
+import 'package:flutter_core_base/features/posts/presentation/views/post_detail_screen.dart';
+import 'package:flutter_core_base/features/posts/presentation/views/posts_screen.dart';
 import 'package:flutter_core_base/features/settings/presentation/settings_screen.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -23,8 +24,17 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const CatalogScreen(),
       ),
       GoRoute(
-        path: RoutePaths.faceOtp,
-        builder: (context, state) => const FaceOtpScreen(),
+        path: RoutePaths.posts,
+        builder: (context, state) => const PostsScreen(),
+        routes: [
+          GoRoute(
+            path: ':id',
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 1;
+              return PostDetailScreen(postId: id);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: RoutePaths.settings,

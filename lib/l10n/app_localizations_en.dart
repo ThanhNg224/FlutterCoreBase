@@ -16,13 +16,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTooltip => 'Settings';
 
   @override
-  String get catalogTitle => 'SDK Capability Catalog';
+  String get catalogTitle => 'Core Feature Catalog';
 
   @override
-  String get catalogSubtitle => 'Explore integrated SDK features and capabilities in this demo host application.';
+  String get catalogSubtitle =>
+      'Explore integrated architectural modules, state management, and Clean Architecture in this starter base.';
 
   @override
-  String get developerSdkSettingsTitle => 'Developer & SDK Settings';
+  String get postsFeedTitle => 'Posts & Feed Showcase';
+
+  @override
+  String get developerSdkSettingsTitle => 'Developer & App Settings';
 
   @override
   String get sdkEnvironmentTitle => 'Environment Configuration';
@@ -40,10 +44,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activeBaseUrlLabel => 'Active Base URL:';
 
   @override
-  String get mockSdkModeLabel => 'Mock SDK Mode';
+  String get mockSdkModeLabel => 'Mock API Mode';
 
   @override
-  String get mockSdkModeDescription => 'Simulate native SDK responses without hardware dependencies';
+  String get mockSdkModeDescription => 'Simulate network responses without external dependencies';
 
   @override
   String get credentialsTitle => 'Credentials & Overrides';
@@ -103,7 +107,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutTitle => 'About';
 
   @override
-  String get sdkVersionLabel => 'Host App Version:';
+  String get sdkVersionLabel => 'Base App Version:';
 
   @override
   String get errorNetwork => 'Could not reach the server. Check your device\'s internet connection and try again.';

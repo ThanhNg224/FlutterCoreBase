@@ -3,9 +3,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sdk_feature.freezed.dart';
 
-enum SdkCategory { biometric, identity, security, utility }
+enum FeatureCategory { data, ui, config, security }
 
-/// Entity describing an SDK showcase capability
+/// Entity describing a core showcase capability
 @freezed
 abstract class SdkFeature with _$SdkFeature {
   const factory SdkFeature({
@@ -13,7 +13,7 @@ abstract class SdkFeature with _$SdkFeature {
     required String title,
     required String description,
     required String routePath,
-    required SdkCategory category,
+    required FeatureCategory category,
     required IconData icon,
     @Default(true) bool isEnabled,
     @Default([]) List<String> tags,

@@ -16,13 +16,17 @@ class AppLocalizationsVi extends AppLocalizations {
   String get settingsTooltip => 'Cài đặt';
 
   @override
-  String get catalogTitle => 'Danh mục tính năng SDK';
+  String get catalogTitle => 'Danh mục tính năng Core';
 
   @override
-  String get catalogSubtitle => 'Khám phá các tính năng và module SDK tích hợp trong ứng dụng mẫu.';
+  String get catalogSubtitle =>
+      'Khám phá các module kiến trúc, quản lý trạng thái và Clean Architecture trong dự án base.';
 
   @override
-  String get developerSdkSettingsTitle => 'Cài đặt Nhà phát triển & SDK';
+  String get postsFeedTitle => 'Danh sách bài viết mẫu';
+
+  @override
+  String get developerSdkSettingsTitle => 'Cài đặt & Nhà phát triển';
 
   @override
   String get sdkEnvironmentTitle => 'Cấu hình môi trường';
@@ -37,20 +41,20 @@ class AppLocalizationsVi extends AppLocalizations {
   String get connectedProdEnvironment => 'Đang kết nối môi trường Production';
 
   @override
-  String get activeBaseUrlLabel => 'URL gốc đang dùng:';
+  String get activeBaseUrlLabel => 'Base URL hiện tại:';
 
   @override
-  String get mockSdkModeLabel => 'Chế độ Mock SDK';
+  String get mockSdkModeLabel => 'Chế độ Mock API';
 
   @override
-  String get mockSdkModeDescription => 'Mô phỏng phản hồi từ SDK mà không phụ thuộc phần cứng thiết bị';
+  String get mockSdkModeDescription => 'Mô phỏng dữ liệu phản hồi không phụ thuộc mạng bên ngoài';
 
   @override
   String get credentialsTitle => 'Thông tin xác thực & Ghi đè';
 
   @override
   String get credentialsDescription =>
-      'Ghi đè thông tin sandbox mặc định, chỉ áp dụng trên thiết bị này. Để trống nếu muốn giữ mặc định.';
+      'Ghi đè thông tin xác thực cho riêng thiết bị này. Để trống để sử dụng mặc định.';
 
   @override
   String get appTokenLabel => 'App Token';
@@ -60,17 +64,17 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String credentialsActiveHint(String value) {
-    return 'Đang dùng: $value';
+    return 'Hiện tại: $value';
   }
 
   @override
-  String get resetCredentialsButton => 'Đặt lại mặc định';
+  String get resetCredentialsButton => 'Khôi phục mặc định';
 
   @override
-  String get credentialsResetMessage => 'Đã xoá thông tin xác thực ghi đè';
+  String get credentialsResetMessage => 'Đã xóa cấu hình ghi đè';
 
   @override
-  String get saveCredentialsButton => 'Lưu thông tin xác thực';
+  String get saveCredentialsButton => 'Lưu thông tin';
 
   @override
   String get credentialsSavedMessage => 'Đã cập nhật thông tin xác thực';
@@ -79,7 +83,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appearanceThemeTitle => 'Giao diện & Chủ đề';
 
   @override
-  String get themeModeLabel => 'Chế độ giao diện';
+  String get themeModeLabel => 'Chế độ màu';
 
   @override
   String get themeModeSystem => 'Hệ thống';
@@ -94,35 +98,34 @@ class AppLocalizationsVi extends AppLocalizations {
   String get languageTitle => 'Ngôn ngữ';
 
   @override
-  String get languageEnglish => 'Tiếng Anh';
+  String get languageEnglish => 'English';
 
   @override
   String get languageVietnamese => 'Tiếng Việt';
 
   @override
-  String get aboutTitle => 'Giới thiệu';
+  String get aboutTitle => 'Thông tin';
 
   @override
-  String get sdkVersionLabel => 'Phiên bản ứng dụng:';
+  String get sdkVersionLabel => 'Phiên bản Base App:';
 
   @override
-  String get errorNetwork => 'Không kết nối được tới máy chủ. Vui lòng kiểm tra kết nối mạng của thiết bị và thử lại.';
+  String get errorNetwork => 'Không thể kết nối tới máy chủ. Vui lòng kiểm tra đường truyền internet và thử lại.';
 
   @override
-  String get errorServer => 'Máy chủ không hoàn tất được yêu cầu này. Vui lòng thử lại sau ít phút.';
+  String get errorServer => 'Máy chủ không thể xử lý yêu cầu lúc này. Vui lòng thử lại sau giây lát.';
 
   @override
-  String get errorUnauthorized =>
-      'Máy chủ từ chối thông tin xác thực này. Vui lòng kiểm tra app token và client key trong Cài đặt.';
+  String get errorUnauthorized => 'Thông tin xác thực không hợp lệ. Vui lòng kiểm tra lại cấu hình trong Cài đặt.';
 
   @override
-  String get errorSdk => 'SDK gốc không thể hoàn thành thao tác trên thiết bị này.';
+  String get errorSdk => 'SDK gốc không thể hoàn thành tác vụ trên thiết bị này.';
 
   @override
-  String get errorStorage => 'Không đọc được cài đặt cục bộ của ứng dụng.';
+  String get errorStorage => 'Không thể đọc dữ liệu cấu hình cục bộ của ứng dụng.';
 
   @override
-  String get errorUnexpected => 'Đã xảy ra lỗi. Vui lòng thử lại.';
+  String get errorUnexpected => 'Đã có lỗi xảy ra. Vui lòng thử lại.';
 
   @override
   String get closeButton => 'Đóng';
@@ -131,7 +134,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get retryButton => 'Thử lại';
 
   @override
-  String get cancelButton => 'Huỷ';
+  String get cancelButton => 'Hủy';
 
   @override
   String get saveButton => 'Lưu';
@@ -140,7 +143,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get confirmButton => 'Xác nhận';
 
   @override
-  String get somethingWentWrongMessage => 'Đã xảy ra lỗi';
+  String get somethingWentWrongMessage => 'Đã có lỗi xảy ra';
 
   @override
   String pageNotFoundMessage(String uri) {

@@ -28,8 +28,8 @@ void main() {
           title: 'Test Feature',
           description: 'Description',
           routePath: '/test',
-          category: SdkCategory.biometric,
-          icon: Icons.face,
+          category: FeatureCategory.data,
+          icon: Icons.article,
         ),
       ];
 

@@ -66,10 +66,10 @@ lib/
     │   ├── domain/                     # SdkFeature entity
     │   └── presentation/               # CatalogScreen, CatalogController, FeatureCard
     │
-    ├── face_otp/                       # Face OTP / Biometrics Showcase Module
-    │   ├── data/                       # FaceOtpSdkDataSource, FaceOtpRepositoryImpl
-    │   ├── domain/                     # FaceOtpConfig, FaceOtpResult, IFaceOtpRepository
-    │   └── presentation/               # FaceOtpController, FaceOtpState, FaceOtpScreen
+    ├── posts/                          # Posts & Feed Showcase (REST API, Riverpod, CRUD)
+    │   ├── data/                       # PostsRemoteDataSource, PostDto, PostsRepositoryImpl
+    │   ├── domain/                     # Post entity, IPostsRepository
+    │   └── presentation/               # PostsController, PostDetailController, PostsScreen, PostDetailScreen
     │
     └── settings/                       # Environment, Theme & Credentials Settings
         └── presentation/               # SettingsScreen (Modular cards)
