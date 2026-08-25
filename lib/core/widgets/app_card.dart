@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 
-/// Reusable Container Card for Design System
+/// Reusable container card for the design system.
+/// Takes its styling from `cardTheme`.
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final VoidCallback? onTap;
   final Color? color;
-  final Border? border;
+  final BoxBorder? border;
 
   const AppCard({
     super.key,
@@ -20,24 +21,29 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Container(
+    final cardTheme = Theme.of(context).cardTheme;
+    final shape = cardTheme.shape;
+    final borderRadius = shape is RoundedRectangleBorder && shape.borderRadius is BorderRadius
+        ? shape.borderRadius as BorderRadius
+        : BorderRadius.circular(AppSpacing.radiusL);
+    final themeSide = shape is RoundedRectangleBorder ? shape.side : BorderSide.none;
+
+    final content = Container(
       padding: padding ?? AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color: color ?? Theme.of(context).cardTheme.color,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusM),
-        border: border ?? Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+        color: color ?? cardTheme.color,
+        borderRadius: borderRadius,
+        border: border ?? (themeSide == BorderSide.none ? null : Border.fromBorderSide(themeSide)),
       ),
       child: child,
     );
 
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusM),
-        child: content,
-      );
-    }
+    if (onTap == null) return content;
 
-    return content;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: borderRadius,
+      child: content,
+    );
   }
 }

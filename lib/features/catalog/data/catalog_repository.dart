@@ -13,7 +13,7 @@ class CatalogRepository implements ICatalogRepository {
   @override
   Future<List<SdkFeature>> getFeatures() async {
     // Simulated fetch (can be extended to remote config or SDK plugin reflection)
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     return const [
       SdkFeature(
         id: 'face_otp',

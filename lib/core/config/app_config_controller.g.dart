@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'settings_controller.dart';
+part of 'app_config_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,52 +9,52 @@ part of 'settings_controller.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(SettingsController)
-final settingsControllerProvider = SettingsControllerProvider._();
+@ProviderFor(AppConfigController)
+final appConfigControllerProvider = AppConfigControllerProvider._();
 
-final class SettingsControllerProvider
-    extends $NotifierProvider<SettingsController, AppSettings> {
-  SettingsControllerProvider._()
+final class AppConfigControllerProvider
+    extends $NotifierProvider<AppConfigController, AppConfig> {
+  AppConfigControllerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'settingsControllerProvider',
+        name: r'appConfigControllerProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$settingsControllerHash();
+  String debugGetCreateSourceHash() => _$appConfigControllerHash();
 
   @$internal
   @override
-  SettingsController create() => SettingsController();
+  AppConfigController create() => AppConfigController();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AppSettings value) {
+  Override overrideWithValue(AppConfig value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AppSettings>(value),
+      providerOverride: $SyncValueProvider<AppConfig>(value),
     );
   }
 }
 
-String _$settingsControllerHash() =>
-    r'3117523cb4087e6fdbb1d860b72a60749eb605ca';
+String _$appConfigControllerHash() =>
+    r'893063433bfe0ccc3d6a509a7a99e0bf7f40d729';
 
-abstract class _$SettingsController extends $Notifier<AppSettings> {
-  AppSettings build();
+abstract class _$AppConfigController extends $Notifier<AppConfig> {
+  AppConfig build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AppSettings, AppSettings>;
+    final ref = this.ref as $Ref<AppConfig, AppConfig>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AppSettings, AppSettings>,
-              AppSettings,
+              AnyNotifier<AppConfig, AppConfig>,
+              AppConfig,
               Object?,
               Object?
             >;

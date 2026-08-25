@@ -1,7 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_core_base/core/logging/logging.dart';
 
-/// Centralized state observer for logging and telemetry in Riverpod
+const _log = AppLogger('Riverpod');
+
+/// Centralized state observer for Riverpod provider lifecycle events.
+/// Logs provider names only at [LogLevel.trace] without exposing values.
 base class AppProviderObserver extends ProviderObserver {
   @override
   void didUpdateProvider(
@@ -9,11 +12,7 @@ base class AppProviderObserver extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
   ) {
-    if (kDebugMode) {
-      debugPrint('⚡ [RIVERPOD UPDATE] ${context.provider.name ?? context.provider.runtimeType}');
-      debugPrint('   Old: $previousValue');
-      debugPrint('   New: $newValue');
-    }
+    _trace('⚡ update', context);
   }
 
   @override
@@ -21,17 +20,25 @@ base class AppProviderObserver extends ProviderObserver {
     ProviderObserverContext context,
     Object? value,
   ) {
-    if (kDebugMode) {
-      debugPrint('➕ [RIVERPOD ADD] ${context.provider.name ?? context.provider.runtimeType}');
-    }
+    _trace('➕ add', context);
   }
 
   @override
   void didDisposeProvider(
     ProviderObserverContext context,
   ) {
-    if (kDebugMode) {
-      debugPrint('🗑️ [RIVERPOD DISPOSE] ${context.provider.name ?? context.provider.runtimeType}');
-    }
+    _trace('🗑️ dispose', context);
+  }
+
+  void _trace(String event, ProviderObserverContext context) {
+    _log.trace(
+      event,
+      data: {
+        'provider': Redacted.unredacted(
+          context.provider.name ?? context.provider.runtimeType.toString(),
+          because: 'provider identity is source-code metadata, never user data',
+        ),
+      },
+    );
   }
 }

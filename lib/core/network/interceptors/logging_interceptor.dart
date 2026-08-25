@@ -1,33 +1,42 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter_core_base/core/logging/logging.dart';
 
-/// Clean logging interceptor for Dio HTTP requests
+const _log = AppLogger('HTTP');
+
+/// Logging interceptor for Dio HTTP requests.
+/// Logs request/response metadata without logging request/response bodies to protect PII.
 class LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (kDebugMode) {
-      debugPrint('➡️ [HTTP REQUEST] ${options.method} ${options.uri}');
-      if (options.data != null) {
-        debugPrint('📦 [BODY] ${options.data}');
-      }
-    }
+    _log.debug('➡️ ${options.method} request', data: {'url': _endpoint(options.uri)});
     super.onRequest(options, handler);
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
-    if (kDebugMode) {
-      debugPrint('⬅️ [HTTP RESPONSE] ${response.statusCode} ${response.requestOptions.uri}');
-    }
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+    _log.debug(
+      '⬅️ response ${response.statusCode}',
+      data: {'url': _endpoint(response.requestOptions.uri)},
+    );
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (kDebugMode) {
-      debugPrint('❌ [HTTP ERROR] ${err.type} ${err.requestOptions.uri}');
-      debugPrint('   Message: ${err.message}');
-    }
+    _log.error(
+      '✖ request failed',
+      data: {
+        'type': Redacted.unredacted(err.type.name, because: 'DioExceptionType enum name'),
+        'url': _endpoint(err.requestOptions.uri),
+        'reason': Redacted.unredacted(
+          err.message ?? 'no message',
+          because: 'Dio summary message',
+        ),
+      },
+    );
     super.onError(err, handler);
   }
+
+  static Redacted _endpoint(Uri uri) =>
+      Redacted.unredacted(uri.toString(), because: 'endpoint path without payload');
 }

@@ -17,7 +17,7 @@ class FaceOtpSdkDataSource implements IFaceOtpSdkDataSource {
   @override
   Future<FaceOtpResultDto> launchVerification(FaceOtpConfig config) async {
     // Simulate real native SDK camera capture & backend verification roundtrip
-    await Future.delayed(AppConstants.mockSdkDelay);
+    await Future<void>.delayed(AppConstants.mockSdkDelay);
 
     // Simulated 90% success rate, 10% mismatch/spoof detection
     final random = Random();

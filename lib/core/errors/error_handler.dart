@@ -1,28 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_core_base/core/errors/app_exception.dart';
 import 'package:flutter_core_base/core/errors/failure.dart';
+import 'package:flutter_core_base/core/logging/logging.dart';
 import 'package:fpdart/fpdart.dart';
 
-/// Centralized error handling and mapping from Exception to Failure
+const _log = AppLogger('Errors');
+
+/// Centralized error handling and mapping from Exception to Failure.
 abstract class ErrorHandler {
-  /// Converts any dynamic exception into a domain [Failure]
+  /// Converts an exception into a domain [Failure] and logs it.
   static Failure handleException(Object error, [StackTrace? stackTrace]) {
-    if (error is AppException) {
-      return switch (error) {
-        ServerException(:final message, :final statusCode) => Failure.server(message: message, statusCode: statusCode),
-        NetworkException(:final message) => Failure.network(message: message),
-        SdkException(:final message, :final errorCode) => Failure.sdk(message: message, errorCode: errorCode),
-        StorageException(:final message) => Failure.storage(message: message),
-        UnauthorizedException(:final message) => Failure.unauthorized(message: message),
-        UnexpectedException(:final message) => Failure.unexpected(message: message),
-      };
-    }
-
-    if (error is DioException) {
-      return handleDioError(error);
-    }
-
-    return Failure.unexpected(message: error.toString());
+    final failure = _mapToFailure(error);
+    _log.error(
+      'exception mapped to failure',
+      error: error,
+      stackTrace: stackTrace ?? _traceOf(error) ?? StackTrace.current,
+      data: {'failure': Redacted.type(failure)},
+    );
+    return failure;
   }
 
   /// Maps DioException to domain Failure
@@ -49,7 +44,7 @@ abstract class ErrorHandler {
     };
   }
 
-  /// Wraps an async call in an `Either<Failure, T>`
+  /// Wraps an async call in an `Either<Failure, T>`.
   static Future<Either<Failure, T>> guard<T>(Future<T> Function() action) async {
     try {
       final result = await action();
@@ -58,4 +53,29 @@ abstract class ErrorHandler {
       return Left(handleException(e, st));
     }
   }
+
+  static Failure _mapToFailure(Object error) {
+    if (error is AppException) {
+      return switch (error) {
+        ServerException(:final message, :final statusCode) => Failure.server(message: message, statusCode: statusCode),
+        NetworkException(:final message) => Failure.network(message: message),
+        SdkException(:final message, :final errorCode) => Failure.sdk(message: message, errorCode: errorCode),
+        StorageException(:final message) => Failure.storage(message: message),
+        UnauthorizedException(:final message) => Failure.unauthorized(message: message),
+        UnexpectedException(:final message) => Failure.unexpected(message: message),
+      };
+    }
+
+    if (error is DioException) {
+      return handleDioError(error);
+    }
+
+    return Failure.unexpected(message: error.toString());
+  }
+
+  static StackTrace? _traceOf(Object error) => switch (error) {
+    AppException(:final stackTrace) => stackTrace,
+    DioException(:final stackTrace) => stackTrace,
+    _ => null,
+  };
 }

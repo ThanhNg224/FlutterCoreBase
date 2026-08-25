@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Spacing, Padding, and Radius constants
+/// Spacing, Padding, Radius, and Layout constants
 abstract class AppSpacing {
   static const double xs = 4.0;
   static const double s = 8.0;
@@ -20,4 +20,7 @@ abstract class AppSpacing {
   static const double radiusL = 16.0;
   static const double radiusXL = 24.0;
   static const double radiusFull = 999.0;
+
+  // Responsive Layout
+  static const double maxContentWidth = 640.0;
 }

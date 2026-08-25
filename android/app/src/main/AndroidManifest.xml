@@ -1,14 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
-        android:label="Wonderous"
-        android:requestLegacyExternalStorage="true"
+        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:name="${applicationName}"
         android:roundIcon="@mipmap/ic_launcher_round">
-
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDectGpXKc04T6U5MyccC7L5DVl0xbUFY4"/>
 
         <activity
             android:name=".MainActivity"

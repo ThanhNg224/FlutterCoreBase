@@ -1,0 +1,61 @@
+{
+  "@@locale": "en",
+
+  "appName": "Flutter Core Base",
+  "settingsTooltip": "Settings",
+  "catalogTitle": "SDK Capability Catalog",
+  "catalogSubtitle": "Explore integrated SDK features and capabilities in this demo host application.",
+
+  "developerSdkSettingsTitle": "Developer & SDK Settings",
+  "sdkEnvironmentTitle": "Environment Configuration",
+  "useDevServerLabel": "Use Development Server",
+  "connectedDevEnvironment": "Connected to Dev Environment",
+  "connectedProdEnvironment": "Connected to Production Environment",
+  "activeBaseUrlLabel": "Active Base URL:",
+  "mockSdkModeLabel": "Mock SDK Mode",
+  "mockSdkModeDescription": "Simulate native SDK responses without hardware dependencies",
+  "credentialsTitle": "Credentials & Overrides",
+  "credentialsDescription": "Overrides the built-in sandbox credentials for this device only. Leave untouched to keep the defaults.",
+  "appTokenLabel": "App Token",
+  "clientKeyLabel": "Client Key",
+  "credentialsActiveHint": "Currently: {value}",
+  "@credentialsActiveHint": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "resetCredentialsButton": "Reset to defaults",
+  "credentialsResetMessage": "Credential overrides cleared",
+  "saveCredentialsButton": "Save credentials",
+  "credentialsSavedMessage": "Credentials updated",
+  "appearanceThemeTitle": "Appearance & Theme",
+  "themeModeLabel": "Theme Mode",
+  "themeModeSystem": "System",
+  "themeModeLight": "Light",
+  "themeModeDark": "Dark",
+  "languageTitle": "Language",
+  "languageEnglish": "English",
+  "languageVietnamese": "Vietnamese",
+  "aboutTitle": "About",
+  "sdkVersionLabel": "Host App Version:",
+
+  "errorNetwork": "Could not reach the server. Check your device's internet connection and try again.",
+  "errorServer": "The server could not complete this request. Please try again in a moment.",
+  "errorUnauthorized": "The server rejected these credentials. Check the app token and client key under Settings.",
+  "errorSdk": "The native SDK could not finish the operation on this device.",
+  "errorStorage": "Could not read the app's local settings.",
+  "errorUnexpected": "Something went wrong. Please try again.",
+
+  "closeButton": "Close",
+  "retryButton": "Retry",
+  "cancelButton": "Cancel",
+  "saveButton": "Save",
+  "confirmButton": "Confirm",
+  "somethingWentWrongMessage": "Something went wrong",
+  "pageNotFoundMessage": "Page not found: {uri}",
+  "@pageNotFoundMessage": {
+    "placeholders": {
+      "uri": { "type": "String" }
+    }
+  }
+}

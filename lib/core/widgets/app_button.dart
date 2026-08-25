@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/theme/app_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
-import 'package:flutter_core_base/core/theme/app_typography.dart';
 
 enum ButtonVariant { primary, secondary, outline, danger }
 
-/// Reusable Design System Button with loading indicator support
+/// Reusable Design System Button with loading indicator support.
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -27,61 +26,69 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveOnPressed = isLoading ? null : onPressed;
+    final foreground = switch (variant) {
+      ButtonVariant.outline =>
+        Theme.of(context).outlinedButtonTheme.style?.foregroundColor?.resolve(const {}) ?? AppColors.primaryDark,
+      ButtonVariant.primary || ButtonVariant.danger => AppColors.onLightFill,
+      ButtonVariant.secondary => Colors.white,
+    };
 
-    Widget buttonChild = Row(
+    final child = Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (isLoading) ...[
-          const SizedBox(
+          SizedBox(
             width: 18,
             height: 18,
-            child: CircularProgressIndicator(strokeWidth: 2.2, color: Colors.white),
+            child: CircularProgressIndicator(strokeWidth: 2.2, color: foreground),
           ),
           const SizedBox(width: AppSpacing.s),
         ] else if (icon != null) ...[
           Icon(icon, size: 20),
           const SizedBox(width: AppSpacing.s),
         ],
-        Text(label, style: AppTypography.titleMedium.copyWith(fontWeight: FontWeight.w600)),
+        Flexible(child: Text(label, textAlign: TextAlign.center)),
       ],
     );
 
-    Widget button = switch (variant) {
+    final button = switch (variant) {
       ButtonVariant.primary => ElevatedButton(
           onPressed: effectiveOnPressed,
-          child: buttonChild,
+          style: _filledStyle(AppColors.primary, foreground),
+          child: child,
         ),
       ButtonVariant.secondary => ElevatedButton(
           onPressed: effectiveOnPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.secondary,
-            foregroundColor: Colors.white,
-          ),
-          child: buttonChild,
-        ),
-      ButtonVariant.outline => OutlinedButton(
-          onPressed: effectiveOnPressed,
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppColors.primary),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusM)),
-          ),
-          child: buttonChild,
+          style: _filledStyle(AppColors.secondary, foreground),
+          child: child,
         ),
       ButtonVariant.danger => ElevatedButton(
           onPressed: effectiveOnPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
-            foregroundColor: Colors.white,
-          ),
-          child: buttonChild,
+          style: _filledStyle(AppColors.error, foreground),
+          child: child,
+        ),
+      ButtonVariant.outline => OutlinedButton(
+          onPressed: effectiveOnPressed,
+          style: isLoading
+              ? OutlinedButton.styleFrom(
+                  disabledForegroundColor: foreground,
+                  side: BorderSide(color: foreground),
+                )
+              : null,
+          child: child,
         ),
     };
 
-    if (width != null) {
-      return SizedBox(width: width, child: button);
-    }
-    return button;
+    return width == null ? button : SizedBox(width: width, child: button);
+  }
+
+  ButtonStyle _filledStyle(Color background, Color foreground) {
+    return ElevatedButton.styleFrom(
+      backgroundColor: background,
+      foregroundColor: foreground,
+      disabledBackgroundColor: isLoading ? background : null,
+      disabledForegroundColor: isLoading ? foreground : null,
+    );
   }
 }
