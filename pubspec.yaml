@@ -53,7 +53,30 @@ dev_dependencies:
   # Linter
   flutter_lints: ^6.0.0
 
+  # App icon & splash screen generation
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
+
 flutter:
   default-flavor: dev
   uses-material-design: true
   generate: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/branding/app_icon.png"
+  adaptive_icon_background: "#1E56A0"
+  adaptive_icon_foreground: "assets/branding/app_icon_foreground.png"
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#1E56A0"
+  image: assets/branding/splash_icon.png
+  color_dark: "#0F3A70"
+  image_dark: assets/branding/splash_icon.png
+  android_12:
+    image: assets/branding/splash_icon.png
+    icon_background_color: "#1E56A0"
+    image_dark: assets/branding/splash_icon.png
+    icon_background_color_dark: "#0F3A70"

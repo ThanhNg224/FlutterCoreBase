@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Single text-field entry point for the design system ensuring consistent
-/// InputDecoration and styling across screens.
+/// InputDecoration, accessibility, and styling across screens.
 class AppTextField extends StatelessWidget {
   final String label;
   final String? hint;
@@ -11,10 +11,15 @@ class AppTextField extends StatelessWidget {
   final IconData? prefixIcon;
   final Widget? suffix;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
+  final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final String? initialValue;
   final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onFieldSubmitted;
   final FormFieldValidator<String>? validator;
   final int? maxLines;
   final int? minLines;
@@ -30,10 +35,15 @@ class AppTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffix,
     this.keyboardType,
+    this.textInputAction,
+    this.textCapitalization = TextCapitalization.none,
+    this.autofillHints,
     this.inputFormatters,
     this.controller,
+    this.focusNode,
     this.initialValue,
     this.onChanged,
+    this.onFieldSubmitted,
     this.validator,
     this.maxLines = 1,
     this.minLines,
@@ -55,9 +65,13 @@ class AppTextField extends StatelessWidget {
 
     return TextFormField(
       controller: controller,
+      focusNode: focusNode,
       initialValue: initialValue,
       decoration: decoration,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
+      autofillHints: autofillHints,
       inputFormatters: inputFormatters,
       enabled: enabled,
       validator: validator,
@@ -65,6 +79,7 @@ class AppTextField extends StatelessWidget {
       minLines: minLines,
       obscureText: obscureText,
       onChanged: onChanged,
+      onFieldSubmitted: onFieldSubmitted,
     );
   }
 }

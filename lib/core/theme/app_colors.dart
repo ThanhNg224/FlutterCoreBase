@@ -35,7 +35,8 @@ abstract class AppColors {
   static const Color textPrimaryLight = Color(0xFF0F172A);
   static const Color textSecondaryLight = Color(0xFF5C5C5C);
   static const Color textHintLight = Color(0xFF6B6A6A);
-  static const Color borderLight = Color(0xFFE2E8F0);
+  static const Color borderLight = Color(0xFFCBD5E1);
+  static const Color controlBorderLight = Color(0xFF7C879A);
 
   // Neutral Colors (Dark Theme)
   static const Color backgroundDark = Color(0xFF0B0F19);
@@ -43,5 +44,6 @@ abstract class AppColors {
   static const Color textPrimaryDark = Color(0xFFF8FAFC);
   static const Color textSecondaryDark = Color(0xFF94A3B8);
   static const Color textHintDark = Color(0xFF7F8EA3);
-  static const Color borderDark = Color(0xFF222F43);
+  static const Color borderDark = Color(0xFF334155);
+  static const Color controlBorderDark = Color(0xFF64748B);
 }

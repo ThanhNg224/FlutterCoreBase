@@ -22,13 +22,24 @@ void main() {
   });
 
   group('AppTheme segmented button', () {
-    test('selected segment resolves to brand primary', () {
+    test('selected segment in light theme resolves to brand primary and onLightFill', () {
       final style = AppTheme.lightTheme.segmentedButtonTheme.style!;
       final selectedBackground = style.backgroundColor!.resolve({WidgetState.selected});
+      final selectedForeground = style.foregroundColor!.resolve({WidgetState.selected});
       final unselectedBackground = style.backgroundColor!.resolve({});
 
       expect(selectedBackground, AppColors.primary);
+      expect(selectedForeground, AppColors.onLightFill);
       expect(unselectedBackground, isNot(AppColors.primary));
+    });
+
+    test('selected segment in dark theme resolves to primaryLight and black for contrast', () {
+      final style = AppTheme.darkTheme.segmentedButtonTheme.style!;
+      final selectedBackground = style.backgroundColor!.resolve({WidgetState.selected});
+      final selectedForeground = style.foregroundColor!.resolve({WidgetState.selected});
+
+      expect(selectedBackground, AppColors.primaryLight);
+      expect(selectedForeground, Colors.black);
     });
   });
 

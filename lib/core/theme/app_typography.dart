@@ -52,4 +52,12 @@ abstract class AppTypography {
     fontWeight: FontWeight.w400,
     height: 1.3,
   );
+
+  /// Disclosures, captions, and legal copy that must remain readable without competing
+  /// with the primary content hierarchy.
+  static const TextStyle legal = TextStyle(
+    fontSize: 13.0,
+    fontWeight: FontWeight.w400,
+    height: 1.5,
+  );
 }

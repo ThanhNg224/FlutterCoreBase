@@ -43,12 +43,17 @@ abstract class AppTheme {
       elevatedButtonTheme: _elevatedButtonTheme,
       outlinedButtonTheme: _outlinedButtonTheme(foreground: AppColors.primaryDark, border: AppColors.primary),
       inputDecorationTheme: _inputDecorationTheme(
-        border: AppColors.borderLight,
+        border: AppColors.controlBorderLight,
         hint: AppColors.textHintLight,
         error: AppColors.errorOnLight,
         focus: AppColors.primaryDark,
       ),
-      segmentedButtonTheme: _segmentedButtonTheme(unselectedForeground: AppColors.textPrimaryLight),
+      segmentedButtonTheme: _segmentedButtonTheme(
+        selectedBackground: AppColors.primary,
+        selectedForeground: AppColors.onLightFill,
+        unselectedForeground: AppColors.textPrimaryLight,
+        border: AppColors.primary,
+      ),
       dividerTheme: const DividerThemeData(color: AppColors.borderLight, space: AppSpacing.m, thickness: 1),
       extensions: const [AppSemanticColors.light],
     );
@@ -91,12 +96,17 @@ abstract class AppTheme {
       elevatedButtonTheme: _elevatedButtonTheme,
       outlinedButtonTheme: _outlinedButtonTheme(foreground: AppColors.primaryLight, border: AppColors.primaryLight),
       inputDecorationTheme: _inputDecorationTheme(
-        border: AppColors.borderDark,
+        border: AppColors.controlBorderDark,
         hint: AppColors.textHintDark,
         error: AppColors.error,
         focus: AppColors.primary,
       ),
-      segmentedButtonTheme: _segmentedButtonTheme(unselectedForeground: AppColors.textPrimaryDark),
+      segmentedButtonTheme: _segmentedButtonTheme(
+        selectedBackground: AppColors.primaryLight,
+        selectedForeground: Colors.black,
+        unselectedForeground: AppColors.textPrimaryDark,
+        border: AppColors.primaryLight,
+      ),
       dividerTheme: const DividerThemeData(color: AppColors.borderDark, space: AppSpacing.m, thickness: 1),
       extensions: const [AppSemanticColors.dark],
     );
@@ -160,17 +170,22 @@ abstract class AppTheme {
     );
   }
 
-  static SegmentedButtonThemeData _segmentedButtonTheme({required Color unselectedForeground}) {
+  static SegmentedButtonThemeData _segmentedButtonTheme({
+    required Color selectedBackground,
+    required Color selectedForeground,
+    required Color unselectedForeground,
+    required Color border,
+  }) {
     Color foreground(Set<WidgetState> states) =>
-        states.contains(WidgetState.selected) ? AppColors.onLightFill : unselectedForeground;
+        states.contains(WidgetState.selected) ? selectedForeground : unselectedForeground;
     Color background(Set<WidgetState> states) =>
-        states.contains(WidgetState.selected) ? AppColors.primary : Colors.transparent;
+        states.contains(WidgetState.selected) ? selectedBackground : Colors.transparent;
 
     return SegmentedButtonThemeData(
       style: ButtonStyle(
         foregroundColor: WidgetStateProperty.resolveWith(foreground),
         backgroundColor: WidgetStateProperty.resolveWith(background),
-        side: const WidgetStatePropertyAll(BorderSide(color: AppColors.primary)),
+        side: WidgetStatePropertyAll(BorderSide(color: border)),
       ),
     );
   }
