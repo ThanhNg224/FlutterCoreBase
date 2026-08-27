@@ -87,13 +87,13 @@ extension FailurePatterns on Failure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( SdkFailure value)?  sdk,TResult Function( StorageFailure value)?  storage,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( PlatformFailure value)?  platform,TResult Function( StorageFailure value)?  storage,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that);case NetworkFailure() when network != null:
-return network(_that);case SdkFailure() when sdk != null:
-return sdk(_that);case StorageFailure() when storage != null:
+return network(_that);case PlatformFailure() when platform != null:
+return platform(_that);case StorageFailure() when storage != null:
 return storage(_that);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that);case UnexpectedFailure() when unexpected != null:
 return unexpected(_that);case _:
@@ -114,13 +114,13 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( SdkFailure value)  sdk,required TResult Function( StorageFailure value)  storage,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( UnexpectedFailure value)  unexpected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( PlatformFailure value)  platform,required TResult Function( StorageFailure value)  storage,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( UnexpectedFailure value)  unexpected,}){
 final _that = this;
 switch (_that) {
 case ServerFailure():
 return server(_that);case NetworkFailure():
-return network(_that);case SdkFailure():
-return sdk(_that);case StorageFailure():
+return network(_that);case PlatformFailure():
+return platform(_that);case StorageFailure():
 return storage(_that);case UnauthorizedFailure():
 return unauthorized(_that);case UnexpectedFailure():
 return unexpected(_that);}
@@ -137,13 +137,13 @@ return unexpected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( SdkFailure value)?  sdk,TResult? Function( StorageFailure value)?  storage,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( UnexpectedFailure value)?  unexpected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( PlatformFailure value)?  platform,TResult? Function( StorageFailure value)?  storage,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( UnexpectedFailure value)?  unexpected,}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that);case NetworkFailure() when network != null:
-return network(_that);case SdkFailure() when sdk != null:
-return sdk(_that);case StorageFailure() when storage != null:
+return network(_that);case PlatformFailure() when platform != null:
+return platform(_that);case StorageFailure() when storage != null:
 return storage(_that);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that);case UnexpectedFailure() when unexpected != null:
 return unexpected(_that);case _:
@@ -163,12 +163,12 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode)?  server,TResult Function( String message)?  network,TResult Function( String message,  String? errorCode)?  sdk,TResult Function( String message)?  storage,TResult Function( String message)?  unauthorized,TResult Function( String message)?  unexpected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode)?  server,TResult Function( String message)?  network,TResult Function( String message,  String? errorCode)?  platform,TResult Function( String message)?  storage,TResult Function( String message)?  unauthorized,TResult Function( String message)?  unexpected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.statusCode);case NetworkFailure() when network != null:
-return network(_that.message);case SdkFailure() when sdk != null:
-return sdk(_that.message,_that.errorCode);case StorageFailure() when storage != null:
+return network(_that.message);case PlatformFailure() when platform != null:
+return platform(_that.message,_that.errorCode);case StorageFailure() when storage != null:
 return storage(_that.message);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that.message);case UnexpectedFailure() when unexpected != null:
 return unexpected(_that.message);case _:
@@ -189,12 +189,12 @@ return unexpected(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode)  server,required TResult Function( String message)  network,required TResult Function( String message,  String? errorCode)  sdk,required TResult Function( String message)  storage,required TResult Function( String message)  unauthorized,required TResult Function( String message)  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode)  server,required TResult Function( String message)  network,required TResult Function( String message,  String? errorCode)  platform,required TResult Function( String message)  storage,required TResult Function( String message)  unauthorized,required TResult Function( String message)  unexpected,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
 return server(_that.message,_that.statusCode);case NetworkFailure():
-return network(_that.message);case SdkFailure():
-return sdk(_that.message,_that.errorCode);case StorageFailure():
+return network(_that.message);case PlatformFailure():
+return platform(_that.message,_that.errorCode);case StorageFailure():
 return storage(_that.message);case UnauthorizedFailure():
 return unauthorized(_that.message);case UnexpectedFailure():
 return unexpected(_that.message);}
@@ -211,12 +211,12 @@ return unexpected(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode)?  server,TResult? Function( String message)?  network,TResult? Function( String message,  String? errorCode)?  sdk,TResult? Function( String message)?  storage,TResult? Function( String message)?  unauthorized,TResult? Function( String message)?  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode)?  server,TResult? Function( String message)?  network,TResult? Function( String message,  String? errorCode)?  platform,TResult? Function( String message)?  storage,TResult? Function( String message)?  unauthorized,TResult? Function( String message)?  unexpected,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.statusCode);case NetworkFailure() when network != null:
-return network(_that.message);case SdkFailure() when sdk != null:
-return sdk(_that.message,_that.errorCode);case StorageFailure() when storage != null:
+return network(_that.message);case PlatformFailure() when platform != null:
+return platform(_that.message,_that.errorCode);case StorageFailure() when storage != null:
 return storage(_that.message);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that.message);case UnexpectedFailure() when unexpected != null:
 return unexpected(_that.message);case _:
@@ -364,8 +364,8 @@ as String,
 /// @nodoc
 
 
-class SdkFailure implements Failure {
-  const SdkFailure({required this.message, this.errorCode});
+class PlatformFailure implements Failure {
+  const PlatformFailure({required this.message, this.errorCode});
   
 
 @override final  String message;
@@ -375,13 +375,13 @@ class SdkFailure implements Failure {
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$SdkFailureCopyWith<SdkFailure> get copyWith => _$SdkFailureCopyWithImpl<SdkFailure>(this, _$identity);
+$PlatformFailureCopyWith<PlatformFailure> get copyWith => _$PlatformFailureCopyWithImpl<PlatformFailure>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SdkFailure&&(identical(other.message, message) || other.message == message)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlatformFailure&&(identical(other.message, message) || other.message == message)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode));
 }
 
 
@@ -390,15 +390,15 @@ int get hashCode => Object.hash(runtimeType,message,errorCode);
 
 @override
 String toString() {
-  return 'Failure.sdk(message: $message, errorCode: $errorCode)';
+  return 'Failure.platform(message: $message, errorCode: $errorCode)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $SdkFailureCopyWith<$Res> implements $FailureCopyWith<$Res> {
-  factory $SdkFailureCopyWith(SdkFailure value, $Res Function(SdkFailure) _then) = _$SdkFailureCopyWithImpl;
+abstract mixin class $PlatformFailureCopyWith<$Res> implements $FailureCopyWith<$Res> {
+  factory $PlatformFailureCopyWith(PlatformFailure value, $Res Function(PlatformFailure) _then) = _$PlatformFailureCopyWithImpl;
 @override @useResult
 $Res call({
  String message, String? errorCode
@@ -409,17 +409,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$SdkFailureCopyWithImpl<$Res>
-    implements $SdkFailureCopyWith<$Res> {
-  _$SdkFailureCopyWithImpl(this._self, this._then);
+class _$PlatformFailureCopyWithImpl<$Res>
+    implements $PlatformFailureCopyWith<$Res> {
+  _$PlatformFailureCopyWithImpl(this._self, this._then);
 
-  final SdkFailure _self;
-  final $Res Function(SdkFailure) _then;
+  final PlatformFailure _self;
+  final $Res Function(PlatformFailure) _then;
 
 /// Create a copy of Failure
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? errorCode = freezed,}) {
-  return _then(SdkFailure(
+  return _then(PlatformFailure(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,

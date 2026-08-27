@@ -9,7 +9,7 @@ void main() {
     Failure.network(),
     Failure.unauthorized(),
     Failure.server(message: 'raw server text'),
-    Failure.sdk(message: 'PlatformException(401, Something went wrong, ...)'),
+    Failure.platform(message: 'PlatformException(401, Something went wrong, ...)'),
     Failure.storage(message: 'raw storage text'),
     Failure.unexpected(message: 'raw unexpected text'),
   ];

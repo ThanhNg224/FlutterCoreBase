@@ -10,6 +10,7 @@ import 'package:flutter_core_base/core/utils/redaction.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/core/widgets/app_section_header.dart';
+import 'package:flutter_core_base/core/widgets/app_snackbar.dart';
 import 'package:flutter_core_base/core/widgets/app_text_field.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
@@ -146,6 +147,7 @@ class _CredentialsCardState extends ConsumerState<_CredentialsCard> {
     result.fold(
       (failure) => _confirm(
         l10n == null ? 'Unable to update credentials' : failure.localizedMessage(l10n),
+        isError: true,
       ),
       (_) {
         _clearFields();
@@ -161,6 +163,7 @@ class _CredentialsCardState extends ConsumerState<_CredentialsCard> {
     result.fold(
       (failure) => _confirm(
         l10n == null ? 'Unable to reset credentials' : failure.localizedMessage(l10n),
+        isError: true,
       ),
       (_) {
         _clearFields();
@@ -175,8 +178,12 @@ class _CredentialsCardState extends ConsumerState<_CredentialsCard> {
     FocusScope.of(context).unfocus();
   }
 
-  void _confirm(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  void _confirm(String message, {bool isError = false}) {
+    if (isError) {
+      AppSnackbar.showError(context, message);
+      return;
+    }
+    AppSnackbar.showSuccess(context, message);
   }
 
   @override

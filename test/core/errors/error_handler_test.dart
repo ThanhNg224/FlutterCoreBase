@@ -5,12 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ErrorHandler', () {
-    test('should map SdkException to SdkFailure correctly', () {
-      const exception = SdkException(message: 'Face liveness failed', errorCode: 'ERR_100');
+    test('should map PlatformException to PlatformFailure correctly', () {
+      const exception = PlatformException(message: 'Face liveness failed', errorCode: 'ERR_100');
       final failure = ErrorHandler.handleException(exception);
 
-      expect(failure, isA<SdkFailure>());
-      expect((failure as SdkFailure).message, 'Face liveness failed');
+      expect(failure, isA<PlatformFailure>());
+      expect((failure as PlatformFailure).message, 'Face liveness failed');
       expect(failure.errorCode, 'ERR_100');
     });
 

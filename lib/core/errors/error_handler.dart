@@ -26,8 +26,9 @@ abstract class ErrorHandler {
       DioExceptionType.connectionTimeout ||
       DioExceptionType.sendTimeout ||
       DioExceptionType.receiveTimeout ||
-      DioExceptionType.connectionError =>
-        const Failure.network(message: 'Connection timed out. Please check your network.'),
+      DioExceptionType.connectionError => const Failure.network(
+        message: 'Connection timed out. Please check your network.',
+      ),
       DioExceptionType.badResponse => () {
         final statusCode = dioError.response?.statusCode;
         final responseData = dioError.response?.data;
@@ -59,7 +60,7 @@ abstract class ErrorHandler {
       return switch (error) {
         ServerException(:final message, :final statusCode) => Failure.server(message: message, statusCode: statusCode),
         NetworkException(:final message) => Failure.network(message: message),
-        SdkException(:final message, :final errorCode) => Failure.sdk(message: message, errorCode: errorCode),
+        PlatformException(:final message, :final errorCode) => Failure.platform(message: message, errorCode: errorCode),
         StorageException(:final message) => Failure.storage(message: message),
         UnauthorizedException(:final message) => Failure.unauthorized(message: message),
         UnexpectedException(:final message) => Failure.unexpected(message: message),

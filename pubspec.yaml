@@ -63,6 +63,10 @@ flutter:
   default-flavor: dev
   uses-material-design: true
   generate: true
+  assets:
+    - assets/branding/app_icon.png
+    - assets/branding/app_icon_foreground.png
+    - assets/branding/splash_icon.png
 
 flutter_launcher_icons:
   android: true

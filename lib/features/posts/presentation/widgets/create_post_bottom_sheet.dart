@@ -4,6 +4,7 @@ import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_dialog.dart';
+import 'package:flutter_core_base/core/widgets/app_snackbar.dart';
 import 'package:flutter_core_base/core/widgets/app_text_field.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
@@ -52,9 +53,7 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
         ),
         (_) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n?.postCreatedSuccessMessage ?? 'Post created successfully!')),
-          );
+          AppSnackbar.showSuccess(context, l10n?.postCreatedSuccessMessage ?? 'Post created successfully!');
         },
       );
     }

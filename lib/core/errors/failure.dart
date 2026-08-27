@@ -14,10 +14,10 @@ sealed class Failure with _$Failure {
     @Default('Network connection failed. Please check your internet.') String message,
   }) = NetworkFailure;
 
-  const factory Failure.sdk({
+  const factory Failure.platform({
     required String message,
     String? errorCode,
-  }) = SdkFailure;
+  }) = PlatformFailure;
 
   const factory Failure.storage({
     required String message,

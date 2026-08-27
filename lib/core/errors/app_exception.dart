@@ -18,9 +18,9 @@ class NetworkException extends AppException {
   const NetworkException({super.message = 'No Internet connection', super.stackTrace});
 }
 
-class SdkException extends AppException {
+class PlatformException extends AppException {
   final String? errorCode;
-  const SdkException({required super.message, this.errorCode, super.stackTrace});
+  const PlatformException({required super.message, this.errorCode, super.stackTrace});
 }
 
 class StorageException extends AppException {

@@ -1,6 +1,6 @@
 /// App-wide global constants
 abstract class AppConstants {
-  static const String appName = 'Flutter SDK Host Base';
+  static const String appName = 'Flutter Core Base';
   static const String appVersion = '1.0.0';
 
   // Network timeouts
