@@ -23,7 +23,7 @@ class PostsController extends _$PostsController {
   }
 
   Future<List<Post>> _fetchPosts({required int page}) async {
-    final repository = ref.read(postsRepositoryProvider);
+    final repository = await ref.read(postsRepositoryProvider.future);
     final result = await repository.getPosts(page: page, limit: _pageSize);
 
     return result.fold(
@@ -65,7 +65,7 @@ class PostsController extends _$PostsController {
   }
 
   Future<bool> createPost({required String title, required String body}) async {
-    final repository = ref.read(postsRepositoryProvider);
+    final repository = await ref.read(postsRepositoryProvider.future);
     final result = await repository.createPost(title: title, body: body);
 
     return result.fold(
@@ -79,7 +79,7 @@ class PostsController extends _$PostsController {
   }
 
   Future<bool> deletePost(int id) async {
-    final repository = ref.read(postsRepositoryProvider);
+    final repository = await ref.read(postsRepositoryProvider.future);
     final result = await repository.deletePost(id);
 
     return result.fold(

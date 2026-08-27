@@ -112,3 +112,56 @@ final class LocalStorageServiceProvider
 
 String _$localStorageServiceHash() =>
     r'0bec02a3d785041682b82b4b41994e7613e9e834';
+
+/// Provider for credential-only secure storage.
+
+@ProviderFor(secureStorageService)
+final secureStorageServiceProvider = SecureStorageServiceProvider._();
+
+/// Provider for credential-only secure storage.
+
+final class SecureStorageServiceProvider
+    extends
+        $FunctionalProvider<
+          ISecureStorageService,
+          ISecureStorageService,
+          ISecureStorageService
+        >
+    with $Provider<ISecureStorageService> {
+  /// Provider for credential-only secure storage.
+  SecureStorageServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'secureStorageServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$secureStorageServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<ISecureStorageService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ISecureStorageService create(Ref ref) {
+    return secureStorageService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ISecureStorageService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ISecureStorageService>(value),
+    );
+  }
+}
+
+String _$secureStorageServiceHash() =>
+    r'4b9d3e2f51c3aaf398a689309261513a14878a1f';

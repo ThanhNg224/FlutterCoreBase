@@ -15,18 +15,18 @@ final postsRepositoryProvider = PostsRepositoryProvider._();
 final class PostsRepositoryProvider
     extends
         $FunctionalProvider<
+          AsyncValue<IPostsRepository>,
           IPostsRepository,
-          IPostsRepository,
-          IPostsRepository
+          FutureOr<IPostsRepository>
         >
-    with $Provider<IPostsRepository> {
+    with $FutureModifier<IPostsRepository>, $FutureProvider<IPostsRepository> {
   PostsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'postsRepositoryProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -36,21 +36,14 @@ final class PostsRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<IPostsRepository> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<IPostsRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  IPostsRepository create(Ref ref) {
+  FutureOr<IPostsRepository> create(Ref ref) {
     return postsRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IPostsRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<IPostsRepository>(value),
-    );
   }
 }
 
-String _$postsRepositoryHash() => r'1a37292399f8416d540760bd20d6431d92faad5d';
+String _$postsRepositoryHash() => r'0df1f6cf90b4d6e961d693535b090f28f3f1b13b';

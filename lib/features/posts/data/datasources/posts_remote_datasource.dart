@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_core_base/core/config/app_config_controller.dart';
+import 'package:flutter_core_base/core/constants/api_endpoints.dart';
 import 'package:flutter_core_base/core/network/dio_client.dart';
 import 'package:flutter_core_base/features/posts/data/models/post_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,8 +23,6 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
     this.isMock = false,
   });
 
-  static const String _baseUrl = 'https://jsonplaceholder.typicode.com';
-
   @override
   Future<List<PostDto>> getPosts({int page = 1, int limit = 10}) async {
     if (isMock) {
@@ -40,7 +39,7 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
     }
 
     final response = await dio.get<List<dynamic>>(
-      '$_baseUrl/posts',
+      ApiEndpoints.posts,
       queryParameters: {'_page': page, '_limit': limit},
     );
 
@@ -60,7 +59,7 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
       );
     }
 
-    final response = await dio.get<Map<String, dynamic>>('$_baseUrl/posts/$id');
+    final response = await dio.get<Map<String, dynamic>>('${ApiEndpoints.posts}/$id');
     return PostDto.fromJson(response.data!);
   }
 
@@ -77,7 +76,7 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
     }
 
     final response = await dio.post<Map<String, dynamic>>(
-      '$_baseUrl/posts',
+      ApiEndpoints.posts,
       data: {'title': title, 'body': body, 'userId': userId},
     );
     return PostDto.fromJson(response.data!);
@@ -89,13 +88,13 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
       await Future<void>.delayed(const Duration(milliseconds: 200));
       return;
     }
-    await dio.delete<dynamic>('$_baseUrl/posts/$id');
+    await dio.delete<dynamic>('${ApiEndpoints.posts}/$id');
   }
 }
 
-@Riverpod(keepAlive: true)
-IPostsRemoteDataSource postsRemoteDataSource(Ref ref) {
-  final dio = ref.watch(dioClientProvider);
-  final config = ref.watch(appConfigControllerProvider);
+@riverpod
+Future<IPostsRemoteDataSource> postsRemoteDataSource(Ref ref) async {
+  final dio = await ref.watch(dioClientProvider.future);
+  final config = await ref.watch(appConfigControllerProvider.future);
   return PostsRemoteDataSource(dio: dio, isMock: config.mockSdkEnabled);
 }

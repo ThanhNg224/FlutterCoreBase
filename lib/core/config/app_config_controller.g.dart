@@ -13,7 +13,7 @@ part of 'app_config_controller.dart';
 final appConfigControllerProvider = AppConfigControllerProvider._();
 
 final class AppConfigControllerProvider
-    extends $NotifierProvider<AppConfigController, AppConfig> {
+    extends $AsyncNotifierProvider<AppConfigController, AppConfig> {
   AppConfigControllerProvider._()
     : super(
         from: null,
@@ -31,30 +31,22 @@ final class AppConfigControllerProvider
   @$internal
   @override
   AppConfigController create() => AppConfigController();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AppConfig value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AppConfig>(value),
-    );
-  }
 }
 
 String _$appConfigControllerHash() =>
-    r'893063433bfe0ccc3d6a509a7a99e0bf7f40d729';
+    r'05465fd863ef54253a269c73189d8b156122b1c7';
 
-abstract class _$AppConfigController extends $Notifier<AppConfig> {
-  AppConfig build();
+abstract class _$AppConfigController extends $AsyncNotifier<AppConfig> {
+  FutureOr<AppConfig> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AppConfig, AppConfig>;
+    final ref = this.ref as $Ref<AsyncValue<AppConfig>, AppConfig>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AppConfig, AppConfig>,
-              AppConfig,
+              AnyNotifier<AsyncValue<AppConfig>, AppConfig>,
+              AsyncValue<AppConfig>,
               Object?,
               Object?
             >;

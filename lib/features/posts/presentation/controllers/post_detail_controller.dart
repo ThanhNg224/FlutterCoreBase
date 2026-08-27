@@ -8,7 +8,7 @@ part 'post_detail_controller.g.dart';
 class PostDetailController extends _$PostDetailController {
   @override
   FutureOr<Post> build(int id) async {
-    final repository = ref.read(postsRepositoryProvider);
+    final repository = await ref.read(postsRepositoryProvider.future);
     final result = await repository.getPostDetail(id);
 
     return result.fold(

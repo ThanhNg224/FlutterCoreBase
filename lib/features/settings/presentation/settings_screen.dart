@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/config/app_config.dart';
 import 'package:flutter_core_base/core/config/app_config_controller.dart';
+import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/localization/locale_provider.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/core/widgets/app_section_header.dart';
 import 'package:flutter_core_base/core/widgets/app_text_field.dart';
+import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +35,8 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.l),
               AppSectionHeader(
                 title: l10n?.credentialsTitle ?? 'Credentials & Overrides',
-                subtitle: l10n?.credentialsDescription ?? 'Overrides the built-in sandbox credentials for this device only.',
+                subtitle:
+                    l10n?.credentialsDescription ?? 'Overrides the built-in sandbox credentials for this device only.',
               ),
               const _CredentialsCard(),
               const SizedBox(height: AppSpacing.l),
@@ -57,49 +60,54 @@ class _EnvironmentCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
-    final config = ref.watch(appConfigControllerProvider);
     final controller = ref.read(appConfigControllerProvider.notifier);
-    final isDev = config.environment == Environment.development;
+    final configAsync = ref.watch(appConfigControllerProvider);
 
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SwitchListTile.adaptive(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n?.useDevServerLabel ?? 'Use Development Server'),
-            subtitle: Text(
-              isDev
-                  ? (l10n?.connectedDevEnvironment ?? 'Connected to Dev Environment')
-                  : (l10n?.connectedProdEnvironment ?? 'Connected to Production Environment'),
-              style: textTheme.bodySmall,
-            ),
-            value: isDev,
-            onChanged: controller.toggleEnvironment,
+    return AsyncValueWidget<AppConfig>(
+      value: configAsync,
+      data: (config) {
+        final isDev = config.environment == Environment.development;
+        return AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n?.useDevServerLabel ?? 'Use Development Server'),
+                subtitle: Text(
+                  isDev
+                      ? (l10n?.connectedDevEnvironment ?? 'Connected to Dev Environment')
+                      : (l10n?.connectedProdEnvironment ?? 'Connected to Production Environment'),
+                  style: textTheme.bodySmall,
+                ),
+                value: isDev,
+                onChanged: controller.toggleEnvironment,
+              ),
+              const Divider(),
+              Text(l10n?.activeBaseUrlLabel ?? 'Active Base URL:', style: textTheme.bodySmall),
+              const SizedBox(height: 2),
+              Text(
+                config.baseUrl,
+                style: textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.brandAccent,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.m),
+              SwitchListTile.adaptive(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n?.mockSdkModeLabel ?? 'Mock SDK Mode'),
+                subtitle: Text(
+                  l10n?.mockSdkModeDescription ?? 'Simulate native SDK responses without hardware dependencies',
+                  style: textTheme.bodySmall,
+                ),
+                value: config.mockSdkEnabled,
+                onChanged: controller.toggleMockSdk,
+              ),
+            ],
           ),
-          const Divider(),
-          Text(l10n?.activeBaseUrlLabel ?? 'Active Base URL:', style: textTheme.bodySmall),
-          const SizedBox(height: 2),
-          Text(
-            config.baseUrl,
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colors.brandAccent,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          SwitchListTile.adaptive(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n?.mockSdkModeLabel ?? 'Mock SDK Mode'),
-            subtitle: Text(
-              l10n?.mockSdkModeDescription ?? 'Simulate native SDK responses without hardware dependencies',
-              style: textTheme.bodySmall,
-            ),
-            value: config.mockSdkEnabled,
-            onChanged: controller.toggleMockSdk,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -122,25 +130,43 @@ class _CredentialsCardState extends ConsumerState<_CredentialsCard> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     final appToken = _appTokenController.text.trim();
     final clientKey = _clientKeyController.text.trim();
     if (appToken.isEmpty && clientKey.isEmpty) return;
 
-    ref.read(appConfigControllerProvider.notifier).updateCredentials(
+    final result = await ref
+        .read(appConfigControllerProvider.notifier)
+        .updateCredentials(
           appToken: appToken.isEmpty ? null : appToken,
           clientKey: clientKey.isEmpty ? null : clientKey,
         );
-    _clearFields();
+    if (!mounted) return;
     final l10n = AppLocalizations.of(context);
-    _confirm(l10n?.credentialsSavedMessage ?? 'Credentials updated');
+    result.fold(
+      (failure) => _confirm(
+        l10n == null ? 'Unable to update credentials' : failure.localizedMessage(l10n),
+      ),
+      (_) {
+        _clearFields();
+        _confirm(l10n?.credentialsSavedMessage ?? 'Credentials updated');
+      },
+    );
   }
 
-  void _reset() {
-    ref.read(appConfigControllerProvider.notifier).clearCredentialOverrides();
-    _clearFields();
+  Future<void> _reset() async {
+    final result = await ref.read(appConfigControllerProvider.notifier).clearCredentialOverrides();
+    if (!mounted) return;
     final l10n = AppLocalizations.of(context);
-    _confirm(l10n?.credentialsResetMessage ?? 'Credential overrides cleared');
+    result.fold(
+      (failure) => _confirm(
+        l10n == null ? 'Unable to reset credentials' : failure.localizedMessage(l10n),
+      ),
+      (_) {
+        _clearFields();
+        _confirm(l10n?.credentialsResetMessage ?? 'Credential overrides cleared');
+      },
+    );
   }
 
   void _clearFields() {
@@ -156,40 +182,43 @@ class _CredentialsCardState extends ConsumerState<_CredentialsCard> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final config = ref.watch(appConfigControllerProvider);
-
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AppTextField(
-            label: l10n?.appTokenLabel ?? 'App Token',
-            helperText: l10n?.credentialsActiveHint(Redaction.secret(config.appToken)) ??
-                'Currently: ${Redaction.secret(config.appToken)}',
-            controller: _appTokenController,
-            prefixIcon: Icons.vpn_key_rounded,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          AppTextField(
-            label: l10n?.clientKeyLabel ?? 'Client Key',
-            helperText: l10n?.credentialsActiveHint(Redaction.secret(config.clientKey)) ??
-                'Currently: ${Redaction.secret(config.clientKey)}',
-            controller: _clientKeyController,
-            prefixIcon: Icons.badge_rounded,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          AppButton(
-            label: l10n?.saveCredentialsButton ?? 'Save credentials',
-            variant: ButtonVariant.outline,
-            icon: Icons.save_rounded,
-            onPressed: _save,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          TextButton(
-            onPressed: _reset,
-            child: Text(l10n?.resetCredentialsButton ?? 'Reset to defaults'),
-          ),
-        ],
+    return AsyncValueWidget<AppConfig>(
+      value: ref.watch(appConfigControllerProvider),
+      data: (config) => AppCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppTextField(
+              label: l10n?.appTokenLabel ?? 'App Token',
+              helperText:
+                  l10n?.credentialsActiveHint(Redaction.secret(config.appToken)) ??
+                  'Currently: ${Redaction.secret(config.appToken)}',
+              controller: _appTokenController,
+              prefixIcon: Icons.vpn_key_rounded,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            AppTextField(
+              label: l10n?.clientKeyLabel ?? 'Client Key',
+              helperText:
+                  l10n?.credentialsActiveHint(Redaction.secret(config.clientKey)) ??
+                  'Currently: ${Redaction.secret(config.clientKey)}',
+              controller: _clientKeyController,
+              prefixIcon: Icons.badge_rounded,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            AppButton(
+              label: l10n?.saveCredentialsButton ?? 'Save credentials',
+              variant: ButtonVariant.outline,
+              icon: Icons.save_rounded,
+              onPressed: _save,
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            TextButton(
+              onPressed: _reset,
+              child: Text(l10n?.resetCredentialsButton ?? 'Reset to defaults'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,8 +277,7 @@ class _AppearanceCard extends ConsumerWidget {
                 ButtonSegment(value: 'vi', label: Text(l10n?.languageVietnamese ?? 'Tiếng Việt')),
               ],
               selected: <String>{currentLanguageCode},
-              onSelectionChanged: (selection) =>
-                  ref.read(localeProvider.notifier).setLocale(Locale(selection.first)),
+              onSelectionChanged: (selection) => ref.read(localeProvider.notifier).setLocale(Locale(selection.first)),
             ),
           ),
         ],
@@ -264,18 +292,19 @@ class _AboutCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final sdkVersion = ref.watch(appConfigControllerProvider).sdkVersion;
-
-    return AppCard(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(l10n?.sdkVersionLabel ?? 'Host App Version:'),
-          Text(
-            'v$sdkVersion',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
+    return AsyncValueWidget<AppConfig>(
+      value: ref.watch(appConfigControllerProvider),
+      data: (config) => AppCard(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n?.sdkVersionLabel ?? 'Host App Version:'),
+            Text(
+              'v${config.sdkVersion}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

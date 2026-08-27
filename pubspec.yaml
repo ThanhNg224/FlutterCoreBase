@@ -32,6 +32,7 @@ dependencies:
 
   # Local Persistence & Storage
   shared_preferences: ^2.5.5
+  flutter_secure_storage: ^11.0.0
 
   # Animation & UI Helpers
   flutter_animate: ^4.5.0

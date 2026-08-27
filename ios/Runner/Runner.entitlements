@@ -8,5 +8,7 @@
 	<array>
 		<string>group.com.gskinner.flutter.wonders.widget</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array/>
 </dict>
 </plist>

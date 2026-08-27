@@ -7,7 +7,7 @@ enum Environment { development, production }
 
 /// Cross-cutting runtime configuration (environment, credentials, mock mode, version).
 /// Lives in `core` so any layer/feature can read it without cross-feature dependencies.
-@freezed
+@Freezed(toStringOverride: false)
 abstract class AppConfig with _$AppConfig {
   const factory AppConfig({
     @Default(Environment.production) Environment environment,

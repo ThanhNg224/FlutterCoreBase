@@ -51,7 +51,7 @@ void main() {
     fakeRepository = FakePostsRepository();
     container = ProviderContainer(
       overrides: [
-        postsRepositoryProvider.overrideWithValue(fakeRepository),
+        postsRepositoryProvider.overrideWith((ref) async => fakeRepository as IPostsRepository),
       ],
     );
   });

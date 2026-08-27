@@ -33,10 +33,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,environment,baseUrl,appToken,clientKey,mockSdkEnabled,sdkVersion);
 
-@override
-String toString() {
-  return 'AppConfig(environment: $environment, baseUrl: $baseUrl, appToken: $appToken, clientKey: $clientKey, mockSdkEnabled: $mockSdkEnabled, sdkVersion: $sdkVersion)';
-}
 
 
 }
@@ -239,10 +235,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,environment,baseUrl,appToken,clientKey,mockSdkEnabled,sdkVersion);
 
-@override
-String toString() {
-  return 'AppConfig(environment: $environment, baseUrl: $baseUrl, appToken: $appToken, clientKey: $clientKey, mockSdkEnabled: $mockSdkEnabled, sdkVersion: $sdkVersion)';
-}
 
 
 }

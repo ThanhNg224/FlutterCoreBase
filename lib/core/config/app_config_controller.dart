@@ -1,7 +1,12 @@
 import 'package:flutter_core_base/core/config/app_config.dart';
 import 'package:flutter_core_base/core/constants/api_endpoints.dart';
 import 'package:flutter_core_base/core/constants/storage_keys.dart';
+import 'package:flutter_core_base/core/errors/error_handler.dart';
+import 'package:flutter_core_base/core/errors/failure.dart';
+import 'package:flutter_core_base/core/storage/local_storage_service.dart';
+import 'package:flutter_core_base/core/storage/secure_storage_service.dart';
 import 'package:flutter_core_base/core/storage/storage_providers.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_config_controller.g.dart';
@@ -9,12 +14,12 @@ part 'app_config_controller.g.dart';
 @Riverpod(keepAlive: true)
 class AppConfigController extends _$AppConfigController {
   @override
-  AppConfig build() {
+  Future<AppConfig> build() async {
     final storage = ref.watch(localStorageServiceProvider);
+    final secureStorage = ref.watch(secureStorageServiceProvider);
     final useDev = storage.getBool(StorageKeys.useDevEnvironment) ?? false;
     final mockSdk = storage.getBool(StorageKeys.mockSdkMode) ?? false;
-    final token = storage.getString(StorageKeys.appToken) ?? _defaultTokenFor(useDev);
-    final clientKey = storage.getString(StorageKeys.clientKey) ?? ApiEndpoints.defaultProdClientKey;
+    final credentials = await _readCredentialOverrides(storage, secureStorage);
 
     final env = useDev ? Environment.development : Environment.production;
     final baseUrl = useDev ? ApiEndpoints.devUrl : ApiEndpoints.prodUrl;
@@ -23,53 +28,105 @@ class AppConfigController extends _$AppConfigController {
       environment: env,
       mockSdkEnabled: mockSdk,
       baseUrl: baseUrl,
-      appToken: token,
-      clientKey: clientKey,
+      appToken: credentials.appToken ?? _defaultTokenFor(useDev),
+      clientKey: credentials.clientKey ?? _defaultClientKeyFor(useDev),
     );
   }
 
   String _defaultTokenFor(bool useDev) => useDev ? ApiEndpoints.defaultDevToken : ApiEndpoints.defaultProdToken;
+  String _defaultClientKeyFor(bool useDev) =>
+      useDev ? ApiEndpoints.defaultDevClientKey : ApiEndpoints.defaultProdClientKey;
 
-  void toggleEnvironment(bool useDev) {
+  Future<void> toggleEnvironment(bool useDev) async {
     final storage = ref.read(localStorageServiceProvider);
-    storage.setBool(StorageKeys.useDevEnvironment, useDev);
+    await storage.setBool(StorageKeys.useDevEnvironment, useDev);
 
     final env = useDev ? Environment.development : Environment.production;
     final baseUrl = useDev ? ApiEndpoints.devUrl : ApiEndpoints.prodUrl;
-    final hasCustomToken = storage.getString(StorageKeys.appToken) != null;
-    final token = hasCustomToken ? state.appToken : _defaultTokenFor(useDev);
+    final current = state.value;
+    if (current == null) return;
+    final secureStorage = ref.read(secureStorageServiceProvider);
+    final token = await secureStorage.read(StorageKeys.secureAppToken) ?? _defaultTokenFor(useDev);
+    final clientKey = await secureStorage.read(StorageKeys.secureClientKey) ?? _defaultClientKeyFor(useDev);
 
-    state = state.copyWith(environment: env, baseUrl: baseUrl, appToken: token);
+    state = AsyncData(current.copyWith(environment: env, baseUrl: baseUrl, appToken: token, clientKey: clientKey));
   }
 
-  void toggleMockSdk(bool enabled) {
+  Future<void> toggleMockSdk(bool enabled) async {
     final storage = ref.read(localStorageServiceProvider);
-    storage.setBool(StorageKeys.mockSdkMode, enabled);
-    state = state.copyWith(mockSdkEnabled: enabled);
-  }
-
-  void clearCredentialOverrides() {
-    final storage = ref.read(localStorageServiceProvider);
-    storage.remove(StorageKeys.appToken);
-    storage.remove(StorageKeys.clientKey);
-
-    state = state.copyWith(
-      appToken: _defaultTokenFor(state.environment == Environment.development),
-      clientKey: ApiEndpoints.defaultProdClientKey,
-    );
-  }
-
-  void updateCredentials({String? appToken, String? clientKey}) {
-    final storage = ref.read(localStorageServiceProvider);
-    if (appToken != null) {
-      storage.setString(StorageKeys.appToken, appToken);
+    await storage.setBool(StorageKeys.mockSdkMode, enabled);
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(current.copyWith(mockSdkEnabled: enabled));
     }
-    if (clientKey != null) {
-      storage.setString(StorageKeys.clientKey, clientKey);
+  }
+
+  Future<Either<Failure, void>> clearCredentialOverrides() {
+    return ErrorHandler.guard(() async {
+      final secureStorage = ref.read(secureStorageServiceProvider);
+      await secureStorage.delete(StorageKeys.secureAppToken);
+      await secureStorage.delete(StorageKeys.secureClientKey);
+
+      final current = state.value;
+      if (current != null) {
+        final useDev = current.environment == Environment.development;
+        state = AsyncData(
+          current.copyWith(
+            appToken: _defaultTokenFor(useDev),
+            clientKey: _defaultClientKeyFor(useDev),
+          ),
+        );
+      }
+    });
+  }
+
+  Future<Either<Failure, void>> updateCredentials({String? appToken, String? clientKey}) {
+    return ErrorHandler.guard(() async {
+      final secureStorage = ref.read(secureStorageServiceProvider);
+      if (appToken != null) {
+        await secureStorage.write(key: StorageKeys.secureAppToken, value: appToken);
+      }
+      if (clientKey != null) {
+        await secureStorage.write(key: StorageKeys.secureClientKey, value: clientKey);
+      }
+
+      final current = state.value;
+      if (current != null) {
+        state = AsyncData(
+          current.copyWith(
+            appToken: appToken ?? current.appToken,
+            clientKey: clientKey ?? current.clientKey,
+          ),
+        );
+      }
+    });
+  }
+
+  Future<({String? appToken, String? clientKey})> _readCredentialOverrides(
+    ILocalStorageService storage,
+    ISecureStorageService secureStorage,
+  ) async {
+    var appToken = await secureStorage.read(StorageKeys.secureAppToken);
+    var clientKey = await secureStorage.read(StorageKeys.secureClientKey);
+    final legacyAppToken = storage.getString(StorageKeys.legacyAppToken);
+    final legacyClientKey = storage.getString(StorageKeys.legacyClientKey);
+
+    if (appToken == null && legacyAppToken != null) {
+      await secureStorage.write(key: StorageKeys.secureAppToken, value: legacyAppToken);
+      appToken = legacyAppToken;
     }
-    state = state.copyWith(
-      appToken: appToken ?? state.appToken,
-      clientKey: clientKey ?? state.clientKey,
-    );
+    if (clientKey == null && legacyClientKey != null) {
+      await secureStorage.write(key: StorageKeys.secureClientKey, value: legacyClientKey);
+      clientKey = legacyClientKey;
+    }
+
+    if (legacyAppToken != null) {
+      await storage.remove(StorageKeys.legacyAppToken);
+    }
+    if (legacyClientKey != null) {
+      await storage.remove(StorageKeys.legacyClientKey);
+    }
+
+    return (appToken: appToken, clientKey: clientKey);
   }
 }

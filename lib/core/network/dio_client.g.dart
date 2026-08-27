@@ -15,8 +15,9 @@ final dioClientProvider = DioClientProvider._();
 
 /// Configured Dio HTTP client provider
 
-final class DioClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
-    with $Provider<Dio> {
+final class DioClientProvider
+    extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
+    with $FutureModifier<Dio>, $FutureProvider<Dio> {
   /// Configured Dio HTTP client provider
   DioClientProvider._()
     : super(
@@ -24,7 +25,7 @@ final class DioClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
         argument: null,
         retry: null,
         name: r'dioClientProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -34,21 +35,13 @@ final class DioClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
   @$internal
   @override
-  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  Dio create(Ref ref) {
+  FutureOr<Dio> create(Ref ref) {
     return dioClient(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Dio value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Dio>(value),
-    );
   }
 }
 
-String _$dioClientHash() => r'd8385c61420f28a3309fffb8fc947da96687ed79';
+String _$dioClientHash() => r'19635240651f5deae83c83cb140825dfa86dcecc';

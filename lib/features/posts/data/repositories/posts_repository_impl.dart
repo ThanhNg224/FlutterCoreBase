@@ -45,8 +45,8 @@ class PostsRepositoryImpl implements IPostsRepository {
   }
 }
 
-@Riverpod(keepAlive: true)
-IPostsRepository postsRepository(Ref ref) {
-  final remoteDataSource = ref.watch(postsRemoteDataSourceProvider);
+@riverpod
+Future<IPostsRepository> postsRepository(Ref ref) async {
+  final remoteDataSource = await ref.watch(postsRemoteDataSourceProvider.future);
   return PostsRepositoryImpl(remoteDataSource: remoteDataSource);
 }

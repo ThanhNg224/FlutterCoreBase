@@ -15,18 +15,20 @@ final postsRemoteDataSourceProvider = PostsRemoteDataSourceProvider._();
 final class PostsRemoteDataSourceProvider
     extends
         $FunctionalProvider<
+          AsyncValue<IPostsRemoteDataSource>,
           IPostsRemoteDataSource,
-          IPostsRemoteDataSource,
-          IPostsRemoteDataSource
+          FutureOr<IPostsRemoteDataSource>
         >
-    with $Provider<IPostsRemoteDataSource> {
+    with
+        $FutureModifier<IPostsRemoteDataSource>,
+        $FutureProvider<IPostsRemoteDataSource> {
   PostsRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'postsRemoteDataSourceProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -36,23 +38,15 @@ final class PostsRemoteDataSourceProvider
 
   @$internal
   @override
-  $ProviderElement<IPostsRemoteDataSource> $createElement(
+  $FutureProviderElement<IPostsRemoteDataSource> $createElement(
     $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  IPostsRemoteDataSource create(Ref ref) {
+  FutureOr<IPostsRemoteDataSource> create(Ref ref) {
     return postsRemoteDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IPostsRemoteDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<IPostsRemoteDataSource>(value),
-    );
   }
 }
 
 String _$postsRemoteDataSourceHash() =>
-    r'de45394e690f02369ece58bd1ddb8cbab354b682';
+    r'bf2ae7b82d2a05b87cde1af0f8f22ec89d6618a0';
