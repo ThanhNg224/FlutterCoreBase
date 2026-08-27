@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_core_base/core/theme/app_colors.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
@@ -21,6 +21,7 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
 
     return AppCard(
       onTap: onTap,
@@ -51,7 +52,7 @@ class PostCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Post #${post.id} · Author #${post.userId}',
+                      l10n?.postSubtitle(post.id, post.userId) ?? 'Post #${post.id} · Author #${post.userId}',
                       style: textTheme.bodySmall?.copyWith(color: colors.textSecondary),
                     ),
                   ],
@@ -59,9 +60,9 @@ class PostCard extends StatelessWidget {
               ),
               if (onDelete != null)
                 IconButton(
-                  icon: Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 20),
+                  icon: Icon(Icons.delete_outline_rounded, color: colors.statusError, size: 20),
                   onPressed: onDelete,
-                  tooltip: 'Delete',
+                  tooltip: l10n?.deleteButton ?? 'Delete',
                 ),
             ],
           ),

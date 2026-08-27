@@ -24,11 +24,11 @@ lib/core/
 ## 1. Design System & Theme (`core/theme/`)
 
 - **`AppColors`**: Brand palette, semantic status colors, and contrast-tested foreground colors (WCAG >= 4.5:1).
-- **`AppTheme`**: Builds Material 3 `ThemeData` for light/dark via `ColorScheme.fromSeed(seedColor: AppColors.primary)`, explicit `textTheme` mapping from `AppTypography`, button themes, `inputDecorationTheme`, `segmentedButtonTheme`, and `dividerTheme`.
-- **`AppTypography`**: Centralized text styles matching the design hierarchy.
+- **`AppTheme`**: Builds Material 3 `ThemeData` for light/dark via `ColorScheme.fromSeed(seedColor: AppColors.primary)`, explicit `textTheme` mapping from `AppTypography`, `fontFamily: AppTypography.fontFamily`, button themes, `inputDecorationTheme`, `segmentedButtonTheme`, and `dividerTheme`.
+- **`AppTypography`**: Centralized text styles matching the design hierarchy, powered by **Inter** (`GoogleFonts.inter`) for clean legibility and full Vietnamese diacritics support.
 - **`AppSemanticColors`**: A `ThemeExtension` for raw `Color` values (icons, borders, surfaces, status tokens) accessed via `context.colors`.
 - **`AppMotion`**: Accessible animation tokens and `.staggeredEntrance()` respecting reduced-motion accessibility settings.
-- **`AppSpacing`**: Standardized paddings, margins, and border radius tokens.
+- **`AppSpacing`**: Standardized 8-point grid paddings, margins, and border radius tokens.
 
 ---
 
@@ -79,7 +79,8 @@ Enforces two safety guarantees by construction:
 
 ---
 
-## 7. Storage (`core/storage/`)
-
-- **`LocalStorageService`**: Typed wrapper around `SharedPreferences`.
-- **`storageProviders`**: Injected via `ProviderScope` override in `main.dart`.
+## 7. Storage (`core/storage/` & `core/constants/storage_keys.dart`)
+ 
+- **`ILocalStorageService` & `LocalStorageService`**: Typed abstraction and wrapper around `SharedPreferences` for type-safe key-value persistence.
+- **`StorageKeys`**: Centralized repository of all persistent storage keys.
+- **`storageProviders`**: Injected via `ProviderScope` override in `main.dart` (`localStorageServiceProvider`).

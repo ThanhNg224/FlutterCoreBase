@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
 import 'package:flutter_core_base/core/theme/app_motion.dart';
+import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
+import 'package:flutter_core_base/core/widgets/app_dialog.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_controller.dart';
@@ -68,7 +70,7 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh',
+            tooltip: l10n?.refreshTooltip ?? 'Refresh',
             onPressed: () => ref.read(postsControllerProvider.notifier).refresh(),
           ),
         ],
@@ -86,15 +88,15 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.inbox_outlined, size: 64, color: Colors.grey),
+                        Icon(Icons.inbox_outlined, size: 64, color: context.colors.textHint),
                         const SizedBox(height: AppSpacing.m),
                         Text(
-                          'No articles found',
+                          l10n?.noPostsFound ?? 'No articles found',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.m),
                         AppButton(
-                          label: 'Create First Post',
+                          label: l10n?.createFirstPostButton ?? 'Create First Post',
                           onPressed: _showCreateBottomSheet,
                         ),
                       ],
@@ -109,27 +111,17 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                   child: PostCard(
                     post: post,
                     onTap: () => context.push('${RoutePaths.posts}/${post.id}'),
-                    onDelete: () async {
-                      final confirmed = await showDialog<bool>(
+                    onDelete: () {
+                      AppDialog.showActionDialog(
                         context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: const Text('Delete Post'),
-                          content: Text('Are you sure you want to delete "${post.title}"?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(ctx).pop(false),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(ctx).pop(true),
-                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
+                        icon: Icons.delete_outline_rounded,
+                        title: l10n?.deletePostTitle ?? 'Delete Post',
+                        message: l10n?.deletePostConfirmation(post.title) ??
+                            'Are you sure you want to delete "${post.title}"?',
+                        primaryLabel: l10n?.deleteButton ?? 'Delete',
+                        secondaryLabel: l10n?.cancelButton ?? 'Cancel',
+                        onPrimary: () => ref.read(postsControllerProvider.notifier).deletePost(post.id),
                       );
-                      if (confirmed == true) {
-                        await ref.read(postsControllerProvider.notifier).deletePost(post.id);
-                      }
                     },
                   ),
                 );
@@ -161,7 +153,7 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showCreateBottomSheet,
         icon: const Icon(Icons.add_rounded),
-        label: const Text('New Post'),
+        label: Text(l10n?.newPostButton ?? 'New Post'),
       ),
     );
   }

@@ -116,11 +116,149 @@ abstract class AppLocalizations {
   /// **'Explore integrated architectural modules, state management, and Clean Architecture in this starter base.'**
   String get catalogSubtitle;
 
+  /// No description provided for @exploreSdkFeaturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore SDK Features'**
+  String get exploreSdkFeaturesTitle;
+
+  /// No description provided for @exploreSdkFeaturesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an integrated module below to configure parameters and trigger live SDK verification.'**
+  String get exploreSdkFeaturesSubtitle;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
+
   /// No description provided for @postsFeedTitle.
   ///
   /// In en, this message translates to:
   /// **'Posts & Feed Showcase'**
   String get postsFeedTitle;
+
+  /// No description provided for @refreshTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refreshTooltip;
+
+  /// No description provided for @noPostsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No articles found'**
+  String get noPostsFound;
+
+  /// No description provided for @createFirstPostButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Create First Post'**
+  String get createFirstPostButton;
+
+  /// No description provided for @newPostButton.
+  ///
+  /// In en, this message translates to:
+  /// **'New Post'**
+  String get newPostButton;
+
+  /// No description provided for @deletePostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Post'**
+  String get deletePostTitle;
+
+  /// No description provided for @deletePostConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{title}\"?'**
+  String deletePostConfirmation(String title);
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
+  /// No description provided for @postDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post #{id}'**
+  String postDetailTitle(int id);
+
+  /// No description provided for @authorIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Author ID #{id}'**
+  String authorIdLabel(int id);
+
+  /// No description provided for @publishedArticleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Published article'**
+  String get publishedArticleLabel;
+
+  /// No description provided for @postSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post #{id} · Author #{userId}'**
+  String postSubtitle(int id, int userId);
+
+  /// No description provided for @createPostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Post'**
+  String get createPostTitle;
+
+  /// No description provided for @postTitleFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get postTitleFieldLabel;
+
+  /// No description provided for @postTitleFieldHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter post title'**
+  String get postTitleFieldHint;
+
+  /// No description provided for @titleRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Title is required'**
+  String get titleRequiredValidation;
+
+  /// No description provided for @postBodyFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get postBodyFieldLabel;
+
+  /// No description provided for @postBodyFieldHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter post body content...'**
+  String get postBodyFieldHint;
+
+  /// No description provided for @contentRequiredValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Content is required'**
+  String get contentRequiredValidation;
+
+  /// No description provided for @publishPostButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish Post'**
+  String get publishPostButton;
+
+  /// No description provided for @postCreatedSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Post created successfully!'**
+  String get postCreatedSuccessMessage;
 
   /// No description provided for @developerSdkSettingsTitle.
   ///
@@ -269,7 +407,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageVietnamese.
   ///
   /// In en, this message translates to:
-  /// **'Vietnamese'**
+  /// **'Tiếng Việt'**
   String get languageVietnamese;
 
   /// No description provided for @aboutTitle.

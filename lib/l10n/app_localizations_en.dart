@@ -23,7 +23,85 @@ class AppLocalizationsEn extends AppLocalizations {
       'Explore integrated architectural modules, state management, and Clean Architecture in this starter base.';
 
   @override
+  String get exploreSdkFeaturesTitle => 'Explore SDK Features';
+
+  @override
+  String get exploreSdkFeaturesSubtitle =>
+      'Select an integrated module below to configure parameters and trigger live SDK verification.';
+
+  @override
+  String get comingSoon => 'Coming Soon';
+
+  @override
   String get postsFeedTitle => 'Posts & Feed Showcase';
+
+  @override
+  String get refreshTooltip => 'Refresh';
+
+  @override
+  String get noPostsFound => 'No articles found';
+
+  @override
+  String get createFirstPostButton => 'Create First Post';
+
+  @override
+  String get newPostButton => 'New Post';
+
+  @override
+  String get deletePostTitle => 'Delete Post';
+
+  @override
+  String deletePostConfirmation(String title) {
+    return 'Are you sure you want to delete \"$title\"?';
+  }
+
+  @override
+  String get deleteButton => 'Delete';
+
+  @override
+  String postDetailTitle(int id) {
+    return 'Post #$id';
+  }
+
+  @override
+  String authorIdLabel(int id) {
+    return 'Author ID #$id';
+  }
+
+  @override
+  String get publishedArticleLabel => 'Published article';
+
+  @override
+  String postSubtitle(int id, int userId) {
+    return 'Post #$id · Author #$userId';
+  }
+
+  @override
+  String get createPostTitle => 'Create New Post';
+
+  @override
+  String get postTitleFieldLabel => 'Title';
+
+  @override
+  String get postTitleFieldHint => 'Enter post title';
+
+  @override
+  String get titleRequiredValidation => 'Title is required';
+
+  @override
+  String get postBodyFieldLabel => 'Content';
+
+  @override
+  String get postBodyFieldHint => 'Enter post body content...';
+
+  @override
+  String get contentRequiredValidation => 'Content is required';
+
+  @override
+  String get publishPostButton => 'Publish Post';
+
+  @override
+  String get postCreatedSuccessMessage => 'Post created successfully!';
 
   @override
   String get developerSdkSettingsTitle => 'Developer & App Settings';
@@ -101,7 +179,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageEnglish => 'English';
 
   @override
-  String get languageVietnamese => 'Vietnamese';
+  String get languageVietnamese => 'Tiếng Việt';
 
   @override
   String get aboutTitle => 'About';

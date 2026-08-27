@@ -36,6 +36,7 @@ dependencies:
   # Animation & UI Helpers
   flutter_animate: ^4.5.0
   intl: ^0.20.2
+  google_fonts: ^8.2.1
 
 dev_dependencies:
   flutter_test:

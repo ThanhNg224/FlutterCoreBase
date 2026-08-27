@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/theme/app_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/theme/app_typography.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Reusable helper to render [AsyncValue] cleanly with loading, error, and data states
@@ -21,6 +22,8 @@ class AsyncValueWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return value.when(
       data: data,
       error: error ??
@@ -33,7 +36,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
                       const Icon(Icons.error_outline_rounded, color: AppColors.error, size: 48),
                       const SizedBox(height: AppSpacing.m),
                       Text(
-                        'Something went wrong',
+                        l10n?.somethingWentWrongMessage ?? 'Something went wrong',
                         style: AppTypography.titleMedium.copyWith(color: AppColors.error),
                       ),
                       const SizedBox(height: AppSpacing.s),

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_core_base/core/theme/app_colors.dart';
+import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/theme/app_typography.dart';
 import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/features/catalog/domain/sdk_feature.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class FeatureCard extends StatelessWidget {
@@ -13,7 +14,9 @@ class FeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
+    final iconColor = feature.isEnabled ? colors.brandAccent : colors.textHint;
 
     return AppCard(
       onTap: feature.isEnabled
@@ -29,15 +32,12 @@ class FeatureCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: (feature.isEnabled ? AppColors.primary : Colors.grey)
-                      .withValues(alpha: isDark ? 0.2 : 0.1),
+                  color: iconColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusM),
                 ),
                 child: Icon(
                   feature.icon,
-                  color: feature.isEnabled
-                      ? (isDark ? AppColors.primaryLight : AppColors.primary)
-                      : Colors.grey,
+                  color: iconColor,
                   size: 26,
                 ),
               ),
@@ -46,16 +46,19 @@ class FeatureCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.15),
+                    color: colors.track.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
-                    'Coming Soon',
-                    style: AppTypography.caption.copyWith(fontWeight: FontWeight.w600),
+                    l10n?.comingSoon ?? 'Coming Soon',
+                    style: AppTypography.caption.copyWith(
+                      color: colors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 )
               else
-                const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.textSecondaryLight),
+                Icon(Icons.arrow_forward_ios_rounded, size: 16, color: colors.textHint),
             ],
           ),
           const SizedBox(height: AppSpacing.m),
@@ -67,7 +70,7 @@ class FeatureCard extends StatelessWidget {
           Text(
             feature.description,
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+              color: colors.textSecondary,
             ),
           ),
           const SizedBox(height: AppSpacing.m),
@@ -78,13 +81,16 @@ class FeatureCard extends StatelessWidget {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15)),
+                  color: colors.surface,
+                  border: Border.all(color: colors.border),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusS),
                 ),
                 child: Text(
                   '#$tag',
-                  style: AppTypography.caption.copyWith(fontWeight: FontWeight.w500),
+                  style: AppTypography.caption.copyWith(
+                    color: colors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               );
             }).toList(),

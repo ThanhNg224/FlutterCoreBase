@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines Dart & Flutter coding standards, formatting guidelines, naming conventions, and best practices for the project.
+This document defines Dart & Flutter coding standards, formatting guidelines, naming conventions, and best practices for the project. Every developer and AI assistant must follow these rules strictly.
 
 ---
 
@@ -21,7 +21,7 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
 ## Flutter & Dart Best Practices
 
 ### 1. Immutability & Data Modeling
-- Always use `@freezed` for domain entities and complex UI states.
+- Always use `@freezed` for domain entities, DTOs, and complex UI states.
 - Prefer `final` fields and `const` constructors wherever possible.
 
 ### 2. Widget Construction & Performance
@@ -29,20 +29,39 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
 - Use `const` widgets to optimize Flutter element rebuild trees.
 - Use `ref.watch(provider.select((s) => s.specificField))` to avoid rebuilding entire screens on minor state changes.
 - Never place asynchronous side effects directly inside widget `build()` methods.
+- Keep UI widgets "dumb": UI renders state and delegates events to Riverpod controllers.
 
-### 3. Design System & Theming
-- Never hardcode raw hex colors in widgets (e.g. `Color(0xFF1E56A0)`). Reference `AppColors.primary` or `Theme.of(context).colorScheme`.
-- Use `AppSpacing` tokens (`AppSpacing.s`, `AppSpacing.m`, `AppSpacing.l`) instead of arbitrary margins/paddings.
-- Use `AppTypography` text styles for all text elements.
+### 3. Design System & Theming (Strict Rules)
+- **Typography & Font Family:**
+  - The standard app font is **Inter** (`GoogleFonts.inter`), configured in `AppTypography` and `AppTheme`.
+  - Always use `AppTypography.<style>` or `Theme.of(context).textTheme.<slot>`.
+  - **PROHIBITED:** Hardcoding arbitrary `TextStyle(fontSize: 15, ...)` or inline font families in feature widgets.
+- **Colors & Semantics:**
+  - Always use `context.colors.<token>` (`AppSemanticColors`) for dynamic surfaces, borders, hints, secondary text, and status colors (`statusSuccess`, `statusWarning`, `statusError`, `brandAccent`, `track`).
+  - For brand accents, use `Theme.of(context).colorScheme` or `AppColors.primary`.
+  - **PROHIBITED:** Hardcoding raw colors (`Colors.grey`, `Colors.red`, `Colors.black`, `Colors.white`, `Color(0xFF...)`) in presentation screens/widgets.
+- **Spacing & Radius:**
+  - Always use `AppSpacing` tokens (`AppSpacing.xs` (4), `AppSpacing.s` (8), `AppSpacing.m` (16), `AppSpacing.l` (24), `AppSpacing.xl` (32), `AppSpacing.xxl` (48)).
+  - Always use `AppSpacing.radiusS/M/L/XL/Full` for border radius.
+  - Always use `AppSpacing.pagePadding`, `cardPadding`, `dialogPadding`.
+  - **PROHIBITED:** Hardcoding arbitrary pixel values (e.g. `EdgeInsets.all(13)` or `BorderRadius.circular(15)`).
+- **Reusable Components:**
+  - Always check and reuse `lib/core/widgets/` (`AppButton`, `AppCard`, `AppTextField`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AsyncValueWidget`) before creating custom one-off UI widgets.
 
-### 4. Error Handling
-- Use `fpdart`'s `Either<Failure, T>` return type for repository methods.
-- Use `ErrorHandler.guard()` in data sources/repositories to convert unexpected exceptions into typed `Failure` objects.
-- Present human-friendly error messages on the UI layer using `failure.localizedMessage(l10n)` or `AppDialog`.
+### 4. Local Storage & Preferences (Strict Rules)
+- Always access local persistence via `ILocalStorageService` (injected via `ref.watch(localStorageServiceProvider)`).
+- All storage keys must be declared in `StorageKeys` (`core/constants/storage_keys.dart`).
+- **PROHIBITED:** Directly calling `SharedPreferences.getInstance()` in feature screens, widgets, or controllers.
 
-### 5. Code Quality Checklist
-- **No unused imports:** Keep files clean.
-- **No `print()` or `debugPrint()` statements:** Use `AppLogger` (`core/logging/`), which is silent in release by construction. Declare `const _log = AppLogger('<Scope>');` at the top of the file.
-- **Never log a raw value:** Logger's `data` parameter takes `Map<String, Redacted>`. Use `Redacted.secret` / `.phone` / `.length` / `.type` / `.count` / `.flag`, and `Redacted.unredacted(v, because: ...)` for non-sensitive values.
+### 5. Error Handling & Architecture
+- Return `Future<Either<Failure, T>>` from repositories using `fpdart`.
+- Use `ErrorHandler.guard()` in data sources/repositories to automatically catch exceptions and map them to typed `Failure` objects.
+- Present human-friendly error messages on the UI layer using `failure.localizedMessage(l10n)` or `AppDialog`. Never expose raw stack traces or technical exception messages to users.
+
+### 6. Code Quality & Security Checklist
+- **No unused imports:** Keep files clean and organized.
+- **No `print()` or `debugPrint()`:** Use `AppLogger` (`core/logging/`), which is silent in release builds by construction. Declare `const _log = AppLogger('<Scope>');` at the top of the file.
+- **Never log raw sensitive values:** Logger's `data` parameter takes `Map<String, Redacted>`. Use `Redacted.secret` / `.phone` / `.length` / `.type` / `.count` / `.flag`, and `Redacted.unredacted(v, because: ...)` for non-sensitive values.
 - **Code Gen Check:** Always run `dart run build_runner build --delete-conflicting-outputs` after updating `@riverpod` or `@freezed` models.
 - **Analysis:** `flutter analyze` must produce **zero warnings or errors**.
+- **Tests:** Run `flutter test` and maintain passing tests for core logic and controllers.

@@ -23,7 +23,85 @@ class AppLocalizationsVi extends AppLocalizations {
       'Khám phá các module kiến trúc, quản lý trạng thái và Clean Architecture trong dự án base.';
 
   @override
+  String get exploreSdkFeaturesTitle => 'Khám phá các tính năng SDK';
+
+  @override
+  String get exploreSdkFeaturesSubtitle =>
+      'Chọn một module tích hợp bên dưới để cấu hình tham số và kiểm thử trực tiếp SDK.';
+
+  @override
+  String get comingSoon => 'Sắp ra mắt';
+
+  @override
   String get postsFeedTitle => 'Danh sách bài viết mẫu';
+
+  @override
+  String get refreshTooltip => 'Làm mới';
+
+  @override
+  String get noPostsFound => 'Chưa có bài viết nào';
+
+  @override
+  String get createFirstPostButton => 'Tạo bài viết đầu tiên';
+
+  @override
+  String get newPostButton => 'Tạo bài viết';
+
+  @override
+  String get deletePostTitle => 'Xóa bài viết';
+
+  @override
+  String deletePostConfirmation(String title) {
+    return 'Bạn có chắc chắn muốn xóa \"$title\" không?';
+  }
+
+  @override
+  String get deleteButton => 'Xóa';
+
+  @override
+  String postDetailTitle(int id) {
+    return 'Bài viết #$id';
+  }
+
+  @override
+  String authorIdLabel(int id) {
+    return 'Tác giả #$id';
+  }
+
+  @override
+  String get publishedArticleLabel => 'Bài viết đã xuất bản';
+
+  @override
+  String postSubtitle(int id, int userId) {
+    return 'Bài viết #$id · Tác giả #$userId';
+  }
+
+  @override
+  String get createPostTitle => 'Tạo bài viết mới';
+
+  @override
+  String get postTitleFieldLabel => 'Tiêu đề';
+
+  @override
+  String get postTitleFieldHint => 'Nhập tiêu đề bài viết';
+
+  @override
+  String get titleRequiredValidation => 'Vui lòng nhập tiêu đề';
+
+  @override
+  String get postBodyFieldLabel => 'Nội dung';
+
+  @override
+  String get postBodyFieldHint => 'Nhập nội dung bài viết...';
+
+  @override
+  String get contentRequiredValidation => 'Vui lòng nhập nội dung';
+
+  @override
+  String get publishPostButton => 'Đăng bài viết';
+
+  @override
+  String get postCreatedSuccessMessage => 'Tạo bài viết thành công!';
 
   @override
   String get developerSdkSettingsTitle => 'Cài đặt & Nhà phát triển';

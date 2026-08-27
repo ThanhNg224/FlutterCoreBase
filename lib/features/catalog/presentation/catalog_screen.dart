@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
+import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/theme/app_typography.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_core_base/features/catalog/presentation/catalog_controller.dart';
 import 'package:flutter_core_base/features/catalog/presentation/widgets/feature_card.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,14 +17,15 @@ class CatalogScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final catalogState = ref.watch(catalogControllerProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SDK Capability Catalog'),
+        title: Text(l10n?.catalogTitle ?? 'Core Feature Catalog'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            tooltip: 'Settings',
+            tooltip: l10n?.settingsTooltip ?? 'Settings',
             onPressed: () => context.push(RoutePaths.settings),
           ),
         ],
@@ -36,13 +39,14 @@ class CatalogScreen extends ConsumerWidget {
               padding: AppSpacing.pagePadding,
               children: [
                 Text(
-                  'Explore SDK Features',
+                  l10n?.exploreSdkFeaturesTitle ?? 'Explore SDK Features',
                   style: AppTypography.headlineMedium,
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  'Select an integrated module below to configure parameters and trigger live SDK verification.',
-                  style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
+                  l10n?.exploreSdkFeaturesSubtitle ??
+                      'Select an integrated module below to configure parameters and trigger live SDK verification.',
+                  style: AppTypography.bodyMedium.copyWith(color: context.colors.textSecondary),
                 ),
                 const SizedBox(height: AppSpacing.l),
                 ...features.map((feature) {

@@ -22,6 +22,7 @@ abstract class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      fontFamily: AppTypography.fontFamily,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.backgroundLight,
       textTheme: _textTheme(primary: AppColors.textPrimaryLight, secondary: AppColors.textSecondaryLight),
@@ -75,6 +76,7 @@ abstract class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: AppTypography.fontFamily,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.backgroundDark,
       textTheme: _textTheme(primary: AppColors.textPrimaryDark, secondary: AppColors.textSecondaryDark),

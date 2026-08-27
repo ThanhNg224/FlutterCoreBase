@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_text_field.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 
 class CreatePostBottomSheet extends StatefulWidget {
   final Future<bool> Function({required String title, required String body}) onSubmit;
@@ -37,9 +38,10 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
     if (mounted) {
       setState(() => _isSubmitting = false);
       if (success) {
+        final l10n = AppLocalizations.of(context);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Post created successfully!')),
+          SnackBar(content: Text(l10n?.postCreatedSuccessMessage ?? 'Post created successfully!')),
         );
       }
     }
@@ -48,6 +50,7 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final l10n = AppLocalizations.of(context);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -66,27 +69,27 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
               children: [
                 const Icon(Icons.post_add_rounded, size: 24),
                 const SizedBox(width: AppSpacing.s),
-                Text('Create New Post', style: Theme.of(context).textTheme.titleLarge),
+                Text(l10n?.createPostTitle ?? 'Create New Post', style: Theme.of(context).textTheme.titleLarge),
               ],
             ),
             const SizedBox(height: AppSpacing.m),
             AppTextField(
               controller: _titleController,
-              label: 'Title',
-              hint: 'Enter post title',
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Title is required' : null,
+              label: l10n?.postTitleFieldLabel ?? 'Title',
+              hint: l10n?.postTitleFieldHint ?? 'Enter post title',
+              validator: (v) => (v == null || v.trim().isEmpty) ? (l10n?.titleRequiredValidation ?? 'Title is required') : null,
             ),
             const SizedBox(height: AppSpacing.m),
             AppTextField(
               controller: _bodyController,
-              label: 'Content',
-              hint: 'Enter post body content...',
+              label: l10n?.postBodyFieldLabel ?? 'Content',
+              hint: l10n?.postBodyFieldHint ?? 'Enter post body content...',
               maxLines: 4,
-              validator: (v) => (v == null || v.trim().isEmpty) ? 'Content is required' : null,
+              validator: (v) => (v == null || v.trim().isEmpty) ? (l10n?.contentRequiredValidation ?? 'Content is required') : null,
             ),
             const SizedBox(height: AppSpacing.l),
             AppButton(
-              label: 'Publish Post',
+              label: l10n?.publishPostButton ?? 'Publish Post',
               isLoading: _isSubmitting,
               onPressed: _submit,
             ),

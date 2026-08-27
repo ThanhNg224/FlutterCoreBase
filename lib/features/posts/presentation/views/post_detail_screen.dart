@@ -5,6 +5,7 @@ import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/post_detail_controller.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PostDetailScreen extends ConsumerWidget {
@@ -17,10 +18,11 @@ class PostDetailScreen extends ConsumerWidget {
     final postAsync = ref.watch(postDetailControllerProvider(postId));
     final textTheme = Theme.of(context).textTheme;
     final colors = context.colors;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post #$postId'),
+        title: Text(l10n?.postDetailTitle(postId) ?? 'Post #$postId'),
       ),
       body: Center(
         child: ConstrainedBox(
@@ -48,11 +50,11 @@ class PostDetailScreen extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Author ID #${post.userId}',
+                                    l10n?.authorIdLabel(post.userId) ?? 'Author ID #${post.userId}',
                                     style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    'Published article',
+                                    l10n?.publishedArticleLabel ?? 'Published article',
                                     style: textTheme.bodySmall?.copyWith(color: colors.textSecondary),
                                   ),
                                 ],

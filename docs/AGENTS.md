@@ -33,6 +33,42 @@ Treat these documents as the project's engineering source of truth.
 
 ---
 
+## Mandatory Coding & Architecture Rules (Strict Enforcement)
+
+Every AI agent and developer MUST strictly obey the following rules without exception:
+
+1. **Design System & Styling:**
+   - **Font & Typography:** The project uses **Inter** (`GoogleFonts.inter`). Always use `AppTypography.<slot>` or `Theme.of(context).textTheme.<slot>`. Never hardcode `TextStyle(fontSize: ..., fontFamily: ...)`.
+   - **Colors:** Use `context.colors.<token>` (`AppSemanticColors`) for all dynamic borders, surfaces, secondary/hint texts, and status colors. Use `Theme.of(context).colorScheme` or `AppColors.primary` for brand accents. **NEVER** use raw Flutter colors like `Colors.grey`, `Colors.red`, `Colors.white`, or `Color(0xFF...)`.
+   - **Spacing & Radius:** Use `AppSpacing` tokens (`xs: 4`, `s: 8`, `m: 16`, `l: 24`, `xl: 32`, `xxl: 48`) and `AppSpacing.radius*`. **NEVER** use arbitrary magic padding/radius numbers.
+   - **Component Reuse:** Always check and reuse `lib/core/widgets/` (`AppButton`, `AppCard`, `AppTextField`, `AppDialog`, `AppErrorWidget`, `AsyncValueWidget`) before creating custom widgets.
+
+2. **State Management & Dependency Injection:**
+   - Always use **Riverpod Generator (`@riverpod`)**.
+   - Use default `@riverpod` (auto-dispose) for screen controllers; use `@Riverpod(keepAlive: true)` for singletons/core services.
+   - Keep UI widgets "dumb": UI delegates all actions to Riverpod controllers.
+
+3. **Storage & Preferences:**
+   - Always inject and use `ILocalStorageService` (`localStorageServiceProvider`).
+   - All persistence keys MUST be defined in `StorageKeys` (`core/constants/storage_keys.dart`).
+   - **NEVER** call `SharedPreferences.getInstance()` inside feature screens or controllers.
+
+4. **Error Handling & Architecture:**
+   - Feature structure MUST follow `domain/` -> `data/` -> `presentation/`.
+   - Repositories MUST return `Future<Either<Failure, T>>` and use `ErrorHandler.guard()`.
+   - Present user-facing errors with `failure.localizedMessage(l10n)` or `AppDialog`.
+
+5. **Logging & Security:**
+   - Always declare `const _log = AppLogger('<Scope>');`.
+   - **NEVER** use `print()` or `debugPrint()`.
+   - Never log raw sensitive values; always use `Redacted` wrappers (`Redacted.secret`, `Redacted.phone`, `Redacted.type`, etc.).
+
+6. **Quality & Verification:**
+   - Run `dart run build_runner build --delete-conflicting-outputs` after editing `@riverpod` or `@freezed` models.
+   - Run `flutter analyze` (must be 0 issues) and `flutter test`.
+
+---
+
 ## AI Workflow
 
 For every request:

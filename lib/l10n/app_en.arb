@@ -5,7 +5,54 @@
   "settingsTooltip": "Settings",
   "catalogTitle": "Core Feature Catalog",
   "catalogSubtitle": "Explore integrated architectural modules, state management, and Clean Architecture in this starter base.",
+  "exploreSdkFeaturesTitle": "Explore SDK Features",
+  "exploreSdkFeaturesSubtitle": "Select an integrated module below to configure parameters and trigger live SDK verification.",
+  "comingSoon": "Coming Soon",
+
   "postsFeedTitle": "Posts & Feed Showcase",
+  "refreshTooltip": "Refresh",
+  "noPostsFound": "No articles found",
+  "createFirstPostButton": "Create First Post",
+  "newPostButton": "New Post",
+  "deletePostTitle": "Delete Post",
+  "deletePostConfirmation": "Are you sure you want to delete \"{title}\"?",
+  "@deletePostConfirmation": {
+    "placeholders": {
+      "title": { "type": "String" }
+    }
+  },
+  "deleteButton": "Delete",
+
+  "postDetailTitle": "Post #{id}",
+  "@postDetailTitle": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "authorIdLabel": "Author ID #{id}",
+  "@authorIdLabel": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "publishedArticleLabel": "Published article",
+  "postSubtitle": "Post #{id} · Author #{userId}",
+  "@postSubtitle": {
+    "placeholders": {
+      "id": { "type": "int" },
+      "userId": { "type": "int" }
+    }
+  },
+
+  "createPostTitle": "Create New Post",
+  "postTitleFieldLabel": "Title",
+  "postTitleFieldHint": "Enter post title",
+  "titleRequiredValidation": "Title is required",
+  "postBodyFieldLabel": "Content",
+  "postBodyFieldHint": "Enter post body content...",
+  "contentRequiredValidation": "Content is required",
+  "publishPostButton": "Publish Post",
+  "postCreatedSuccessMessage": "Post created successfully!",
 
   "developerSdkSettingsTitle": "Developer & App Settings",
   "sdkEnvironmentTitle": "Environment Configuration",
@@ -36,7 +83,7 @@
   "themeModeDark": "Dark",
   "languageTitle": "Language",
   "languageEnglish": "English",
-  "languageVietnamese": "Vietnamese",
+  "languageVietnamese": "Tiếng Việt",
   "aboutTitle": "About",
   "sdkVersionLabel": "Base App Version:",
 
