@@ -1,5 +1,5 @@
-import 'package:flutter_core_base/features/catalog/data/catalog_repository.dart';
-import 'package:flutter_core_base/features/catalog/domain/sdk_feature.dart';
+import 'package:flutter_core_base/features/catalog/data/repositories/catalog_repository.dart';
+import 'package:flutter_core_base/features/catalog/domain/entities/catalog_feature.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'catalog_controller.g.dart';
@@ -8,16 +8,18 @@ part 'catalog_controller.g.dart';
 @riverpod
 class CatalogController extends _$CatalogController {
   @override
-  FutureOr<List<SdkFeature>> build() async {
+  FutureOr<List<CatalogFeature>> build() async {
     final repository = ref.watch(catalogRepositoryProvider);
-    return repository.getFeatures();
+    final result = await repository.getFeatures();
+    return result.fold((failure) => throw failure, (features) => features);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() {
+    state = await AsyncValue.guard(() async {
       final repository = ref.read(catalogRepositoryProvider);
-      return repository.getFeatures();
+      final result = await repository.getFeatures();
+      return result.fold((failure) => throw failure, (features) => features);
     });
   }
 }

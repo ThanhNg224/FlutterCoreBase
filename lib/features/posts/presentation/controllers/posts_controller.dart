@@ -1,5 +1,8 @@
+import 'package:flutter_core_base/core/errors/failure.dart';
 import 'package:flutter_core_base/features/posts/data/repositories/posts_repository_impl.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
+import 'package:flutter_core_base/features/posts/presentation/controllers/posts_state.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'posts_controller.g.dart';
@@ -8,86 +11,81 @@ part 'posts_controller.g.dart';
 class PostsController extends _$PostsController {
   int _currentPage = 1;
   static const int _pageSize = 10;
-  bool _hasMore = true;
-  bool _isLoadingMore = false;
-
-  bool get hasMore => _hasMore;
-  bool get isLoadingMore => _isLoadingMore;
 
   @override
-  FutureOr<List<Post>> build() async {
+  FutureOr<PostsState> build() async {
     _currentPage = 1;
-    _hasMore = true;
-    _isLoadingMore = false;
-    return _fetchPosts(page: 1);
-  }
-
-  Future<List<Post>> _fetchPosts({required int page}) async {
-    final repository = await ref.read(postsRepositoryProvider.future);
-    final result = await repository.getPosts(page: page, limit: _pageSize);
-
+    final result = await _fetchPosts(page: _currentPage);
     return result.fold(
       (failure) => throw failure,
-      (posts) {
-        if (posts.length < _pageSize) {
-          _hasMore = false;
-        }
-        return posts;
-      },
+      (items) => PostsState(items: items, hasMore: items.length == _pageSize),
     );
+  }
+
+  Future<Either<Failure, List<Post>>> _fetchPosts({required int page}) async {
+    final repository = await ref.read(postsRepositoryProvider.future);
+    return repository.getPosts(page: page, limit: _pageSize);
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      _currentPage = 1;
-      _hasMore = true;
-      return _fetchPosts(page: 1);
-    });
+    _currentPage = 1;
+    final result = await _fetchPosts(page: _currentPage);
+    state = result.fold(
+      (failure) => AsyncValue.error(failure, StackTrace.current),
+      (items) => AsyncValue.data(PostsState(items: items, hasMore: items.length == _pageSize)),
+    );
   }
 
   Future<void> loadMore() async {
-    if (_isLoadingMore || !_hasMore || state.isLoading || state.hasError) return;
+    final current = state.value;
+    if (current == null || current.isLoadingMore || !current.hasMore || state.isLoading || state.hasError) return;
 
-    final currentPosts = state.value ?? <Post>[];
-    _isLoadingMore = true;
-
-    try {
-      final nextPage = _currentPage + 1;
-      final newPosts = await _fetchPosts(page: nextPage);
-      _currentPage = nextPage;
-      state = AsyncValue.data([...currentPosts, ...newPosts]);
-    } catch (_) {
-      // Retain existing items on pagination failure
-    } finally {
-      _isLoadingMore = false;
-    }
-  }
-
-  Future<bool> createPost({required String title, required String body}) async {
-    final repository = await ref.read(postsRepositoryProvider.future);
-    final result = await repository.createPost(title: title, body: body);
-
-    return result.fold(
-      (failure) => false,
-      (newPost) {
-        final currentPosts = state.value ?? <Post>[];
-        state = AsyncValue.data([newPost, ...currentPosts]);
-        return true;
+    state = AsyncValue.data(current.copyWith(isLoadingMore: true, paginationFailure: null));
+    final nextPage = _currentPage + 1;
+    final result = await _fetchPosts(page: nextPage);
+    state = result.fold(
+      (failure) => AsyncValue.data(current.copyWith(paginationFailure: failure)),
+      (newItems) {
+        _currentPage = nextPage;
+        return AsyncValue.data(
+          current.copyWith(
+            items: [...current.items, ...newItems],
+            hasMore: newItems.length == _pageSize,
+          ),
+        );
       },
     );
   }
 
-  Future<bool> deletePost(int id) async {
+  Future<Either<Failure, Post>> createPost({required String title, required String body}) async {
+    final repository = await ref.read(postsRepositoryProvider.future);
+    final result = await repository.createPost(title: title, body: body);
+
+    return result.fold(
+      Left.new,
+      (newPost) {
+        final current = state.value;
+        if (current != null) {
+          state = AsyncValue.data(current.copyWith(items: [newPost, ...current.items]));
+        }
+        return Right(newPost);
+      },
+    );
+  }
+
+  Future<Either<Failure, void>> deletePost(int id) async {
     final repository = await ref.read(postsRepositoryProvider.future);
     final result = await repository.deletePost(id);
 
     return result.fold(
-      (failure) => false,
+      Left.new,
       (_) {
-        final currentPosts = state.value ?? <Post>[];
-        state = AsyncValue.data(currentPosts.where((Post p) => p.id != id).toList());
-        return true;
+        final current = state.value;
+        if (current != null) {
+          state = AsyncValue.data(current.copyWith(items: current.items.where((post) => post.id != id).toList()));
+        }
+        return const Right(null);
       },
     );
   }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
+import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/theme/app_motion.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_dialog.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
-import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_controller.dart';
+import 'package:flutter_core_base/features/posts/presentation/controllers/posts_state.dart';
 import 'package:flutter_core_base/features/posts/presentation/widgets/create_post_bottom_sheet.dart';
 import 'package:flutter_core_base/features/posts/presentation/widgets/post_card.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
@@ -58,10 +59,25 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
     );
   }
 
+  Future<void> _deletePost(int id) async {
+    final result = await ref.read(postsControllerProvider.notifier).deletePost(id);
+    if (!mounted) return;
+
+    final l10n = AppLocalizations.of(context);
+    result.fold(
+      (failure) => AppDialog.showResultDialog(
+        context: context,
+        title: l10n?.somethingWentWrongMessage ?? 'Something went wrong',
+        message: l10n == null ? 'Unable to delete the post' : failure.localizedMessage(l10n),
+        isSuccess: false,
+      ),
+      (_) {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final postsAsync = ref.watch(postsControllerProvider);
-    final controller = ref.read(postsControllerProvider.notifier);
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
@@ -78,9 +94,10 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: AppSpacing.maxContentWidth),
-          child: AsyncValueWidget<List<Post>>(
+          child: AsyncValueWidget<PostsState>(
             value: postsAsync,
-            data: (posts) {
+            data: (postsState) {
+              final posts = postsState.items;
               if (posts.isEmpty) {
                 return Center(
                   child: Padding(
@@ -116,11 +133,12 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                         context: context,
                         icon: Icons.delete_outline_rounded,
                         title: l10n?.deletePostTitle ?? 'Delete Post',
-                        message: l10n?.deletePostConfirmation(post.title) ??
+                        message:
+                            l10n?.deletePostConfirmation(post.title) ??
                             'Are you sure you want to delete "${post.title}"?',
                         primaryLabel: l10n?.deleteButton ?? 'Delete',
                         secondaryLabel: l10n?.cancelButton ?? 'Cancel',
-                        onPrimary: () => ref.read(postsControllerProvider.notifier).deletePost(post.id),
+                        onPrimary: () => _deletePost(post.id),
                       );
                     },
                   ),
@@ -134,14 +152,30 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                 child: ListView.builder(
                   controller: _scrollController,
                   padding: AppSpacing.pagePadding,
-                  itemCount: animatedItems.length + (controller.isLoadingMore ? 1 : 0),
+                  itemCount:
+                      animatedItems.length + (postsState.isLoadingMore || postsState.paginationFailure != null ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index < animatedItems.length) {
                       return animatedItems[index];
                     }
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
-                      child: Center(child: CircularProgressIndicator.adaptive()),
+                    if (postsState.isLoadingMore) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
+                        child: Center(child: CircularProgressIndicator.adaptive()),
+                      );
+                    }
+                    final failure = postsState.paginationFailure!;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+                      child: Center(
+                        child: TextButton.icon(
+                          onPressed: () => ref.read(postsControllerProvider.notifier).loadMore(),
+                          icon: const Icon(Icons.refresh_rounded),
+                          label: Text(
+                            l10n == null ? 'Unable to load more posts' : failure.localizedMessage(l10n),
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),

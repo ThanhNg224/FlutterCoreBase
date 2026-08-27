@@ -3,12 +3,12 @@ import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/theme/app_typography.dart';
 import 'package:flutter_core_base/core/widgets/app_card.dart';
-import 'package:flutter_core_base/features/catalog/domain/sdk_feature.dart';
+import 'package:flutter_core_base/features/catalog/domain/entities/catalog_feature.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class FeatureCard extends StatelessWidget {
-  final SdkFeature feature;
+  final CatalogFeature feature;
 
   const FeatureCard({super.key, required this.feature});
 
@@ -36,7 +36,7 @@ class FeatureCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusM),
                 ),
                 child: Icon(
-                  feature.icon,
+                  _iconFor(feature.iconKey),
                   color: iconColor,
                   size: 26,
                 ),
@@ -99,4 +99,11 @@ class FeatureCard extends StatelessWidget {
       ),
     );
   }
+
+  IconData _iconFor(String iconKey) => switch (iconKey) {
+    CatalogIconKeys.feed => Icons.dynamic_feed_rounded,
+    CatalogIconKeys.settings => Icons.tune_rounded,
+    CatalogIconKeys.architecture => Icons.architecture_rounded,
+    _ => Icons.extension_rounded,
+  };
 }

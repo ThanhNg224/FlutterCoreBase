@@ -13,7 +13,7 @@ part of 'posts_controller.dart';
 final postsControllerProvider = PostsControllerProvider._();
 
 final class PostsControllerProvider
-    extends $AsyncNotifierProvider<PostsController, List<Post>> {
+    extends $AsyncNotifierProvider<PostsController, PostsState> {
   PostsControllerProvider._()
     : super(
         from: null,
@@ -33,19 +33,19 @@ final class PostsControllerProvider
   PostsController create() => PostsController();
 }
 
-String _$postsControllerHash() => r'bdf06b4360df6b9656c8f6a37a5df801c4f01a57';
+String _$postsControllerHash() => r'eb653c08fa88bb42815c1c6b15508ce8317d77a2';
 
-abstract class _$PostsController extends $AsyncNotifier<List<Post>> {
-  FutureOr<List<Post>> build();
+abstract class _$PostsController extends $AsyncNotifier<PostsState> {
+  FutureOr<PostsState> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<List<Post>>, List<Post>>;
+    final ref = this.ref as $Ref<AsyncValue<PostsState>, PostsState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Post>>, List<Post>>,
-              AsyncValue<List<Post>>,
+              AnyNotifier<AsyncValue<PostsState>, PostsState>,
+              AsyncValue<PostsState>,
               Object?,
               Object?
             >;

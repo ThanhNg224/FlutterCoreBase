@@ -15,7 +15,7 @@ final catalogControllerProvider = CatalogControllerProvider._();
 
 /// Auto-disposed controller managing SDK feature catalog list
 final class CatalogControllerProvider
-    extends $AsyncNotifierProvider<CatalogController, List<SdkFeature>> {
+    extends $AsyncNotifierProvider<CatalogController, List<CatalogFeature>> {
   /// Auto-disposed controller managing SDK feature catalog list
   CatalogControllerProvider._()
     : super(
@@ -36,22 +36,27 @@ final class CatalogControllerProvider
   CatalogController create() => CatalogController();
 }
 
-String _$catalogControllerHash() => r'679087cc840fcabba2a264519d8cf4fd03ba188a';
+String _$catalogControllerHash() => r'6de42c48772a91a4bee7a02bca214c4f6a40fd3e';
 
 /// Auto-disposed controller managing SDK feature catalog list
 
-abstract class _$CatalogController extends $AsyncNotifier<List<SdkFeature>> {
-  FutureOr<List<SdkFeature>> build();
+abstract class _$CatalogController
+    extends $AsyncNotifier<List<CatalogFeature>> {
+  FutureOr<List<CatalogFeature>> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
     final ref =
-        this.ref as $Ref<AsyncValue<List<SdkFeature>>, List<SdkFeature>>;
+        this.ref
+            as $Ref<AsyncValue<List<CatalogFeature>>, List<CatalogFeature>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<SdkFeature>>, List<SdkFeature>>,
-              AsyncValue<List<SdkFeature>>,
+              AnyNotifier<
+                AsyncValue<List<CatalogFeature>>,
+                List<CatalogFeature>
+              >,
+              AsyncValue<List<CatalogFeature>>,
               Object?,
               Object?
             >;

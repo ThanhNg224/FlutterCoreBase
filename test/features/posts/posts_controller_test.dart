@@ -5,6 +5,7 @@ import 'package:flutter_core_base/features/posts/data/repositories/posts_reposit
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/features/posts/domain/repositories/i_posts_repository.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_controller.dart';
+import 'package:flutter_core_base/features/posts/presentation/controllers/posts_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FakePostsRepository implements IPostsRepository {
@@ -14,10 +15,11 @@ class FakePostsRepository implements IPostsRepository {
   ];
 
   bool shouldFail = false;
+  bool shouldFailLoadMore = false;
 
   @override
   Future<Either<Failure, List<Post>>> getPosts({int page = 1, int limit = 10}) async {
-    if (shouldFail) {
+    if (shouldFail || (shouldFailLoadMore && page > 1)) {
       return const Left(Failure.server(message: 'Server down'));
     }
     return Right(List.of(posts));
@@ -60,34 +62,34 @@ void main() {
 
   group('PostsController', () {
     test('initial build fetches posts successfully', () async {
-      final posts = await container.read(postsControllerProvider.future);
+      final state = await container.read(postsControllerProvider.future);
 
-      expect(posts.length, 2);
-      expect(posts[0].id, 1);
+      expect(state.items.length, 2);
+      expect(state.items[0].id, 1);
     });
 
     test('createPost adds new post to the top of the list', () async {
       await container.read(postsControllerProvider.future);
 
-      final success = await container
+      final result = await container
           .read(postsControllerProvider.notifier)
           .createPost(title: 'Brand New', body: 'Content');
 
-      expect(success, isTrue);
-      final currentList = container.read(postsControllerProvider).value!;
-      expect(currentList.length, 3);
-      expect(currentList.first.title, 'Brand New');
+      expect(result.isRight(), isTrue);
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.length, 3);
+      expect(currentState.items.first.title, 'Brand New');
     });
 
     test('deletePost removes post from the list', () async {
       await container.read(postsControllerProvider.future);
 
-      final success = await container.read(postsControllerProvider.notifier).deletePost(1);
+      final result = await container.read(postsControllerProvider.notifier).deletePost(1);
 
-      expect(success, isTrue);
-      final currentList = container.read(postsControllerProvider).value!;
-      expect(currentList.length, 1);
-      expect(currentList.any((p) => p.id == 1), isFalse);
+      expect(result.isRight(), isTrue);
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.length, 1);
+      expect(currentState.items.any((p) => p.id == 1), isFalse);
     });
 
     test('refresh reloads list', () async {
@@ -99,9 +101,26 @@ void main() {
 
       await container.read(postsControllerProvider.notifier).refresh();
 
-      final currentList = container.read(postsControllerProvider).value!;
-      expect(currentList.length, 1);
-      expect(currentList.first.id, 100);
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.length, 1);
+      expect(currentState.items.first.id, 100);
+    });
+
+    test('retains posts and exposes a pagination failure', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+      fakeRepository.shouldFailLoadMore = true;
+
+      await container.read(postsControllerProvider.notifier).loadMore();
+
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState, isA<PostsState>());
+      expect(currentState.items, hasLength(10));
+      expect(currentState.isLoadingMore, isFalse);
+      expect(currentState.paginationFailure, const Failure.server(message: 'Server down'));
     });
   });
 }
