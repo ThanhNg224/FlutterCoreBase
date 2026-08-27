@@ -46,7 +46,7 @@ dev_dependencies:
   # Code Generation
   build_runner: ^2.4.15
   riverpod_generator: ^4.0.8
-  freezed: ^4.0.0-dev.3
+  freezed: ^4.0.0
   json_serializable: ^6.9.4
 
   # Testing & Mocking

@@ -93,6 +93,12 @@
 		76D33FFF3E2F37E583228A7C /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
+		A10100000000000000000001 /* Debug-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Debug-dev.xcconfig"; path = Flutter/Debug-dev.xcconfig; sourceTree = "<group>"; };
+		A10100000000000000000002 /* Debug-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Debug-prod.xcconfig"; path = Flutter/Debug-prod.xcconfig; sourceTree = "<group>"; };
+		A10100000000000000000003 /* Profile-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Profile-dev.xcconfig"; path = Flutter/Profile-dev.xcconfig; sourceTree = "<group>"; };
+		A10100000000000000000004 /* Profile-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Profile-prod.xcconfig"; path = Flutter/Profile-prod.xcconfig; sourceTree = "<group>"; };
+		A10100000000000000000005 /* Release-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Release-dev.xcconfig"; path = Flutter/Release-dev.xcconfig; sourceTree = "<group>"; };
+		A10100000000000000000006 /* Release-prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Release-prod.xcconfig"; path = Flutter/Release-prod.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -163,6 +169,12 @@
 			children = (
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
+				A10100000000000000000001 /* Debug-dev.xcconfig */,
+				A10100000000000000000002 /* Debug-prod.xcconfig */,
+				A10100000000000000000003 /* Profile-dev.xcconfig */,
+				A10100000000000000000004 /* Profile-prod.xcconfig */,
+				A10100000000000000000005 /* Release-dev.xcconfig */,
+				A10100000000000000000006 /* Release-prod.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
 				9740EEB31CF90195004384FC /* Generated.xcconfig */,
 			);
@@ -514,6 +526,18 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A20100000000000000000001 /* Debug-dev */ = { isa = XCBuildConfiguration; buildSettings = {}; name = "Debug-dev"; };
+		A20100000000000000000002 /* Debug-prod */ = { isa = XCBuildConfiguration; buildSettings = {}; name = "Debug-prod"; };
+		A20100000000000000000003 /* Profile-dev */ = { isa = XCBuildConfiguration; buildSettings = {}; name = "Profile-dev"; };
+		A20100000000000000000004 /* Profile-prod */ = { isa = XCBuildConfiguration; buildSettings = {}; name = "Profile-prod"; };
+		A20100000000000000000005 /* Release-dev */ = { isa = XCBuildConfiguration; buildSettings = {}; name = "Release-dev"; };
+		A20100000000000000000006 /* Release-prod */ = { isa = XCBuildConfiguration; buildSettings = {}; name = "Release-prod"; };
+		A30100000000000000000001 /* Debug-dev */ = { isa = XCBuildConfiguration; baseConfigurationReference = A10100000000000000000001 /* Debug-dev.xcconfig */; buildSettings = {}; name = "Debug-dev"; };
+		A30100000000000000000002 /* Debug-prod */ = { isa = XCBuildConfiguration; baseConfigurationReference = A10100000000000000000002 /* Debug-prod.xcconfig */; buildSettings = {}; name = "Debug-prod"; };
+		A30100000000000000000003 /* Profile-dev */ = { isa = XCBuildConfiguration; baseConfigurationReference = A10100000000000000000003 /* Profile-dev.xcconfig */; buildSettings = {}; name = "Profile-dev"; };
+		A30100000000000000000004 /* Profile-prod */ = { isa = XCBuildConfiguration; baseConfigurationReference = A10100000000000000000004 /* Profile-prod.xcconfig */; buildSettings = {}; name = "Profile-prod"; };
+		A30100000000000000000005 /* Release-dev */ = { isa = XCBuildConfiguration; baseConfigurationReference = A10100000000000000000005 /* Release-dev.xcconfig */; buildSettings = {}; name = "Release-dev"; };
+		A30100000000000000000006 /* Release-prod */ = { isa = XCBuildConfiguration; baseConfigurationReference = A10100000000000000000006 /* Release-prod.xcconfig */; buildSettings = {}; name = "Release-prod"; };
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -977,8 +1001,14 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				97C147031CF9000F007C117D /* Debug */,
+				A20100000000000000000001 /* Debug-dev */,
+				A20100000000000000000002 /* Debug-prod */,
 				97C147041CF9000F007C117D /* Release */,
+				A20100000000000000000005 /* Release-dev */,
+				A20100000000000000000006 /* Release-prod */,
 				249021D3217E4FDB00AE95B9 /* Profile */,
+				A20100000000000000000003 /* Profile-dev */,
+				A20100000000000000000004 /* Profile-prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -987,8 +1017,14 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				97C147061CF9000F007C117D /* Debug */,
+				A30100000000000000000001 /* Debug-dev */,
+				A30100000000000000000002 /* Debug-prod */,
 				97C147071CF9000F007C117D /* Release */,
+				A30100000000000000000005 /* Release-dev */,
+				A30100000000000000000006 /* Release-prod */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
+				A30100000000000000000003 /* Profile-dev */,
+				A30100000000000000000004 /* Profile-prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

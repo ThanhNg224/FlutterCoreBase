@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,7 +7,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val keyProperties = Properties()
+val keyPropertiesFile = rootProject.file("key.properties")
+
 android {
+    val releaseSigningConfig = if (keyPropertiesFile.exists()) {
+        keyPropertiesFile.inputStream().use(keyProperties::load)
+        signingConfigs.create("release") {
+            keyAlias = keyProperties["keyAlias"] as String
+            keyPassword = keyProperties["keyPassword"] as String
+            storeFile = rootProject.file(keyProperties["storeFile"] as String)
+            storePassword = keyProperties["storePassword"] as String
+        }
+    } else {
+        null
+    }
+
     namespace = "com.personal.fluttercorebase"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
@@ -55,8 +72,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Signing with debug keys for now so `flutter run --release` works out of the box
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = releaseSigningConfig ?: signingConfigs.getByName("debug")
+            if (releaseSigningConfig == null) {
+                logger.warn("android/key.properties is missing; using the debug signing key for local release builds.")
+            }
         }
     }
 }
