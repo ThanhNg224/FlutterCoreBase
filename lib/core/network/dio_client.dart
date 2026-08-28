@@ -8,9 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'dio_client.g.dart';
 
 /// Configured Dio HTTP client provider
-@riverpod
+@Riverpod(keepAlive: true)
 Future<Dio> dioClient(Ref ref) async {
   final config = await ref.watch(appConfigControllerProvider.future);
+  final configController = ref.read(appConfigControllerProvider.notifier);
   final dio = Dio(
     BaseOptions(
       baseUrl: config.baseUrl,
@@ -25,10 +26,9 @@ Future<Dio> dioClient(Ref ref) async {
 
   dio.interceptors.addAll([
     AuthInterceptor(
-      readConfig: () => ref.read(appConfigControllerProvider).value ?? config,
-      clearCredentialOverrides: () async {
-        await ref.read(appConfigControllerProvider.notifier).clearCredentialOverrides();
-      },
+      readConfig: () => config,
+      clearCredentialOverrides: configController.clearCredentialOverrides,
+      baseUri: Uri.parse(config.baseUrl),
     ),
     LoggingInterceptor(),
   ]);

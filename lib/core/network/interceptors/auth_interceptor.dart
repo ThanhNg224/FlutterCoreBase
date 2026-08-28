@@ -10,10 +10,12 @@ const _log = AppLogger('HTTP.Auth');
 class AuthInterceptor extends Interceptor {
   final AppConfig Function() readConfig;
   final Future<void> Function() clearCredentialOverrides;
+  final Uri baseUri;
 
   AuthInterceptor({
     required this.readConfig,
     required this.clearCredentialOverrides,
+    required this.baseUri,
   });
 
   @override
@@ -30,12 +32,24 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (err.response?.statusCode != 401) {
+    if (err.response?.statusCode != 401 || !_isCurrentApiRequest(err.requestOptions.uri)) {
       handler.next(err);
       return;
     }
 
     unawaited(_clearCredentialsThenForward(err, handler));
+  }
+
+  bool _isCurrentApiRequest(Uri requestUri) {
+    if (requestUri.scheme != baseUri.scheme || requestUri.host != baseUri.host || requestUri.port != baseUri.port) {
+      return false;
+    }
+
+    final basePath = baseUri.path.endsWith('/') ? baseUri.path.substring(0, baseUri.path.length - 1) : baseUri.path;
+    return basePath.isEmpty ||
+        basePath == '/' ||
+        requestUri.path == basePath ||
+        requestUri.path.startsWith('$basePath/');
   }
 
   Future<void> _clearCredentialsThenForward(

@@ -28,7 +28,7 @@ final class PostsRemoteDataSourceProvider
         argument: null,
         retry: null,
         name: r'postsRemoteDataSourceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -49,4 +49,4 @@ final class PostsRemoteDataSourceProvider
 }
 
 String _$postsRemoteDataSourceHash() =>
-    r'bf2ae7b82d2a05b87cde1af0f8f22ec89d6618a0';
+    r'532d201f3cecb4c62e48295f3a46506033977297';

@@ -37,6 +37,7 @@ void main() {
       AuthInterceptor(
         readConfig: () => const AppConfig(appToken: 'token-value', clientKey: 'client-key-value'),
         clearCredentialOverrides: () async {},
+        baseUri: Uri.parse('https://api.example.test'),
       ),
     );
 
@@ -54,11 +55,29 @@ void main() {
       AuthInterceptor(
         readConfig: AppConfig.new,
         clearCredentialOverrides: () async => clearCalls++,
+        baseUri: Uri.parse('https://api.example.test'),
       ),
     );
 
     await expectLater(dio.get<void>('/posts'), throwsA(isA<DioException>()));
 
     expect(clearCalls, 1);
+  });
+
+  test('does not clear credential overrides for a 401 from another origin', () async {
+    final adapter = RecordingAdapter(statusCode: 401);
+    final dio = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
+    var clearCalls = 0;
+    dio.interceptors.add(
+      AuthInterceptor(
+        readConfig: AppConfig.new,
+        clearCredentialOverrides: () async => clearCalls++,
+        baseUri: Uri.parse('https://api.example.test'),
+      ),
+    );
+
+    await expectLater(dio.get<void>('https://other.example.test/posts'), throwsA(isA<DioException>()));
+
+    expect(clearCalls, 0);
   });
 }

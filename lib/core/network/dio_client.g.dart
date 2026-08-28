@@ -25,7 +25,7 @@ final class DioClientProvider
         argument: null,
         retry: null,
         name: r'dioClientProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -44,4 +44,4 @@ final class DioClientProvider
   }
 }
 
-String _$dioClientHash() => r'19635240651f5deae83c83cb140825dfa86dcecc';
+String _$dioClientHash() => r'5073ed91c34ad5780e2f96db1195720a3e78a008';

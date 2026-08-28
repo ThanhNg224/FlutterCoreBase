@@ -92,7 +92,7 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<IPostsRemoteDataSource> postsRemoteDataSource(Ref ref) async {
   final dio = await ref.watch(dioClientProvider.future);
   final config = await ref.watch(appConfigControllerProvider.future);
