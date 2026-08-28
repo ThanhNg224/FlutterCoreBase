@@ -207,6 +207,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorUnexpected => 'Something went wrong. Please try again.';
 
   @override
+  String get validationRequired => 'This field is required.';
+
+  @override
+  String get validationEmail => 'Enter a valid email address.';
+
+  @override
+  String validationMinLength(int count) {
+    return 'Enter at least $count characters.';
+  }
+
+  @override
+  String get offlineBannerMessage => 'You are offline. Check your connection.';
+
+  @override
   String get closeButton => 'Close';
 
   @override

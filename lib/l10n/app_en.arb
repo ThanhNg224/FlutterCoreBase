@@ -93,6 +93,13 @@
   "errorPlatform": "The native SDK could not finish the operation on this device.",
   "errorStorage": "Could not read the app's local settings.",
   "errorUnexpected": "Something went wrong. Please try again.",
+  "validationRequired": "This field is required.",
+  "validationEmail": "Enter a valid email address.",
+  "validationMinLength": "Enter at least {count} characters.",
+  "@validationMinLength": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "offlineBannerMessage": "You are offline. Check your connection.",
 
   "closeButton": "Close",
   "retryButton": "Retry",

@@ -5,6 +5,7 @@ import 'package:flutter_core_base/core/localization/locale_provider.dart';
 import 'package:flutter_core_base/core/routing/app_router.dart';
 import 'package:flutter_core_base/core/theme/app_theme.dart';
 import 'package:flutter_core_base/core/theme/theme_provider.dart';
+import 'package:flutter_core_base/core/widgets/offline_banner.dart';
 import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,6 +34,12 @@ class FlutterCoreBaseApp extends ConsumerWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,
+      builder: (context, child) => Stack(
+        children: [
+          ?child,
+          const Align(alignment: Alignment.topCenter, child: OfflineBanner()),
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
-import 'package:flutter_core_base/l10n/app_localizations.dart';
 
 /// Modal dialog helper for displaying success, error, or confirmation.
 abstract class AppDialog {
@@ -18,7 +18,6 @@ abstract class AppDialog {
       builder: (ctx) {
         final textTheme = Theme.of(ctx).textTheme;
         final accent = isSuccess ? ctx.colors.statusSuccess : ctx.colors.statusError;
-        final l10n = AppLocalizations.of(ctx);
 
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusL)),
@@ -37,7 +36,7 @@ abstract class AppDialog {
               ],
               const SizedBox(height: AppSpacing.l),
               AppButton(
-                label: l10n?.closeButton ?? 'Close',
+                label: ctx.l10n.closeButton,
                 width: double.infinity,
                 onPressed: () => Navigator.of(ctx).pop(),
               ),

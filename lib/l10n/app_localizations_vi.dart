@@ -206,6 +206,20 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorUnexpected => 'Đã có lỗi xảy ra. Vui lòng thử lại.';
 
   @override
+  String get validationRequired => 'Trường này là bắt buộc.';
+
+  @override
+  String get validationEmail => 'Vui lòng nhập địa chỉ email hợp lệ.';
+
+  @override
+  String validationMinLength(int count) {
+    return 'Vui lòng nhập ít nhất $count ký tự.';
+  }
+
+  @override
+  String get offlineBannerMessage => 'Bạn đang ngoại tuyến. Vui lòng kiểm tra kết nối.';
+
+  @override
   String get closeButton => 'Đóng';
 
   @override

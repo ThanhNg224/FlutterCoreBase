@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
 import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/theme/app_motion.dart';
@@ -6,12 +7,12 @@ import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_dialog.dart';
+import 'package:flutter_core_base/core/widgets/app_shimmer.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_controller.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_state.dart';
 import 'package:flutter_core_base/features/posts/presentation/widgets/create_post_bottom_sheet.dart';
 import 'package:flutter_core_base/features/posts/presentation/widgets/post_card.dart';
-import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -63,12 +64,12 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
     final result = await ref.read(postsControllerProvider.notifier).deletePost(id);
     if (!mounted) return;
 
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     result.fold(
       (failure) => AppDialog.showResultDialog(
         context: context,
-        title: l10n?.somethingWentWrongMessage ?? 'Something went wrong',
-        message: l10n == null ? 'Unable to delete the post' : failure.localizedMessage(l10n),
+        title: l10n.somethingWentWrongMessage,
+        message: failure.localizedMessage(l10n),
         isSuccess: false,
       ),
       (_) {},
@@ -78,15 +79,15 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
   @override
   Widget build(BuildContext context) {
     final postsAsync = ref.watch(postsControllerProvider);
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n?.postsFeedTitle ?? 'Posts & Articles'),
+        title: Text(l10n.postsFeedTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            tooltip: l10n?.refreshTooltip ?? 'Refresh',
+            tooltip: l10n.refreshTooltip,
             onPressed: () => ref.read(postsControllerProvider.notifier).refresh(),
           ),
         ],
@@ -96,6 +97,7 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
           constraints: const BoxConstraints(maxWidth: AppSpacing.maxContentWidth),
           child: AsyncValueWidget<PostsState>(
             value: postsAsync,
+            loading: AppShimmerList.new,
             data: (postsState) {
               final posts = postsState.items;
               if (posts.isEmpty) {
@@ -108,12 +110,12 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                         Icon(Icons.inbox_outlined, size: 64, color: context.colors.textHint),
                         const SizedBox(height: AppSpacing.m),
                         Text(
-                          l10n?.noPostsFound ?? 'No articles found',
+                          l10n.noPostsFound,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: AppSpacing.m),
                         AppButton(
-                          label: l10n?.createFirstPostButton ?? 'Create First Post',
+                          label: l10n.createFirstPostButton,
                           onPressed: _showCreateBottomSheet,
                         ),
                       ],
@@ -132,12 +134,10 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                       AppDialog.showActionDialog(
                         context: context,
                         icon: Icons.delete_outline_rounded,
-                        title: l10n?.deletePostTitle ?? 'Delete Post',
-                        message:
-                            l10n?.deletePostConfirmation(post.title) ??
-                            'Are you sure you want to delete "${post.title}"?',
-                        primaryLabel: l10n?.deleteButton ?? 'Delete',
-                        secondaryLabel: l10n?.cancelButton ?? 'Cancel',
+                        title: l10n.deletePostTitle,
+                        message: l10n.deletePostConfirmation(post.title),
+                        primaryLabel: l10n.deleteButton,
+                        secondaryLabel: l10n.cancelButton,
                         onPrimary: () => _deletePost(post.id),
                       );
                     },
@@ -172,7 +172,7 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
                           onPressed: () => ref.read(postsControllerProvider.notifier).loadMore(),
                           icon: const Icon(Icons.refresh_rounded),
                           label: Text(
-                            l10n == null ? 'Unable to load more posts' : failure.localizedMessage(l10n),
+                            failure.localizedMessage(l10n),
                           ),
                         ),
                       ),
@@ -187,7 +187,7 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showCreateBottomSheet,
         icon: const Icon(Icons.add_rounded),
-        label: Text(l10n?.newPostButton ?? 'New Post'),
+        label: Text(l10n.newPostButton),
       ),
     );
   }

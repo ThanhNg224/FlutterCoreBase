@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/theme/app_typography.dart';
 import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/features/catalog/domain/entities/catalog_feature.dart';
-import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class FeatureCard extends StatelessWidget {
@@ -15,7 +15,7 @@ class FeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final l10n = AppLocalizations.of(context);
+    final l10n = context.l10n;
     final iconColor = feature.isEnabled ? colors.brandAccent : colors.textHint;
 
     return AppCard(
@@ -50,7 +50,7 @@ class FeatureCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
-                    l10n?.comingSoon ?? 'Coming Soon',
+                    l10n.comingSoon,
                     style: AppTypography.caption.copyWith(
                       color: colors.textSecondary,
                       fontWeight: FontWeight.w600,

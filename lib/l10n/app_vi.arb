@@ -67,6 +67,13 @@
   "errorPlatform": "SDK gốc không thể hoàn thành tác vụ trên thiết bị này.",
   "errorStorage": "Không thể đọc dữ liệu cấu hình cục bộ của ứng dụng.",
   "errorUnexpected": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+  "validationRequired": "Trường này là bắt buộc.",
+  "validationEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
+  "validationMinLength": "Vui lòng nhập ít nhất {count} ký tự.",
+  "@validationMinLength": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "offlineBannerMessage": "Bạn đang ngoại tuyến. Vui lòng kiểm tra kết nối.",
 
   "closeButton": "Đóng",
   "retryButton": "Thử lại",
