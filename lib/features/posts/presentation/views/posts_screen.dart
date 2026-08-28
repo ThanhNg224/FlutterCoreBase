@@ -5,6 +5,7 @@ import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/theme/app_motion.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
+import 'package:flutter_core_base/core/widgets/app_bottom_sheet.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_dialog.dart';
 import 'package:flutter_core_base/core/widgets/app_shimmer.dart';
@@ -46,12 +47,10 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
   }
 
   void _showCreateBottomSheet() {
-    showModalBottomSheet<void>(
+    AppBottomSheet.show<void>(
       context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXL)),
-      ),
+      title: context.l10n.createPostTitle,
+      icon: Icons.post_add_rounded,
       builder: (context) => CreatePostBottomSheet(
         onSubmit: ({required String title, required String body}) {
           return ref.read(postsControllerProvider.notifier).createPost(title: title, body: body);

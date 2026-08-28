@@ -62,52 +62,35 @@ class _CreatePostBottomSheetState extends State<CreatePostBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final l10n = context.l10n;
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.m,
-        right: AppSpacing.m,
-        top: AppSpacing.l,
-        bottom: AppSpacing.l + bottomInset,
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.post_add_rounded, size: 24),
-                const SizedBox(width: AppSpacing.s),
-                Text(l10n.createPostTitle, style: Theme.of(context).textTheme.titleLarge),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.m),
-            AppTextField(
-              controller: _titleController,
-              label: l10n.postTitleFieldLabel,
-              hint: l10n.postTitleFieldHint,
-              validator: FormValidators.required(context),
-            ),
-            const SizedBox(height: AppSpacing.m),
-            AppTextField(
-              controller: _bodyController,
-              label: l10n.postBodyFieldLabel,
-              hint: l10n.postBodyFieldHint,
-              maxLines: 4,
-              validator: FormValidators.required(context),
-            ),
-            const SizedBox(height: AppSpacing.l),
-            AppButton(
-              label: l10n.publishPostButton,
-              isLoading: _isSubmitting,
-              onPressed: _submit,
-            ),
-          ],
-        ),
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AppTextField(
+            controller: _titleController,
+            label: l10n.postTitleFieldLabel,
+            hint: l10n.postTitleFieldHint,
+            validator: FormValidators.required(context),
+          ),
+          const SizedBox(height: AppSpacing.m),
+          AppTextField(
+            controller: _bodyController,
+            label: l10n.postBodyFieldLabel,
+            hint: l10n.postBodyFieldHint,
+            maxLines: 4,
+            validator: FormValidators.required(context),
+          ),
+          const SizedBox(height: AppSpacing.l),
+          AppButton(
+            label: l10n.publishPostButton,
+            isLoading: _isSubmitting,
+            onPressed: _submit,
+          ),
+        ],
       ),
     );
   }
