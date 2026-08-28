@@ -9,15 +9,18 @@ lib/core/
 ├── config/              # AppConfig, AppConfigController — cross-cutting runtime config
 ├── constants/           # Global endpoints, constants, storage keys
 ├── errors/              # AppException, Failure, ErrorHandler, FailureL10n
+├── extensions/          # BuildContext extensions (context.l10n)
 ├── localization/        # LocaleNotifier, multi-language switching
 ├── logging/             # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted
-├── network/             # DioClient, LoggingInterceptor
+├── network/             # DioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider (isOnlineProvider)
 ├── routing/             # GoRouter configuration & RoutePaths
-├── storage/             # LocalStorageService wrapper around SharedPreferences
+├── storage/             # LocalStorageService (SharedPreferences) & SecureStorageService (credentials)
 ├── theme/               # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion
-├── utils/               # Redaction — pure masking helpers shared by UI and logger
-└── widgets/             # Reusable UI components (AppButton, AppCard, AppDialog, AppErrorWidget, AppSectionHeader, AppTextField, AsyncValueWidget)
+├── utils/               # FormValidators, Redaction — pure helpers shared by UI and logger
+└── widgets/             # Reusable UI components — see "Reusable UI Widgets" below for the current list
 ```
+
+> This file is the single source of truth for what exists in `core/`. `CLAUDE.md`, `AGENTS.md`, `docs/STANDARD.md`, `README.md`, and `.github/copilot-instructions.md` all point back here instead of duplicating the full widget/util list — update it first when adding a new shared component.
 
 ---
 
@@ -67,8 +70,10 @@ Enforces two safety guarantees by construction:
 
 ## 5. Networking (`core/network/`)
 
-- **`DioClient`**: Configured HTTP client with timeouts and error handling.
+- **`DioClient`**: `@Riverpod(keepAlive: true)` HTTP client with timeouts, rebuilt from `AppConfigController` when the environment changes.
+- **`AuthInterceptor`**: Attaches `Authorization`/`X-Client-Key` from `AppConfig` to every request; clears credential overrides on a 401 scoped to the app's own `baseUrl`.
 - **`LoggingInterceptor`**: Logs request/response method and endpoints via `AppLogger` without exposing sensitive bodies.
+- **`ConnectivityProvider`** (`isOnlineProvider`): `Stream<bool>` from `connectivity_plus`; drives `OfflineBanner`.
 
 ---
 
@@ -81,6 +86,40 @@ Enforces two safety guarantees by construction:
 
 ## 7. Storage (`core/storage/` & `core/constants/storage_keys.dart`)
  
-- **`ILocalStorageService` & `LocalStorageService`**: Typed abstraction and wrapper around `SharedPreferences` for type-safe key-value persistence.
+- **`ILocalStorageService` & `LocalStorageService`**: Typed abstraction and wrapper around `SharedPreferences` for non-sensitive, type-safe key-value persistence.
+- **`ISecureStorageService` & `SecureStorageService`**: `flutter_secure_storage`-backed storage for credential overrides (app token, client key) only. Never put credentials in `ILocalStorageService`.
 - **`StorageKeys`**: Centralized repository of all persistent storage keys.
 - **`storageProviders`**: Injected via `ProviderScope` override in `main.dart` (`localStorageServiceProvider`).
+
+---
+
+## 8. Utils (`core/utils/`)
+
+- **`FormValidators`**: l10n-aware `FormFieldValidator<String>` factories — `required(context)`, `email(context)`, `minLength(context, n)`, `compose([...])`. Always use these for `AppTextField.validator` instead of writing inline validators with hardcoded English strings.
+- **`Redaction`**: Pure masking helpers shared by `AppLogger`'s `Redacted` wrappers and UI previews (e.g. masked credentials in Settings).
+
+---
+
+## 9. Extensions (`core/extensions/`)
+
+- **`ContextExtensions`** (`context.l10n`): Non-null `AppLocalizations` accessor. Always use `context.l10n.xxx` — never `AppLocalizations.of(context)` and never the `l10n?.xxx ?? 'English fallback'` pattern, which silently duplicates every string and drifts from the ARB files.
+
+---
+
+## 10. Reusable UI Widgets (`core/widgets/`)
+
+Always check this table before writing a new one-off widget:
+
+| Widget | Use for |
+| ------ | ------- |
+| `AppButton` | Primary/secondary/outline/danger buttons with a built-in loading state. |
+| `AppCard` | Standard elevated/outlined content container. |
+| `AppDialog` | `showResultDialog()` (success/error) and `showActionDialog()` (confirm/cancel) alert dialogs. |
+| `AppBottomSheet` | `AppBottomSheet.show(...)` — rounded top corners, drag handle, optional icon/title header with a close action, and keyboard-safe padding. Use this instead of calling `showModalBottomSheet` directly. |
+| `AppSnackbar` | `showSuccess()` / `showError()` / `showInfo()`. Use this instead of `ScaffoldMessenger.of(context).showSnackBar(...)` directly. |
+| `AppShimmer` / `AppShimmerList` | Skeleton loading placeholders for lists — pass as `AsyncValueWidget`'s `loading:` builder instead of a bare `CircularProgressIndicator` for content lists. |
+| `AppErrorWidget` | Installed as `ErrorWidget.builder`; not for direct use in feature code. |
+| `AppSectionHeader` | Section title + subtitle heading used inside settings/catalog screens. |
+| `AppTextField` | Standard text input with label/hint/validator wiring. |
+| `AsyncValueWidget<T>` | Renders `AsyncValue<T>` loading/error/data states consistently; error state already maps `Failure` to `failure.localizedMessage(l10n)` — never render `err.toString()` in a custom error branch. |
+| `OfflineBanner` | Auto-shown/hidden via `isOnlineProvider`; wired once in `app.dart`, no per-screen setup needed. |

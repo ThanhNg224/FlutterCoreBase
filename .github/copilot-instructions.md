@@ -1,26 +1,14 @@
 # GitHub Copilot Instructions for FlutterCoreBase
 
-## Architectural Boundaries
-- Feature-First Clean Architecture (`lib/features/<feature>/{domain, data, presentation}`).
-- Domain layer is pure Dart without Flutter dependencies.
-- Data layer implements domain repositories and uses `ErrorHandler.guard()`.
-- Presentation layer renders UI and delegates to Riverpod controllers.
+## Source of Truth
+Read `docs/` before implementing. This file is intentionally short and does not restate the rules that live there, so it can't drift out of sync — if a rule changes, it changes in `docs/`, not here.
 
-## Design System & UI Rules
-- Typography: Use **Inter** (`GoogleFonts.inter`), `AppTypography`, and `Theme.of(context).textTheme`.
-- Colors: Always use `context.colors.<token>` (`AppSemanticColors`) for dynamic surfaces, borders, text, and status colors. Use `Theme.of(context).colorScheme` or `AppColors.primary` for brand accents. Never hardcode `Colors.grey`, `Colors.red`, `Color(0xFF...)`.
-- Spacing: Use `AppSpacing` tokens (`xs`, `s`, `m`, `l`, `xl`, `xxl`) and `AppSpacing.radius*`.
-- Reuse: Check `lib/core/widgets/` (`AppButton`, `AppCard`, `AppTextField`, `AppDialog`, `AppErrorWidget`, `AsyncValueWidget`) before creating new widgets.
-
-## State Management & Storage
-- Riverpod Generator: `@riverpod` (auto-dispose) for screen controllers, `@Riverpod(keepAlive: true)` for singletons/shared services.
-- Storage: Always inject `localStorageServiceProvider` (`ILocalStorageService`). Define keys in `StorageKeys`.
-
-## Error Handling & Logging
-- Repositories return `Future<Either<Failure, T>>` (`fpdart`).
-- Logging: `const _log = AppLogger('<Scope>');` with `Redacted` wrappers. Never use `print()` or `debugPrint()`.
+- `docs/ARCHITECTURE.md` — Feature-First layer boundaries, Riverpod Generator patterns, dependency rules.
+- `docs/STANDARD.md` — design system, localization, forms, storage, error handling, logging, and code quality (the authoritative rulebook).
+- `docs/CORE_MODULES.md` — the current inventory of `core/` (reusable widgets, utils, extensions). Check this before creating any new widget or helper.
+- `docs/GIT_FLOW.md` — branching and commit conventions.
 
 ## Verification
 - Code generation: `dart run build_runner build --delete-conflicting-outputs`.
 - Analysis: `flutter analyze` must have 0 warnings.
-- Never write co-author trailers in commit messages.
+- Tests: `flutter test`.

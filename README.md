@@ -27,7 +27,7 @@ A production-grade, highly scalable Flutter starter base designed for modern cro
   - Material 3 theme engine with WCAG contrast compliance ($\ge 4.5:1$ text, $\ge 3:1$ non-text).
   - `AppSemanticColors` ThemeExtension accessed via `context.colors`.
   - Reduced-motion animation support via `AppMotion`.
-  - Reusable components: `AppButton`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AppTextField`.
+  - Reusable components: `AppButton`, `AppBottomSheet`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AppShimmer`, `AppSnackbar`, `AppTextField`, `AsyncValueWidget`, `OfflineBanner` — see [`docs/CORE_MODULES.md`](docs/CORE_MODULES.md) for the current list.
 * **Declarative Routing:** **`go_router`** with deep linking, modal dialogs, and route parameters.
 * **Functional Error Handling:** **`fpdart` (`Either<Failure, Success>`)** with `ErrorHandler.guard()`.
 * **Build Toolchain:** **Java 21 LTS**, **Gradle 8.14**, **Android Gradle Plugin 8.11.1**, **Kotlin 2.2.20**, **Flutter 3.47+**, 64-bit ABI targets (`arm64-v8a`, `x86_64`), release minification & resource shrinking with Proguard.
@@ -47,14 +47,15 @@ lib/
 │   ├── config/                         # AppConfig, AppConfigController (Dev/Prod, Tokens, Mock)
 │   ├── constants/                      # ApiEndpoints, AppConstants, StorageKeys
 │   ├── errors/                         # Failure, AppException, ErrorHandler, FailureL10n
+│   ├── extensions/                     # BuildContext extensions (context.l10n)
 │   ├── localization/                   # LocaleNotifier
 │   ├── logging/                        # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted
-│   ├── network/                        # DioClient, LoggingInterceptor
+│   ├── network/                        # DioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider
 │   ├── routing/                        # AppRouter, RoutePaths
-│   ├── storage/                        # LocalStorageService (SharedPreferences)
+│   ├── storage/                        # LocalStorageService (SharedPreferences), SecureStorageService (credentials)
 │   ├── theme/                          # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion
-│   ├── utils/                          # Redaction (string masking & formatting helpers)
-│   └── widgets/                        # AppButton, AppCard, AppDialog, AppErrorWidget, AppSectionHeader, AppTextField, AsyncValueWidget
+│   ├── utils/                          # FormValidators, Redaction
+│   └── widgets/                        # AppButton, AppBottomSheet, AppCard, AppDialog, AppErrorWidget, AppSectionHeader, AppShimmer, AppSnackbar, AppTextField, AsyncValueWidget, OfflineBanner
 │
 ├── l10n/                               # Localization ARB Dictionaries
 │   ├── app_en.arb                      # English dictionary
@@ -62,8 +63,8 @@ lib/
 │
 └── features/                           # Feature Modules (Feature-First Clean Architecture)
     ├── catalog/                        # SDK Feature Catalog & Showcase Gallery
-    │   ├── data/                       # CatalogRepository
-    │   ├── domain/                     # SdkFeature entity
+    │   ├── data/                       # CatalogRepository (implements ICatalogRepository)
+    │   ├── domain/                     # CatalogFeature entity, ICatalogRepository
     │   └── presentation/               # CatalogScreen, CatalogController, FeatureCard
     │
     ├── posts/                          # Posts & Feed Showcase (REST API, Riverpod, CRUD)

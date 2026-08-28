@@ -46,19 +46,30 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
   - Always use `AppSpacing.pagePadding`, `cardPadding`, `dialogPadding`.
   - **PROHIBITED:** Hardcoding arbitrary pixel values (e.g. `EdgeInsets.all(13)` or `BorderRadius.circular(15)`).
 - **Reusable Components:**
-  - Always check and reuse `lib/core/widgets/` (`AppButton`, `AppCard`, `AppTextField`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AsyncValueWidget`) before creating custom one-off UI widgets.
+  - Always check and reuse `lib/core/widgets/` (`AppButton`, `AppBottomSheet`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AppShimmer`/`AppShimmerList`, `AppSnackbar`, `AppTextField`, `AsyncValueWidget`, `OfflineBanner`) before creating custom one-off UI widgets. See `docs/CORE_MODULES.md` for the current, authoritative list.
 
-### 4. Local Storage & Preferences (Strict Rules)
+### 4. Localization & Forms (Strict Rules)
+- **Localization:**
+  - Always use `context.l10n` (`core/extensions/context_extensions.dart`) to read strings.
+  - **PROHIBITED:** Calling `AppLocalizations.of(context)` directly, and writing a nullable fallback like `l10n?.xxx ?? 'English text'` — this silently duplicates every string and drifts from `app_en.arb`/`app_vi.arb` whenever the ARB copy changes.
+- **Form Validation:**
+  - Always use `FormValidators.required(context)`, `.email(context)`, `.minLength(context, n)`, and `.compose([...])` (`core/utils/form_validators.dart`) for `AppTextField.validator`.
+  - **PROHIBITED:** Inline validators returning hardcoded English strings (e.g. `(v) => v!.isEmpty ? 'Required' : null`).
+- **Feedback:**
+  - Always use `AppSnackbar.showSuccess/showError/showInfo` instead of `ScaffoldMessenger.of(context).showSnackBar(...)` directly.
+  - Always use `AppBottomSheet.show(...)` instead of calling `showModalBottomSheet` directly.
+
+### 5. Local Storage & Preferences (Strict Rules)
 - Always access local persistence via `ILocalStorageService` (injected via `ref.watch(localStorageServiceProvider)`).
 - All storage keys must be declared in `StorageKeys` (`core/constants/storage_keys.dart`).
 - **PROHIBITED:** Directly calling `SharedPreferences.getInstance()` in feature screens, widgets, or controllers.
 
-### 5. Error Handling & Architecture
+### 6. Error Handling & Architecture
 - Return `Future<Either<Failure, T>>` from repositories using `fpdart`.
 - Use `ErrorHandler.guard()` in data sources/repositories to automatically catch exceptions and map them to typed `Failure` objects.
-- Present human-friendly error messages on the UI layer using `failure.localizedMessage(l10n)` or `AppDialog`. Never expose raw stack traces or technical exception messages to users.
+- Present human-friendly error messages on the UI layer using `failure.localizedMessage(l10n)` or `AppDialog`. Never expose raw stack traces or technical exception messages to users — including inside a custom `AsyncValueWidget` error branch.
 
-### 6. Code Quality & Security Checklist
+### 7. Code Quality & Security Checklist
 - **No unused imports:** Keep files clean and organized.
 - **No `print()` or `debugPrint()`:** Use `AppLogger` (`core/logging/`), which is silent in release builds by construction. Declare `const _log = AppLogger('<Scope>');` at the top of the file.
 - **Never log raw sensitive values:** Logger's `data` parameter takes `Map<String, Redacted>`. Use `Redacted.secret` / `.phone` / `.length` / `.type` / `.count` / `.flag`, and `Redacted.unredacted(v, because: ...)` for non-sensitive values.
