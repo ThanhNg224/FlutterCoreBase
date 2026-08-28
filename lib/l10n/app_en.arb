@@ -90,7 +90,7 @@
   "errorNetwork": "Could not reach the server. Check your device's internet connection and try again.",
   "errorServer": "The server could not complete this request. Please try again in a moment.",
   "errorUnauthorized": "The server rejected these credentials. Check the app token and client key under Settings.",
-  "errorSdk": "The native SDK could not finish the operation on this device.",
+  "errorPlatform": "The native SDK could not finish the operation on this device.",
   "errorStorage": "Could not read the app's local settings.",
   "errorUnexpected": "Something went wrong. Please try again.",
 

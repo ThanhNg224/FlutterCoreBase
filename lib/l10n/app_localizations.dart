@@ -440,11 +440,11 @@ abstract class AppLocalizations {
   /// **'The server rejected these credentials. Check the app token and client key under Settings.'**
   String get errorUnauthorized;
 
-  /// No description provided for @errorSdk.
+  /// No description provided for @errorPlatform.
   ///
   /// In en, this message translates to:
   /// **'The native SDK could not finish the operation on this device.'**
-  String get errorSdk;
+  String get errorPlatform;
 
   /// No description provided for @errorStorage.
   ///

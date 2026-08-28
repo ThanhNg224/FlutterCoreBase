@@ -124,6 +124,10 @@ flutter run --flavor dev
 flutter run --flavor prod
 ```
 
+### Android release signing
+
+Local release builds fall back to the Android debug key when `android/key.properties` is absent. Before distributing a release, create that file with the production keystore values (`storeFile`, `storePassword`, `keyAlias`, and `keyPassword`); do not commit it to source control.
+
 ---
 
 ## 🧩 How to Add a New Feature Module

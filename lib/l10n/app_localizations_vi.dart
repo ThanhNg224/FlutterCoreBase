@@ -197,7 +197,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorUnauthorized => 'Thông tin xác thực không hợp lệ. Vui lòng kiểm tra lại cấu hình trong Cài đặt.';
 
   @override
-  String get errorSdk => 'SDK gốc không thể hoàn thành tác vụ trên thiết bị này.';
+  String get errorPlatform => 'SDK gốc không thể hoàn thành tác vụ trên thiết bị này.';
 
   @override
   String get errorStorage => 'Không thể đọc dữ liệu cấu hình cục bộ của ứng dụng.';

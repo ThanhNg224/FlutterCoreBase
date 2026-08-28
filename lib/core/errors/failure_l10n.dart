@@ -12,7 +12,7 @@ extension FailureL10n on Failure {
     NetworkFailure() => l10n.errorNetwork,
     UnauthorizedFailure() => l10n.errorUnauthorized,
     ServerFailure() => l10n.errorServer,
-    PlatformFailure() => l10n.errorSdk,
+    PlatformFailure() => l10n.errorPlatform,
     StorageFailure() => l10n.errorStorage,
     UnexpectedFailure() => l10n.errorUnexpected,
   };

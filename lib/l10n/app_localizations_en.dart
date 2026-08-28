@@ -198,7 +198,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The server rejected these credentials. Check the app token and client key under Settings.';
 
   @override
-  String get errorSdk => 'The native SDK could not finish the operation on this device.';
+  String get errorPlatform => 'The native SDK could not finish the operation on this device.';
 
   @override
   String get errorStorage => 'Could not read the app\'s local settings.';
