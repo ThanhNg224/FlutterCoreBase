@@ -1,0 +1,71 @@
+version: 2
+updates:
+  # Flutter & Dart dependencies
+  - package-ecosystem: "pub"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Ho_Chi_Minh"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+      - "automated"
+    groups:
+      pub-dependencies:
+        patterns:
+          - "*"
+
+  # GitHub Actions workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Ho_Chi_Minh"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "ci"
+      - "automated"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # Android Gradle dependencies
+  - package-ecosystem: "gradle"
+    directory: "/android"
+    target-branch: "develop"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Ho_Chi_Minh"
+    commit-message:
+      prefix: "chore(android-deps)"
+    labels:
+      - "android"
+      - "automated"
+
+  # iOS CocoaPods dependencies
+  - package-ecosystem: "cocoapods"
+    directory: "/ios"
+    target-branch: "develop"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "03:00"
+      timezone: "Asia/Ho_Chi_Minh"
+    commit-message:
+      prefix: "chore(ios-deps)"
+    labels:
+      - "ios"
+      - "automated"
