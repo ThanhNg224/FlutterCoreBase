@@ -8,18 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		296251252AE7410D00D574FF /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296251242AE7410D00D574FF /* Colors.swift */; };
-		2978ECDD2B62D00C00E36CE8 /* FlutterAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978ECDC2B62D00C00E36CE8 /* FlutterAssets.swift */; };
-		297F6FC72AD06E0D00FF159E /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 297F6FC62AD06E0D00FF159E /* WidgetKit.framework */; };
-		297F6FC92AD06E0D00FF159E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 297F6FC82AD06E0D00FF159E /* SwiftUI.framework */; };
-		297F6FCC2AD06E0D00FF159E /* WonderousWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297F6FCB2AD06E0D00FF159E /* WonderousWidgetBundle.swift */; };
-		297F6FCE2AD06E0D00FF159E /* WonderousWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297F6FCD2AD06E0D00FF159E /* WonderousWidget.swift */; };
-		297F6FD12AD06E0F00FF159E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 297F6FD02AD06E0F00FF159E /* Assets.xcassets */; };
-		297F6FD32AD06E0F00FF159E /* WonderousWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 297F6FCF2AD06E0D00FF159E /* WonderousWidget.intentdefinition */; };
-		297F6FD42AD06E0F00FF159E /* WonderousWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 297F6FCF2AD06E0D00FF159E /* WonderousWidget.intentdefinition */; };
-		297F6FD72AD06E0F00FF159E /* WonderousWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 297F6FC52AD06E0D00FF159E /* WonderousWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		297FD5742AE18011008D8BFE /* WonderousWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297FD5732AE18011008D8BFE /* WonderousWidgetView.swift */; };
-		297FD5762AE19BD9008D8BFE /* WonderWidgetViewComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297FD5752AE19BD9008D8BFE /* WonderWidgetViewComponents.swift */; };
 		323DE3CFA8490EAB3C4E249C /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A44ACC5DE81A9C3E5BDA151 /* Pods_Runner.framework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
@@ -28,35 +16,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		297F6FD52AD06E0F00FF159E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 297F6FC42AD06E0D00FF159E;
-			remoteInfo = WonderousWidgetExtension;
-		};
-		E214FC8827C5A18E005F78FB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
-			remoteInfo = Runner;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		297F6FD82AD06E0F00FF159E /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				297F6FD72AD06E0F00FF159E /* WonderousWidgetExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -73,19 +33,6 @@
 		1475293CB8660AC785DF56AB /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		296251242AE7410D00D574FF /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		2978ECDC2B62D00C00E36CE8 /* FlutterAssets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlutterAssets.swift; sourceTree = "<group>"; };
-		297F6FC52AD06E0D00FF159E /* WonderousWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; name = "WonderousWidgetExtension.appex"; path = WonderousWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		297F6FC62AD06E0D00FF159E /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
-		297F6FC82AD06E0D00FF159E /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		297F6FCB2AD06E0D00FF159E /* WonderousWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WonderousWidgetBundle.swift; sourceTree = "<group>"; };
-		297F6FCD2AD06E0D00FF159E /* WonderousWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WonderousWidget.swift; sourceTree = "<group>"; };
-		297F6FCF2AD06E0D00FF159E /* WonderousWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = WonderousWidget.intentdefinition; sourceTree = "<group>"; };
-		297F6FD02AD06E0F00FF159E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		297F6FD22AD06E0F00FF159E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		297FD56C2ADF0DAB008D8BFE /* WonderousWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WonderousWidgetExtension.entitlements; sourceTree = "<group>"; };
-		297FD5732AE18011008D8BFE /* WonderousWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WonderousWidgetView.swift; sourceTree = "<group>"; };
-		297FD5752AE19BD9008D8BFE /* WonderWidgetViewComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WonderWidgetViewComponents.swift; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		4A44ACC5DE81A9C3E5BDA151 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -106,20 +53,10 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D54A22D234A57151F14B56DF /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		E214FC8227C5A18D005F78FB /* wondersUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wondersUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2415C5B27D1451D00925491 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		297F6FC22AD06E0D00FF159E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				297F6FC92AD06E0D00FF159E /* SwiftUI.framework in Frameworks */,
-				297F6FC72AD06E0D00FF159E /* WidgetKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -128,38 +65,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E214FC7F27C5A18D005F78FB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		297F6FCA2AD06E0D00FF159E /* WonderousWidget */ = {
-			isa = PBXGroup;
-			children = (
-				297F6FCB2AD06E0D00FF159E /* WonderousWidgetBundle.swift */,
-				297F6FCD2AD06E0D00FF159E /* WonderousWidget.swift */,
-				297F6FCF2AD06E0D00FF159E /* WonderousWidget.intentdefinition */,
-				297F6FD02AD06E0F00FF159E /* Assets.xcassets */,
-				297F6FD22AD06E0F00FF159E /* Info.plist */,
-				297FD5732AE18011008D8BFE /* WonderousWidgetView.swift */,
-				297FD5752AE19BD9008D8BFE /* WonderWidgetViewComponents.swift */,
-				296251242AE7410D00D574FF /* Colors.swift */,
-				2978ECDC2B62D00C00E36CE8 /* FlutterAssets.swift */,
-			);
-			path = WonderousWidget;
-			sourceTree = "<group>";
-		};
 		5073AC1D92C10773F20D12A2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				4A44ACC5DE81A9C3E5BDA151 /* Pods_Runner.framework */,
-				297F6FC62AD06E0D00FF159E /* WidgetKit.framework */,
-				297F6FC82AD06E0D00FF159E /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -184,10 +96,8 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				297FD56C2ADF0DAB008D8BFE /* WonderousWidgetExtension.entitlements */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
-				297F6FCA2AD06E0D00FF159E /* WonderousWidget */,
 				97C146EF1CF9000F007C117D /* Products */,
 				5073AC1D92C10773F20D12A2 /* Frameworks */,
 				E090BB04291350D10AF9DE4E /* Pods */,
@@ -198,8 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
-				E214FC8227C5A18D005F78FB /* wondersUITests.xctest */,
-				297F6FC52AD06E0D00FF159E /* WonderousWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -233,23 +141,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		297F6FC42AD06E0D00FF159E /* WonderousWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 297F6FDC2AD06E0F00FF159E /* Build configuration list for PBXNativeTarget "WonderousWidgetExtension" */;
-			buildPhases = (
-				297F6FC12AD06E0D00FF159E /* Sources */,
-				297F6FC22AD06E0D00FF159E /* Frameworks */,
-				297F6FC32AD06E0D00FF159E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = WonderousWidgetExtension;
-			productName = WonderousWidgetExtension;
-			productReference = 297F6FC52AD06E0D00FF159E /* WonderousWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		97C146ED1CF9000F007C117D /* Runner */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
@@ -259,7 +150,6 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				297F6FD82AD06E0F00FF159E /* Embed Foundation Extensions */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				9DAF500633B345EE15CA82E0 /* [CP] Embed Pods Frameworks */,
@@ -268,30 +158,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				297F6FD62AD06E0F00FF159E /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
-		};
-		E214FC8127C5A18D005F78FB /* wondersUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E214FC8A27C5A18E005F78FB /* Build configuration list for PBXNativeTarget "wondersUITests" */;
-			buildPhases = (
-				E214FC7E27C5A18D005F78FB /* Sources */,
-				E214FC7F27C5A18D005F78FB /* Frameworks */,
-				E214FC8027C5A18D005F78FB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E214FC8927C5A18E005F78FB /* PBXTargetDependency */,
-			);
-			name = wondersUITests;
-			productName = wondersUITests;
-			productReference = E214FC8227C5A18D005F78FB /* wondersUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -307,16 +178,9 @@
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
-					297F6FC42AD06E0D00FF159E = {
-						CreatedOnToolsVersion = 14.3.1;
-					};
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
-					};
-					E214FC8127C5A18D005F78FB = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = 97C146ED1CF9000F007C117D;
 					};
 				};
 			};
@@ -334,21 +198,11 @@
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
-				E214FC8127C5A18D005F78FB /* wondersUITests */,
-				297F6FC42AD06E0D00FF159E /* WonderousWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		297F6FC32AD06E0D00FF159E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				297F6FD12AD06E0F00FF159E /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		97C146EC1CF9000F007C117D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -357,13 +211,6 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E214FC8027C5A18D005F78FB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,51 +307,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		297F6FC12AD06E0D00FF159E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				297FD5762AE19BD9008D8BFE /* WonderWidgetViewComponents.swift in Sources */,
-				296251252AE7410D00D574FF /* Colors.swift in Sources */,
-				297F6FD32AD06E0F00FF159E /* WonderousWidget.intentdefinition in Sources */,
-				2978ECDD2B62D00C00E36CE8 /* FlutterAssets.swift in Sources */,
-				297FD5742AE18011008D8BFE /* WonderousWidgetView.swift in Sources */,
-				297F6FCE2AD06E0D00FF159E /* WonderousWidget.swift in Sources */,
-				297F6FCC2AD06E0D00FF159E /* WonderousWidgetBundle.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		97C146EA1CF9000F007C117D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				297F6FD42AD06E0F00FF159E /* WonderousWidget.intentdefinition in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E214FC7E27C5A18D005F78FB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		297F6FD62AD06E0F00FF159E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 297F6FC42AD06E0D00FF159E /* WonderousWidgetExtension */;
-			targetProxy = 297F6FD52AD06E0F00FF159E /* PBXContainerItemProxy */;
-		};
-		E214FC8927C5A18E005F78FB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 97C146ED1CF9000F007C117D /* Runner */;
-			targetProxy = E214FC8827C5A18E005F78FB /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		97C146FA1CF9000F007C117D /* Main.storyboard */ = {
@@ -601,135 +413,20 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gskinner.flutter.wonders;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thanhng224.fluttercorebase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Profile;
-		};
-		297F6FD92AD06E0F00FF159E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = WonderousWidgetExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = WonderousWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "WonderousWidget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gskinner.flutter.wonders.Wonderous-Widget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		297F6FDA2AD06E0F00FF159E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = WonderousWidgetExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = WonderousWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "WonderousWidget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gskinner.flutter.wonders.Wonderous-Widget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		297F6FDB2AD06E0F00FF159E /* Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = "WonderousWidgetExtension.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "WonderousWidget/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "WonderousWidget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gskinner.flutter.wonders.Wonderous-Widget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Profile;
 		};
@@ -856,15 +553,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gskinner.flutter.wonders;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thanhng224.fluttercorebase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -885,15 +581,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.gskinner.flutter.wonders;
+				PRODUCT_BUNDLE_IDENTIFIER = com.thanhng224.fluttercorebase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -903,100 +598,9 @@
 			};
 			name = Release;
 		};
-		E214FC8B27C5A18E005F78FB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gskinner.wonders.wondersUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Runner;
-			};
-			name = Debug;
-		};
-		E214FC8C27C5A18E005F78FB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gskinner.wonders.wondersUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Runner;
-			};
-			name = Release;
-		};
-		E214FC8D27C5A18E005F78FB /* Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
-				DEVELOPMENT_TEAM = S3TL5AY6Y3;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gskinner.wonders.wondersUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Runner;
-			};
-			name = Profile;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		297F6FDC2AD06E0F00FF159E /* Build configuration list for PBXNativeTarget "WonderousWidgetExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				297F6FD92AD06E0F00FF159E /* Debug */,
-				297F6FDA2AD06E0F00FF159E /* Release */,
-				297F6FDB2AD06E0F00FF159E /* Profile */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1025,16 +629,6 @@
 				249021D4217E4FDB00AE95B9 /* Profile */,
 				A30100000000000000000003 /* Profile-dev */,
 				A30100000000000000000004 /* Profile-prod */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E214FC8A27C5A18E005F78FB /* Build configuration list for PBXNativeTarget "wondersUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E214FC8B27C5A18E005F78FB /* Debug */,
-				E214FC8C27C5A18E005F78FB /* Release */,
-				E214FC8D27C5A18E005F78FB /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

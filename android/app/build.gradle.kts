@@ -23,7 +23,7 @@ android {
         null
     }
 
-    namespace = "com.personal.fluttercorebase"
+    namespace = "com.thanhng224.fluttercorebase"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.personal.fluttercorebase"
+        applicationId = "com.thanhng224.fluttercorebase"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
