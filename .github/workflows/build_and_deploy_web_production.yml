@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: web-build
           path: build/web
@@ -25,7 +25,7 @@ jobs:
         run: sed -i 's|<base href="/">|<base href="/${{ env.BASE_HREF }}/">|g' build/web/index.html
 
       - name: Upload to SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
