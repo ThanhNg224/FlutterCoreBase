@@ -14,15 +14,15 @@ dependencies:
     sdk: flutter
 
   # State Management & Dependency Injection
-  flutter_riverpod: ^3.4.2
+  flutter_riverpod: ^3.4.3
   riverpod_annotation: ^4.0.6
 
   # Declarative Routing
-  go_router: ^17.5.0
+  go_router: ^18.0.1
 
   # Networking & HTTP Client
-  dio: ^5.8.0+1
-  connectivity_plus: ^6.1.5
+  dio: ^5.11.1
+  connectivity_plus: ^7.3.1
 
   # Functional Programming & Result Types
   fpdart: ^1.1.1
@@ -45,9 +45,9 @@ dev_dependencies:
     sdk: flutter
 
   # Code Generation
-  build_runner: ^2.4.15
+  build_runner: ^2.16.1
   riverpod_generator: ^4.0.8
-  freezed: ^4.0.0
+  freezed: ^4.0.1
   json_serializable: ^6.9.4
 
   # Testing & Mocking
