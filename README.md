@@ -1,36 +1,59 @@
-# Flutter Core Base (Riverpod + Feature-First Clean Architecture)
+# Flutter Core Base
 
-A production-grade, highly scalable Flutter starter base designed for modern cross-platform development, enterprise host apps, and SDK integration showcases.
+[![Flutter](https://img.shields.io/badge/Flutter-3.47+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.13+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![Riverpod](https://img.shields.io/badge/State-Riverpod_Generator-blue?logo=flutter)](https://riverpod.dev)
+[![Architecture](https://img.shields.io/badge/Architecture-Feature--First_Clean-green)](#-architecture-pillars)
+[![Tests](https://img.shields.io/badge/Tests-83_Passed-success)](#-testing--quality-assurance)
+
+A production-grade, highly maintainable Flutter starter base engineered with **Feature-First Clean Architecture**, **Riverpod Generator**, and enterprise-grade resilience, security, and accessibility standards.
 
 ---
 
-## 🌟 Architecture Highlights
+## 🌟 Architecture Pillars & Engineering Highlights
 
-* **Feature-First Clean Architecture (3 Layers per Feature + Shared Core):**
-  - `presentation`: Declarative UI Widgets, Views, and Riverpod `AsyncNotifier` / `Notifier` Controllers.
-  - `domain`: Pure Dart Entities, Value Objects, and Repository Interfaces (Zero framework dependencies).
-  - `data`: Repository Implementations, Remote APIs, Local Persistence, Native Platform Channels, DTOs, and Mappers.
-  - `core`: Shared infrastructure, secure logging, multi-language localization, design system tokens, networking, storage, error handling, and routing.
-* **State Management & DI:** **`flutter_riverpod` + `riverpod_generator` (`@riverpod`)**
-  - Compile-time safe dependencies.
-  - Zero memory leaks via `autoDispose` lifecycle management.
-  - Fine-grained widget rebuilds via `.select()`.
-* **Enterprise Structured Logging:**
-  - Zero release log leakage via `LogPolicy` and `SilentSink`.
-  - Type-safe compile-time redaction with `Redacted` wrapper.
-  - Global uncaught async error capture via `PlatformDispatcher.instance.onError`.
-* **Internationalization & Localization (i18n):**
-  - Standard `l10n.yaml` with `flutter_localizations` (English & Vietnamese ARBs included).
-  - `LocaleNotifier` for dynamic runtime language switching.
-  - `FailureL10n` for mapping domain exceptions into user-friendly localized copy.
-* **Accessible Design System & Theming:**
-  - Material 3 theme engine with WCAG contrast compliance ($\ge 4.5:1$ text, $\ge 3:1$ non-text).
-  - `AppSemanticColors` ThemeExtension accessed via `context.colors`.
-  - Reduced-motion animation support via `AppMotion`.
-  - Reusable components: `AppButton`, `AppBottomSheet`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AppShimmer`, `AppSnackbar`, `AppTextField`, `AsyncValueWidget`, `OfflineBanner` — see [`docs/CORE_MODULES.md`](docs/CORE_MODULES.md) for the current list.
-* **Declarative Routing:** **`go_router`** with deep linking, modal dialogs, and route parameters.
-* **Functional Error Handling:** **`fpdart` (`Either<Failure, Success>`)** with `ErrorHandler.guard()`.
-* **Build Toolchain:** **Java 21 LTS**, **Gradle 8.14**, **Android Gradle Plugin 8.11.1**, **Kotlin 2.2.20**, **Flutter 3.47+**, 64-bit ABI targets (`arm64-v8a`, `x86_64`), release minification & resource shrinking with Proguard.
+* **Feature-First Clean Architecture:**
+  - 3-layer boundary per feature (`presentation` $\to$ `domain` $\leftarrow$ `data`) + shared `core/` infrastructure.
+  - Zero framework dependencies in domain (`@freezed` entities & abstract repositories).
+* **Compile-Time State & DI (`flutter_riverpod` + `riverpod_generator`):**
+  - Type-safe, declarative dependencies via `@riverpod` annotations.
+  - Zero memory leaks via automatic `autoDispose` controller lifecycles.
+  - Granular widget rebuilds using `.select()`.
+* **Security by Construction:**
+  - **Zero log leakage in release:** All logging routes to `SilentSink` via `LogPolicy` without runtime overhead.
+  - **Compile-time redaction:** Logger data parameter strictly requires `Map<String, Redacted>`.
+  - **Decoupled credential storage:** Non-sensitive settings in `SharedPreferences`, auth credentials strictly encrypted in `flutter_secure_storage`.
+  - **Self-defending network layer:** `AuthInterceptor` auto-clears credential overrides on `401 Unauthorized`.
+* **Functional Error Handling (`fpdart`):**
+  - Repositories return `Either<Failure, T>` wrapped via `ErrorHandler.guard()`.
+  - Zero raw exceptions or stack traces exposed to users; `FailureL10n` maps domain failures directly to localized ARB copy.
+  - `AsyncValueWidget<T>` unifies loading, localized error, and data states across the app.
+* **Accessible Design System (WCAG 2.1 AA):**
+  - Material 3 theme engine with automated tests verifying WCAG contrast ($\ge 4.5:1$ text, $\ge 3:1$ non-text).
+  - System reduced-motion compliance via `AppMotion` respecting user accessibility settings.
+  - Typography powered by **Inter** (`GoogleFonts.inter`) with full Vietnamese diacritics support.
+  - Dynamic `ThemeModeNotifier` (Light / Dark / System) with semantic tokens via `AppSemanticColors` (`context.colors`).
+* **Offline-First Resiliency & Runtime Sandbox:**
+  - Real-time `OfflineBanner` automatically managed at the root router level via `connectivity_plus`.
+  - Modern skeleton loading via `AppShimmer` and `AppShimmerList`.
+  - Hot-switch between Dev/Prod environments and Mock SDK mode on-the-fly at runtime without app restarts.
+* **Modern Build Toolchain:**
+  - **Java 21 LTS**, **Gradle 8.14**, **AGP 8.11.1**, **Kotlin 2.2.20**, 64-bit ABI targets (`arm64-v8a`, `x86_64`), and release R8/Proguard shrinking.
+
+---
+
+## 🛠 Tech Stack Matrix
+
+| Layer / Concern | Technology | Purpose |
+| --------------- | ---------- | ------- |
+| **Framework & Language** | Flutter 3.47+ · Dart 3.13+ | Cross-platform client SDK |
+| **State Management & DI** | `flutter_riverpod` · `riverpod_generator` | Reactive state & compile-time dependency injection |
+| **Declarative Routing** | `go_router` | Route matching, deep linking, parameter resolution |
+| **Networking & Connectivity** | `dio` · `connectivity_plus` | HTTP client, security interceptors, connection listener |
+| **Functional & Immutability** | `fpdart` · `freezed` · `json_serializable` | Functional `Either<Failure, T>`, immutable entities & DTOs |
+| **Persistence & Encryption** | `shared_preferences` · `flutter_secure_storage` | Typed local preferences & Keystore/Keychain encryption |
+| **Design & Accessibility** | Material 3 · `google_fonts` (Inter) · `flutter_animate` | WCAG tokens, responsive layout, motion-safe transitions |
+| **Build & Toolchain** | Java 21 · Gradle 8.14 · AGP 8.11.1 · Kotlin 2.2.20 | 64-bit ABI, R8 Proguard minification & resource shrinking |
 
 ---
 
@@ -95,9 +118,36 @@ The repository follows strict architectural and coding standards detailed in `do
 
 ## 🚀 Getting Started
 
+### 0. Quick Start & Project Initialization
+
+When cloning this repository to bootstrap a new project, use the automated setup wizard to rebrand packages, bundle identifiers, and platform configurations across Dart, Android, iOS, macOS, Web, and Windows:
+
+```bash
+# Interactive setup wizard
+python3 scripts/init_project.py
+
+# Or automated via CLI flags:
+python3 scripts/init_project.py \
+  --app-name "Acme Shop" \
+  --dart-name "acme_shop" \
+  --bundle-id "com.acme.shop" \
+  --clean-samples
+```
+
+| Flag | Description |
+| :--- | :--- |
+| `--app-name` | User-facing application display name (e.g., `"Acme Shop"`). |
+| `--dart-name` | Dart package name in `snake_case` (e.g., `acme_shop`). |
+| `--bundle-id` | Application ID & Bundle Identifier (e.g., `com.acme.shop`). |
+| `--clean-samples` | Strips demo features (`posts`, `catalog`) and configures a clean starter `HomeScreen`. |
+| `--dry-run` | Previews all modifications without altering files. |
+| `--force` | Bypasses git uncommitted working tree check. |
+| `--skip-build-check` | Skips post-init `flutter analyze` and `flutter test`. |
+
 ### 1. Prerequisites
 - **Flutter SDK:** `>= 3.47.0` (Dart `>= 3.13.0`)
 - **JDK:** OpenJDK 21 LTS
+- **Android SDK:** API 37 or newer for Android builds
 
 ### 2. Install Dependencies
 ```bash
@@ -116,9 +166,14 @@ dart run flutter_native_splash:create
 ```
 
 ### 4. Run Code Analysis & Unit Tests
+The codebase includes an extensive automated test suite (**83 passing tests**) covering error mapping, security redaction, WCAG contrast verification, reduced-motion compliance, controller lifecycles, and loopback HTTP network integration.
+
 ```bash
+# Static analysis (Enforces 0 warnings / 0 errors)
 flutter analyze
-flutter test
+
+# Run complete test suite with coverage
+flutter test --coverage
 ```
 
 ### 5. Run Application

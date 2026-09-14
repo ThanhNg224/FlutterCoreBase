@@ -24,7 +24,9 @@ android {
     }
 
     namespace = "com.thanhng224.fluttercorebase"
-    compileSdk = flutter.compileSdkVersion
+    // flutter_secure_storage currently requires Android SDK 37; keep the base
+    // compatible with older Flutter defaults while honoring that dependency.
+    compileSdk = maxOf(flutter.compileSdkVersion, 37)
     ndkVersion = "28.2.13676358"
 
     compileOptions {
