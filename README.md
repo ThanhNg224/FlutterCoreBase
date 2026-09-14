@@ -45,7 +45,7 @@ lib/
 │
 ├── core/                               # Core Infrastructure (Reusable across any app)
 │   ├── config/                         # AppConfig, AppConfigController (Dev/Prod, Tokens, Mock)
-│   ├── constants/                      # ApiEndpoints, AppConstants, StorageKeys
+│   ├── constants/                      # ApiEndpoints, AppConstants, StorageKeys, AppAssets
 │   ├── errors/                         # Failure, AppException, ErrorHandler, FailureL10n
 │   ├── extensions/                     # BuildContext extensions (context.l10n)
 │   ├── localization/                   # LocaleNotifier
@@ -53,7 +53,7 @@ lib/
 │   ├── network/                        # DioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider
 │   ├── routing/                        # AppRouter, RoutePaths
 │   ├── storage/                        # LocalStorageService (SharedPreferences), SecureStorageService (credentials)
-│   ├── theme/                          # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion
+│   ├── theme/                          # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion, ThemeModeNotifier
 │   ├── utils/                          # FormValidators, Redaction
 │   └── widgets/                        # AppButton, AppBottomSheet, AppCard, AppDialog, AppErrorWidget, AppSectionHeader, AppShimmer, AppSnackbar, AppTextField, AsyncValueWidget, OfflineBanner
 │
@@ -63,7 +63,7 @@ lib/
 │
 └── features/                           # Feature Modules (Feature-First Clean Architecture)
     ├── catalog/                        # SDK Feature Catalog & Showcase Gallery
-    │   ├── data/                       # CatalogRepository (implements ICatalogRepository)
+    │   ├── data/                       # CatalogRepository in repositories/ (implements ICatalogRepository)
     │   ├── domain/                     # CatalogFeature entity, ICatalogRepository
     │   └── presentation/               # CatalogScreen, CatalogController, FeatureCard
     │
@@ -104,10 +104,15 @@ The repository follows strict architectural and coding standards detailed in `do
 flutter pub get
 ```
 
-### 3. Generate Code & Localization
+### 3. Generate Code, Localization & Branding Assets
 ```bash
+# Generate localization and code bindings
 flutter gen-l10n
 dart run build_runner build --delete-conflicting-outputs
+
+# (Optional) Generate app launcher icons and native splash screens
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
 ```
 
 ### 4. Run Code Analysis & Unit Tests
