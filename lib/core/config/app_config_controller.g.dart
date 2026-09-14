@@ -12,8 +12,7 @@ part of 'app_config_controller.dart';
 @ProviderFor(AppConfigController)
 final appConfigControllerProvider = AppConfigControllerProvider._();
 
-final class AppConfigControllerProvider
-    extends $AsyncNotifierProvider<AppConfigController, AppConfig> {
+final class AppConfigControllerProvider extends $AsyncNotifierProvider<AppConfigController, AppConfig> {
   AppConfigControllerProvider._()
     : super(
         from: null,
@@ -33,8 +32,7 @@ final class AppConfigControllerProvider
   AppConfigController create() => AppConfigController();
 }
 
-String _$appConfigControllerHash() =>
-    r'05465fd863ef54253a269c73189d8b156122b1c7';
+String _$appConfigControllerHash() => r'05465fd863ef54253a269c73189d8b156122b1c7';
 
 abstract class _$AppConfigController extends $AsyncNotifier<AppConfig> {
   FutureOr<AppConfig> build();

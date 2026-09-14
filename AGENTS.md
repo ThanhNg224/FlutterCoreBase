@@ -40,5 +40,5 @@ For every request:
 2. Identify which engineering documents apply, and read them.
 3. Explore existing implementations and search for similar patterns.
 4. Implement the smallest complete and working solution.
-5. Run `flutter analyze` and `flutter test` to ensure zero regressions.
+5. Run `make verify` to ensure formatting, analysis, and tests have zero regressions.
 6. Perform a thorough self-review before presenting results.

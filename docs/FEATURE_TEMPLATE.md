@@ -57,12 +57,11 @@ lib/features/<feature_name>/
    - Add entry in `features/catalog/data/repositories/catalog_repository.dart`.
 
 6. **Step 6: Code Generation & Verification**
-   - Run `dart run build_runner build --delete-conflicting-outputs`.
-   - Run `flutter analyze` and write unit tests in `test/features/<feature_name>/`.
+   - Run `make codegen` (or `dart run build_runner build` followed by `dart format .`).
+   - Run `make verify` (or `flutter analyze` and `flutter test`) and write unit tests in `test/features/<feature_name>/`.
 
 ---
 
 ## Thin & Showcase Feature Modules
 
 Features that only orchestrate cross-cutting core providers (such as `features/settings/` which directly interacts with `AppConfigController`, `LocaleNotifier`, and `ThemeModeNotifier`) or static showcase registries (such as `features/catalog/`) may omit redundant data sources, DTOs, or deep folder nesting to stay lean while strictly respecting layer boundaries.
-

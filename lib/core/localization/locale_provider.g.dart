@@ -14,8 +14,7 @@ part of 'locale_provider.dart';
 final localeProvider = LocaleNotifierProvider._();
 
 /// Provider for the active app [Locale]. `null` means follow the device locale.
-final class LocaleNotifierProvider
-    extends $NotifierProvider<LocaleNotifier, Locale?> {
+final class LocaleNotifierProvider extends $NotifierProvider<LocaleNotifier, Locale?> {
   /// Provider for the active app [Locale]. `null` means follow the device locale.
   LocaleNotifierProvider._()
     : super(
@@ -54,14 +53,7 @@ abstract class _$LocaleNotifier extends $Notifier<Locale?> {
   @override
   WhenComplete runBuild() {
     final ref = this.ref as $Ref<Locale?, Locale?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<Locale?, Locale?>,
-              Locale?,
-              Object?,
-              Object?
-            >;
+    final element = ref.element as $ClassProviderElement<AnyNotifier<Locale?, Locale?>, Locale?, Object?, Object?>;
     return element.handleCreate(ref, build);
   }
 }

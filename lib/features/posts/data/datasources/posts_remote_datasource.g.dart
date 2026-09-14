@@ -19,9 +19,7 @@ final class PostsRemoteDataSourceProvider
           IPostsRemoteDataSource,
           FutureOr<IPostsRemoteDataSource>
         >
-    with
-        $FutureModifier<IPostsRemoteDataSource>,
-        $FutureProvider<IPostsRemoteDataSource> {
+    with $FutureModifier<IPostsRemoteDataSource>, $FutureProvider<IPostsRemoteDataSource> {
   PostsRemoteDataSourceProvider._()
     : super(
         from: null,
@@ -48,5 +46,4 @@ final class PostsRemoteDataSourceProvider
   }
 }
 
-String _$postsRemoteDataSourceHash() =>
-    r'532d201f3cecb4c62e48295f3a46506033977297';
+String _$postsRemoteDataSourceHash() => r'532d201f3cecb4c62e48295f3a46506033977297';

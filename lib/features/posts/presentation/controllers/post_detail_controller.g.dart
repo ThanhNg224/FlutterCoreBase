@@ -12,8 +12,7 @@ part of 'post_detail_controller.dart';
 @ProviderFor(PostDetailController)
 final postDetailControllerProvider = PostDetailControllerFamily._();
 
-final class PostDetailControllerProvider
-    extends $AsyncNotifierProvider<PostDetailController, Post> {
+final class PostDetailControllerProvider extends $AsyncNotifierProvider<PostDetailController, Post> {
   PostDetailControllerProvider._({
     required PostDetailControllerFamily super.from,
     required int super.argument,
@@ -50,18 +49,10 @@ final class PostDetailControllerProvider
   }
 }
 
-String _$postDetailControllerHash() =>
-    r'f5ad508c04e98f8738caa24037f882870cb2b287';
+String _$postDetailControllerHash() => r'f5ad508c04e98f8738caa24037f882870cb2b287';
 
 final class PostDetailControllerFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          PostDetailController,
-          AsyncValue<Post>,
-          Post,
-          FutureOr<Post>,
-          int
-        > {
+    with $ClassFamilyOverride<PostDetailController, AsyncValue<Post>, Post, FutureOr<Post>, int> {
   PostDetailControllerFamily._()
     : super(
         retry: null,
@@ -71,8 +62,7 @@ final class PostDetailControllerFamily extends $Family
         isAutoDispose: true,
       );
 
-  PostDetailControllerProvider call(int id) =>
-      PostDetailControllerProvider._(argument: id, from: this);
+  PostDetailControllerProvider call(int id) => PostDetailControllerProvider._(argument: id, from: this);
 
   @override
   String toString() => r'postDetailControllerProvider';
@@ -88,13 +78,7 @@ abstract class _$PostDetailController extends $AsyncNotifier<Post> {
   WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Post>, Post>;
     final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<Post>, Post>,
-              AsyncValue<Post>,
-              Object?,
-              Object?
-            >;
+        ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<Post>, Post>, AsyncValue<Post>, Object?, Object?>;
     return element.handleCreate(ref, () => build(_$args));
   }
 }

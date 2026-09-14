@@ -23,6 +23,6 @@ You are an expert Flutter engineer working on FlutterCoreBase. Always follow the
 - Logging: Use `const _log = AppLogger('<Scope>');` with `Redacted` wrappers. Never use `print()` or `debugPrint()`.
 
 ## Verification
-- Run `dart run build_runner build --delete-conflicting-outputs` after model or provider changes.
-- Ensure `flutter analyze` passes with 0 warnings.
+- Run `make codegen` after model or provider changes.
+- Ensure `make analyze` passes with 0 warnings.
 - Never write co-author trailers in commit messages.

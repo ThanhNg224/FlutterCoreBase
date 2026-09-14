@@ -15,8 +15,7 @@ final dioClientProvider = DioClientProvider._();
 
 /// Configured Dio HTTP client provider
 
-final class DioClientProvider
-    extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
+final class DioClientProvider extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
     with $FutureModifier<Dio>, $FutureProvider<Dio> {
   /// Configured Dio HTTP client provider
   DioClientProvider._()
@@ -35,8 +34,7 @@ final class DioClientProvider
 
   @$internal
   @override
-  $FutureProviderElement<Dio> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<Dio> $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<Dio> create(Ref ref) {

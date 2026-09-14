@@ -21,5 +21,5 @@
 - Logging: `const _log = AppLogger('<Scope>');` with `Redacted` wrappers. Never use `print()` or `debugPrint()`.
 
 ## Verification
-- Run `dart run build_runner build --delete-conflicting-outputs` when necessary.
-- Ensure `flutter analyze` passes with 0 warnings.
+- Run `make codegen` when necessary.
+- Ensure `make analyze` passes with 0 warnings.

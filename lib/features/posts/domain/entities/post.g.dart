@@ -11,12 +11,8 @@ _Post _$PostFromJson(Map<String, dynamic> json) => _Post(
   title: json['title'] as String,
   body: json['body'] as String,
   userId: (json['userId'] as num?)?.toInt() ?? 1,
-  tags:
-      (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const [],
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
+  tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
+  createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
 );
 
 Map<String, dynamic> _$PostToJson(_Post instance) => <String, dynamic>{

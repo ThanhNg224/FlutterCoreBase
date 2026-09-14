@@ -14,8 +14,7 @@ part of 'catalog_controller.dart';
 final catalogControllerProvider = CatalogControllerProvider._();
 
 /// Auto-disposed controller managing SDK feature catalog list
-final class CatalogControllerProvider
-    extends $AsyncNotifierProvider<CatalogController, List<CatalogFeature>> {
+final class CatalogControllerProvider extends $AsyncNotifierProvider<CatalogController, List<CatalogFeature>> {
   /// Auto-disposed controller managing SDK feature catalog list
   CatalogControllerProvider._()
     : super(
@@ -40,22 +39,16 @@ String _$catalogControllerHash() => r'6de42c48772a91a4bee7a02bca214c4f6a40fd3e';
 
 /// Auto-disposed controller managing SDK feature catalog list
 
-abstract class _$CatalogController
-    extends $AsyncNotifier<List<CatalogFeature>> {
+abstract class _$CatalogController extends $AsyncNotifier<List<CatalogFeature>> {
   FutureOr<List<CatalogFeature>> build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref =
-        this.ref
-            as $Ref<AsyncValue<List<CatalogFeature>>, List<CatalogFeature>>;
+    final ref = this.ref as $Ref<AsyncValue<List<CatalogFeature>>, List<CatalogFeature>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<List<CatalogFeature>>,
-                List<CatalogFeature>
-              >,
+              AnyNotifier<AsyncValue<List<CatalogFeature>>, List<CatalogFeature>>,
               AsyncValue<List<CatalogFeature>>,
               Object?,
               Object?

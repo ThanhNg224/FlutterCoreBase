@@ -29,16 +29,21 @@ $PostDtoCopyWith<PostDto> get copyWith => _$PostDtoCopyWithImpl<PostDto>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId));
+  final _this = this as PostDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.userId, _this.userId) || other.userId == _this.userId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,body,userId);
+int get hashCode {
+  final _this = this as PostDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.body,_this.userId);
+}
 
 @override
 String toString() {
-  return 'PostDto(id: $id, title: $title, body: $body, userId: $userId)';
+  final _this = this as PostDto;
+  return 'PostDto(id: ${_this.id}, title: ${_this.title}, body: ${_this.body}, userId: ${_this.userId})';
 }
 
 
@@ -234,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,body,userId);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,body,userId);
+}
 
 @override
 String toString() {
-  return 'PostDto(id: $id, title: $title, body: $body, userId: $userId)';
+    return 'PostDto(id: $id, title: $title, body: $body, userId: $userId)';
 }
 
 

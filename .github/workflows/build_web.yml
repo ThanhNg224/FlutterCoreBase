@@ -31,7 +31,7 @@ jobs:
         channel: 'stable'
 
     - name: Get dependencies
-      run: flutter pub get
+      run: make pub-get
 
     - name: Enable Flutter web
       run: flutter config --enable-web

@@ -26,16 +26,21 @@ $CatalogFeatureCopyWith<CatalogFeature> get copyWith => _$CatalogFeatureCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatalogFeature&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.routePath, routePath) || other.routePath == routePath)&&(identical(other.category, category) || other.category == category)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other.tags, tags));
+  final _this = this as CatalogFeature;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatalogFeature&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.routePath, _this.routePath) || other.routePath == _this.routePath)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.iconKey, _this.iconKey) || other.iconKey == _this.iconKey)&&(identical(other.isEnabled, _this.isEnabled) || other.isEnabled == _this.isEnabled)&&const DeepCollectionEquality().equals(other.tags, _this.tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,routePath,category,iconKey,isEnabled,const DeepCollectionEquality().hash(tags));
+int get hashCode {
+  final _this = this as CatalogFeature;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.description,_this.routePath,_this.category,_this.iconKey,_this.isEnabled,const DeepCollectionEquality().hash(_this.tags));
+}
 
 @override
 String toString() {
-  return 'CatalogFeature(id: $id, title: $title, description: $description, routePath: $routePath, category: $category, iconKey: $iconKey, isEnabled: $isEnabled, tags: $tags)';
+  final _this = this as CatalogFeature;
+  return 'CatalogFeature(id: ${_this.id}, title: ${_this.title}, description: ${_this.description}, routePath: ${_this.routePath}, category: ${_this.category}, iconKey: ${_this.iconKey}, isEnabled: ${_this.isEnabled}, tags: ${_this.tags})';
 }
 
 
@@ -242,16 +247,18 @@ _$CatalogFeatureCopyWith<_CatalogFeature> get copyWith => __$CatalogFeatureCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatalogFeature&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.routePath, routePath) || other.routePath == routePath)&&(identical(other.category, category) || other.category == category)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other._tags, _tags));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatalogFeature&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.routePath, routePath) || other.routePath == routePath)&&(identical(other.category, category) || other.category == category)&&(identical(other.iconKey, iconKey) || other.iconKey == iconKey)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&const DeepCollectionEquality().equals(other.tags, _tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,routePath,category,iconKey,isEnabled,const DeepCollectionEquality().hash(_tags));
+int get hashCode {
+    return Object.hash(runtimeType,id,title,description,routePath,category,iconKey,isEnabled,const DeepCollectionEquality().hash(_tags));
+}
 
 @override
 String toString() {
-  return 'CatalogFeature(id: $id, title: $title, description: $description, routePath: $routePath, category: $category, iconKey: $iconKey, isEnabled: $isEnabled, tags: $tags)';
+    return 'CatalogFeature(id: $id, title: $title, description: $description, routePath: $routePath, category: $category, iconKey: $iconKey, isEnabled: $isEnabled, tags: $tags)';
 }
 
 

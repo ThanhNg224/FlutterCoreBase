@@ -50,7 +50,8 @@ void main() {
             expect(
               ratio,
               greaterThanOrEqualTo(_aaText),
-              reason: '${entry.key} ${fg.key} on '
+              reason:
+                  '${entry.key} ${fg.key} on '
                   '#${surface.toARGB32().toRadixString(16).substring(2)} '
                   'is ${ratio.toStringAsFixed(2)}:1',
             );

@@ -732,7 +732,7 @@ def run_code_generation_and_verification(root: Path, cfg: ProjectConfig) -> bool
     if cfg.dry_run:
         log_info("[Dry Run] Would execute: flutter pub get")
         log_info("[Dry Run] Would execute: flutter gen-l10n")
-        log_info("[Dry Run] Would execute: dart run build_runner build --delete-conflicting-outputs")
+        log_info("[Dry Run] Would execute: dart run build_runner build")
         log_info("[Dry Run] Would execute: dart format .")
         if not cfg.skip_build_check:
             log_info("[Dry Run] Would execute: flutter analyze --fatal-infos && flutter test")
@@ -746,7 +746,7 @@ def run_code_generation_and_verification(root: Path, cfg: ProjectConfig) -> bool
     commands = [
         ("Resolving dependencies", ["flutter", "pub", "get"]),
         ("Generating localizations", ["flutter", "gen-l10n"]),
-        ("Running build_runner code generation", ["dart", "run", "build_runner", "build", "--delete-conflicting-outputs"]),
+        ("Running build_runner code generation", ["dart", "run", "build_runner", "build"]),
         ("Formatting Dart source files", ["dart", "format", "."]),
     ]
 

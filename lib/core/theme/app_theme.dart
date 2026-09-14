@@ -7,17 +7,18 @@ import 'package:flutter_core_base/core/theme/app_typography.dart';
 /// Comprehensive ThemeData configurations for Light and Dark modes.
 abstract class AppTheme {
   static ThemeData get lightTheme {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      brightness: Brightness.light,
-    ).copyWith(
-      primary: AppColors.primary,
-      onPrimary: AppColors.onLightFill,
-      secondary: AppColors.secondary,
-      onSecondary: Colors.white,
-      surface: AppColors.surfaceLight,
-      error: AppColors.errorOnLight,
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: AppColors.primary,
+          onPrimary: AppColors.onLightFill,
+          secondary: AppColors.secondary,
+          onSecondary: Colors.white,
+          surface: AppColors.surfaceLight,
+          error: AppColors.errorOnLight,
+        );
 
     return ThemeData(
       useMaterial3: true,
@@ -61,17 +62,18 @@ abstract class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      brightness: Brightness.dark,
-    ).copyWith(
-      primary: AppColors.primaryLight,
-      onPrimary: Colors.black,
-      secondary: AppColors.secondary,
-      onSecondary: Colors.white,
-      surface: AppColors.surfaceDark,
-      error: AppColors.error,
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.dark,
+        ).copyWith(
+          primary: AppColors.primaryLight,
+          onPrimary: Colors.black,
+          secondary: AppColors.secondary,
+          onSecondary: Colors.white,
+          surface: AppColors.surfaceDark,
+          error: AppColors.error,
+        );
 
     return ThemeData(
       useMaterial3: true,

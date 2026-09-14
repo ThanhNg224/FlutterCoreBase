@@ -54,30 +54,30 @@ class AppButton extends StatelessWidget {
 
     final button = switch (variant) {
       ButtonVariant.primary => ElevatedButton(
-          onPressed: effectiveOnPressed,
-          style: _filledStyle(AppColors.primary, foreground),
-          child: child,
-        ),
+        onPressed: effectiveOnPressed,
+        style: _filledStyle(AppColors.primary, foreground),
+        child: child,
+      ),
       ButtonVariant.secondary => ElevatedButton(
-          onPressed: effectiveOnPressed,
-          style: _filledStyle(AppColors.secondary, foreground),
-          child: child,
-        ),
+        onPressed: effectiveOnPressed,
+        style: _filledStyle(AppColors.secondary, foreground),
+        child: child,
+      ),
       ButtonVariant.danger => ElevatedButton(
-          onPressed: effectiveOnPressed,
-          style: _filledStyle(AppColors.error, foreground),
-          child: child,
-        ),
+        onPressed: effectiveOnPressed,
+        style: _filledStyle(AppColors.error, foreground),
+        child: child,
+      ),
       ButtonVariant.outline => OutlinedButton(
-          onPressed: effectiveOnPressed,
-          style: isLoading
-              ? OutlinedButton.styleFrom(
-                  disabledForegroundColor: foreground,
-                  side: BorderSide(color: foreground),
-                )
-              : null,
-          child: child,
-        ),
+        onPressed: effectiveOnPressed,
+        style: isLoading
+            ? OutlinedButton.styleFrom(
+                disabledForegroundColor: foreground,
+                side: BorderSide(color: foreground),
+              )
+            : null,
+        child: child,
+      ),
     };
 
     return width == null ? button : SizedBox(width: width, child: button);

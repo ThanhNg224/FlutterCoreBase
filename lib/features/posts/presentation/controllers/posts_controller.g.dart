@@ -12,8 +12,7 @@ part of 'posts_controller.dart';
 @ProviderFor(PostsController)
 final postsControllerProvider = PostsControllerProvider._();
 
-final class PostsControllerProvider
-    extends $AsyncNotifierProvider<PostsController, PostsState> {
+final class PostsControllerProvider extends $AsyncNotifierProvider<PostsController, PostsState> {
   PostsControllerProvider._()
     : super(
         from: null,

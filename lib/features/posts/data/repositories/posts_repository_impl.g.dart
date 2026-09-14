@@ -13,12 +13,7 @@ part of 'posts_repository_impl.dart';
 final postsRepositoryProvider = PostsRepositoryProvider._();
 
 final class PostsRepositoryProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<IPostsRepository>,
-          IPostsRepository,
-          FutureOr<IPostsRepository>
-        >
+    extends $FunctionalProvider<AsyncValue<IPostsRepository>, IPostsRepository, FutureOr<IPostsRepository>>
     with $FutureModifier<IPostsRepository>, $FutureProvider<IPostsRepository> {
   PostsRepositoryProvider._()
     : super(

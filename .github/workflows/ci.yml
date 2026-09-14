@@ -17,11 +17,5 @@ jobs:
           flutter-version: '3.47.0'
           channel: stable
 
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Analyze
-        run: flutter analyze --fatal-infos
-
-      - name: Test with coverage
-        run: flutter test --coverage
+      - name: Verify and test with coverage
+        run: make ci

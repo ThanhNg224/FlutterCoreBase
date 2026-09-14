@@ -13,12 +13,7 @@ part of 'catalog_repository.dart';
 final catalogRepositoryProvider = CatalogRepositoryProvider._();
 
 final class CatalogRepositoryProvider
-    extends
-        $FunctionalProvider<
-          ICatalogRepository,
-          ICatalogRepository,
-          ICatalogRepository
-        >
+    extends $FunctionalProvider<ICatalogRepository, ICatalogRepository, ICatalogRepository>
     with $Provider<ICatalogRepository> {
   CatalogRepositoryProvider._()
     : super(

@@ -37,6 +37,5 @@ class LoggingInterceptor extends Interceptor {
     super.onError(err, handler);
   }
 
-  static Redacted _endpoint(Uri uri) =>
-      Redacted.unredacted(uri.toString(), because: 'endpoint path without payload');
+  static Redacted _endpoint(Uri uri) => Redacted.unredacted(uri.toString(), because: 'endpoint path without payload');
 }

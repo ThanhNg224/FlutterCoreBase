@@ -26,16 +26,21 @@ $PostsStateCopyWith<PostsState> get copyWith => _$PostsStateCopyWithImpl<PostsSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostsState&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.paginationFailure, paginationFailure) || other.paginationFailure == paginationFailure));
+  final _this = this as PostsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostsState&&const DeepCollectionEquality().equals(other.items, _this.items)&&(identical(other.hasMore, _this.hasMore) || other.hasMore == _this.hasMore)&&(identical(other.isLoadingMore, _this.isLoadingMore) || other.isLoadingMore == _this.isLoadingMore)&&(identical(other.paginationFailure, _this.paginationFailure) || other.paginationFailure == _this.paginationFailure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),hasMore,isLoadingMore,paginationFailure);
+int get hashCode {
+  final _this = this as PostsState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.items),_this.hasMore,_this.isLoadingMore,_this.paginationFailure);
+}
 
 @override
 String toString() {
-  return 'PostsState(items: $items, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationFailure: $paginationFailure)';
+  final _this = this as PostsState;
+  return 'PostsState(items: ${_this.items}, hasMore: ${_this.hasMore}, isLoadingMore: ${_this.isLoadingMore}, paginationFailure: ${_this.paginationFailure})';
 }
 
 
@@ -246,16 +251,18 @@ _$PostsStateCopyWith<_PostsState> get copyWith => __$PostsStateCopyWithImpl<_Pos
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostsState&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.paginationFailure, paginationFailure) || other.paginationFailure == paginationFailure));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostsState&&const DeepCollectionEquality().equals(other.items, _items)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.paginationFailure, paginationFailure) || other.paginationFailure == paginationFailure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),hasMore,isLoadingMore,paginationFailure);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),hasMore,isLoadingMore,paginationFailure);
+}
 
 @override
 String toString() {
-  return 'PostsState(items: $items, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationFailure: $paginationFailure)';
+    return 'PostsState(items: $items, hasMore: $hasMore, isLoadingMore: $isLoadingMore, paginationFailure: $paginationFailure)';
 }
 
 

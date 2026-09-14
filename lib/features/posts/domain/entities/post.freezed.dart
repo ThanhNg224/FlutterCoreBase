@@ -29,16 +29,21 @@ $PostCopyWith<Post> get copyWith => _$PostCopyWithImpl<Post>(this as Post, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Post&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as Post;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Post&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,body,userId,const DeepCollectionEquality().hash(tags),createdAt);
+int get hashCode {
+  final _this = this as Post;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.body,_this.userId,const DeepCollectionEquality().hash(_this.tags),_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'Post(id: $id, title: $title, body: $body, userId: $userId, tags: $tags, createdAt: $createdAt)';
+  final _this = this as Post;
+  return 'Post(id: ${_this.id}, title: ${_this.title}, body: ${_this.body}, userId: ${_this.userId}, tags: ${_this.tags}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -244,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Post&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Post&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,body,userId,const DeepCollectionEquality().hash(_tags),createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,body,userId,const DeepCollectionEquality().hash(_tags),createdAt);
+}
 
 @override
 String toString() {
-  return 'Post(id: $id, title: $title, body: $body, userId: $userId, tags: $tags, createdAt: $createdAt)';
+    return 'Post(id: $id, title: $title, body: $body, userId: $userId, tags: $tags, createdAt: $createdAt)';
 }
 
 

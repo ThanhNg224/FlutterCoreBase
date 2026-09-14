@@ -14,8 +14,7 @@ part of 'theme_provider.dart';
 final themeModeProvider = ThemeModeNotifierProvider._();
 
 /// Provider for dynamic ThemeMode toggle (Light, Dark, System)
-final class ThemeModeNotifierProvider
-    extends $NotifierProvider<ThemeModeNotifier, ThemeMode> {
+final class ThemeModeNotifierProvider extends $NotifierProvider<ThemeModeNotifier, ThemeMode> {
   /// Provider for dynamic ThemeMode toggle (Light, Dark, System)
   ThemeModeNotifierProvider._()
     : super(
@@ -55,13 +54,7 @@ abstract class _$ThemeModeNotifier extends $Notifier<ThemeMode> {
   WhenComplete runBuild() {
     final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
     final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<ThemeMode, ThemeMode>,
-              ThemeMode,
-              Object?,
-              Object?
-            >;
+        ref.element as $ClassProviderElement<AnyNotifier<ThemeMode, ThemeMode>, ThemeMode, Object?, Object?>;
     return element.handleCreate(ref, build);
   }
 }

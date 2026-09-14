@@ -12,8 +12,7 @@ part of 'connectivity_provider.dart';
 @ProviderFor(isOnline)
 final isOnlineProvider = IsOnlineProvider._();
 
-final class IsOnlineProvider
-    extends $FunctionalProvider<AsyncValue<bool>, bool, Stream<bool>>
+final class IsOnlineProvider extends $FunctionalProvider<AsyncValue<bool>, bool, Stream<bool>>
     with $FutureModifier<bool>, $StreamProvider<bool> {
   IsOnlineProvider._()
     : super(
@@ -31,8 +30,7 @@ final class IsOnlineProvider
 
   @$internal
   @override
-  $StreamProviderElement<bool> $createElement($ProviderPointer pointer) =>
-      $StreamProviderElement(pointer);
+  $StreamProviderElement<bool> $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
   Stream<bool> create(Ref ref) {

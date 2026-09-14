@@ -26,12 +26,16 @@ $AppConfigCopyWith<AppConfig> get copyWith => _$AppConfigCopyWithImpl<AppConfig>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.baseUrl, baseUrl) || other.baseUrl == baseUrl)&&(identical(other.appToken, appToken) || other.appToken == appToken)&&(identical(other.clientKey, clientKey) || other.clientKey == clientKey)&&(identical(other.mockSdkEnabled, mockSdkEnabled) || other.mockSdkEnabled == mockSdkEnabled)&&(identical(other.sdkVersion, sdkVersion) || other.sdkVersion == sdkVersion));
+  final _this = this as AppConfig;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppConfig&&(identical(other.environment, _this.environment) || other.environment == _this.environment)&&(identical(other.baseUrl, _this.baseUrl) || other.baseUrl == _this.baseUrl)&&(identical(other.appToken, _this.appToken) || other.appToken == _this.appToken)&&(identical(other.clientKey, _this.clientKey) || other.clientKey == _this.clientKey)&&(identical(other.mockSdkEnabled, _this.mockSdkEnabled) || other.mockSdkEnabled == _this.mockSdkEnabled)&&(identical(other.sdkVersion, _this.sdkVersion) || other.sdkVersion == _this.sdkVersion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,environment,baseUrl,appToken,clientKey,mockSdkEnabled,sdkVersion);
+int get hashCode {
+  final _this = this as AppConfig;
+  return Object.hash(runtimeType,_this.environment,_this.baseUrl,_this.appToken,_this.clientKey,_this.mockSdkEnabled,_this.sdkVersion);
+}
 
 
 
@@ -228,12 +232,14 @@ _$AppConfigCopyWith<_AppConfig> get copyWith => __$AppConfigCopyWithImpl<_AppCon
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.baseUrl, baseUrl) || other.baseUrl == baseUrl)&&(identical(other.appToken, appToken) || other.appToken == appToken)&&(identical(other.clientKey, clientKey) || other.clientKey == clientKey)&&(identical(other.mockSdkEnabled, mockSdkEnabled) || other.mockSdkEnabled == mockSdkEnabled)&&(identical(other.sdkVersion, sdkVersion) || other.sdkVersion == sdkVersion));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppConfig&&(identical(other.environment, environment) || other.environment == environment)&&(identical(other.baseUrl, baseUrl) || other.baseUrl == baseUrl)&&(identical(other.appToken, appToken) || other.appToken == appToken)&&(identical(other.clientKey, clientKey) || other.clientKey == clientKey)&&(identical(other.mockSdkEnabled, mockSdkEnabled) || other.mockSdkEnabled == mockSdkEnabled)&&(identical(other.sdkVersion, sdkVersion) || other.sdkVersion == sdkVersion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,environment,baseUrl,appToken,clientKey,mockSdkEnabled,sdkVersion);
+int get hashCode {
+    return Object.hash(runtimeType,environment,baseUrl,appToken,clientKey,mockSdkEnabled,sdkVersion);
+}
 
 
 

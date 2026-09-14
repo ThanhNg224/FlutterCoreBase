@@ -5,6 +5,8 @@ import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_theme.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('AppTheme text theme', () {
     test('light theme maps emphasis vs secondary text colors correctly', () {
       final textTheme = AppTheme.lightTheme.textTheme;

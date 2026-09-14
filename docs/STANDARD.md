@@ -73,6 +73,6 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
 - **No unused imports:** Keep files clean and organized.
 - **No `print()` or `debugPrint()`:** Use `AppLogger` (`core/logging/`), which is silent in release builds by construction. Declare `const _log = AppLogger('<Scope>');` at the top of the file.
 - **Never log raw sensitive values:** Logger's `data` parameter takes `Map<String, Redacted>`. Use `Redacted.secret` / `.phone` / `.length` / `.type` / `.count` / `.flag`, and `Redacted.unredacted(v, because: ...)` for non-sensitive values.
-- **Code Gen Check:** Always run `dart run build_runner build --delete-conflicting-outputs` after updating `@riverpod` or `@freezed` models.
-- **Analysis:** `flutter analyze` must produce **zero warnings or errors**.
-- **Tests:** Run `flutter test` and maintain passing tests for core logic and controllers.
+- **Code Gen Check:** Always run `make codegen` after updating `@riverpod` or `@freezed` models (or `dart run build_runner build` followed by `dart format .`).
+- **Analysis:** `make analyze` must produce **zero warnings or errors**.
+- **Tests:** Run `make test` and maintain passing tests for core logic and controllers.

@@ -9,6 +9,7 @@ Read `docs/` before implementing. This file is intentionally short and does not 
 - `docs/GIT_FLOW.md` — branching and commit conventions.
 
 ## Verification
-- Code generation: `dart run build_runner build --delete-conflicting-outputs`.
-- Analysis: `flutter analyze` must have 0 warnings.
-- Tests: `flutter test`.
+- Code generation: `make codegen` (or `dart run build_runner build` followed by `dart format .`).
+- Analysis: `make analyze` must have 0 warnings.
+- Tests: `make test`.
+- Local gate: `make verify`.

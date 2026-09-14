@@ -36,4 +36,4 @@ Use Conventional Commits format:
 
 1. **NO Co-author Metadata:** Never append co-author signatures (`Co-authored-by: ...`) to commit messages.
 2. **Logical Atomic Commits:** Group related changes together logically; avoid unorganized blobs.
-3. **Pre-commit Verification:** Always ensure `flutter analyze` and `flutter test` pass before committing.
+3. **Pre-commit Verification:** Run `make verify` (or `flutter analyze` and `flutter test`) before committing.

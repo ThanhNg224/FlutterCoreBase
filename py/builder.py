@@ -1,4 +1,5 @@
-#!/usr/bin/python
-import os
-cmd = "flutter pub run build_runner build --delete-conflicting-outputs";
-os.system(cmd);
+#!/usr/bin/env python3
+import subprocess
+
+
+subprocess.run(["dart", "run", "build_runner", "build"], check=True)

@@ -16,12 +16,7 @@ final sharedPreferencesProvider = SharedPreferencesProvider._();
 /// Provider for SharedPreferences instance (initialized at startup)
 
 final class SharedPreferencesProvider
-    extends
-        $FunctionalProvider<
-          SharedPreferences,
-          SharedPreferences,
-          SharedPreferences
-        >
+    extends $FunctionalProvider<SharedPreferences, SharedPreferences, SharedPreferences>
     with $Provider<SharedPreferences> {
   /// Provider for SharedPreferences instance (initialized at startup)
   SharedPreferencesProvider._()
@@ -68,12 +63,7 @@ final localStorageServiceProvider = LocalStorageServiceProvider._();
 /// Provider for [ILocalStorageService]
 
 final class LocalStorageServiceProvider
-    extends
-        $FunctionalProvider<
-          ILocalStorageService,
-          ILocalStorageService,
-          ILocalStorageService
-        >
+    extends $FunctionalProvider<ILocalStorageService, ILocalStorageService, ILocalStorageService>
     with $Provider<ILocalStorageService> {
   /// Provider for [ILocalStorageService]
   LocalStorageServiceProvider._()
@@ -110,8 +100,7 @@ final class LocalStorageServiceProvider
   }
 }
 
-String _$localStorageServiceHash() =>
-    r'0bec02a3d785041682b82b4b41994e7613e9e834';
+String _$localStorageServiceHash() => r'0bec02a3d785041682b82b4b41994e7613e9e834';
 
 /// Provider for credential-only secure storage.
 
@@ -121,12 +110,7 @@ final secureStorageServiceProvider = SecureStorageServiceProvider._();
 /// Provider for credential-only secure storage.
 
 final class SecureStorageServiceProvider
-    extends
-        $FunctionalProvider<
-          ISecureStorageService,
-          ISecureStorageService,
-          ISecureStorageService
-        >
+    extends $FunctionalProvider<ISecureStorageService, ISecureStorageService, ISecureStorageService>
     with $Provider<ISecureStorageService> {
   /// Provider for credential-only secure storage.
   SecureStorageServiceProvider._()
@@ -163,5 +147,4 @@ final class SecureStorageServiceProvider
   }
 }
 
-String _$secureStorageServiceHash() =>
-    r'4b9d3e2f51c3aaf398a689309261513a14878a1f';
+String _$secureStorageServiceHash() => r'4b9d3e2f51c3aaf398a689309261513a14878a1f';

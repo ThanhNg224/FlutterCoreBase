@@ -144,6 +144,30 @@ python3 scripts/init_project.py \
 | `--force` | Bypasses git uncommitted working tree check. |
 | `--skip-build-check` | Skips post-init `flutter analyze` and `flutter test`. |
 
+For the common development commands, use the root `Makefile`:
+
+```bash
+make help
+make setup                 # dependencies, localization, and code generation
+make format               # apply the canonical Dart formatting
+make verify                # format check, analyze, and tests
+make ci                   # codegen, format check, analyze, and coverage
+make run-dev               # run the dev flavor
+make build-apk-dev         # build the dev debug APK
+```
+
+The headless initializer is also available through Make:
+
+```bash
+make init-cli \
+  APP_NAME="Acme Shop" \
+  DART_NAME=acme_shop \
+  BUNDLE_ID=com.acme.shop \
+  CLEAN_SAMPLES=1
+```
+
+The Makefile is a convenience wrapper around the Flutter and Python commands. The direct commands below remain the fallback for environments without `make`.
+
 ### 1. Prerequisites
 - **Flutter SDK:** `>= 3.47.0` (Dart `>= 3.13.0`)
 - **JDK:** OpenJDK 21 LTS
@@ -151,18 +175,16 @@ python3 scripts/init_project.py \
 
 ### 2. Install Dependencies
 ```bash
-flutter pub get
+make pub-get
 ```
 
 ### 3. Generate Code, Localization & Branding Assets
 ```bash
 # Generate localization and code bindings
-flutter gen-l10n
-dart run build_runner build --delete-conflicting-outputs
+make codegen
 
 # (Optional) Generate app launcher icons and native splash screens
-dart run flutter_launcher_icons
-dart run flutter_native_splash:create
+make branding
 ```
 
 ### 4. Run Code Analysis & Unit Tests
@@ -170,19 +192,19 @@ The codebase includes an extensive automated test suite (**83 passing tests**) c
 
 ```bash
 # Static analysis (Enforces 0 warnings / 0 errors)
-flutter analyze
+make analyze
 
 # Run complete test suite with coverage
-flutter test --coverage
+make test-coverage
 ```
 
 ### 5. Run Application
 ```bash
 # Run Development flavor
-flutter run --flavor dev
+make run-dev
 
 # Run Production flavor
-flutter run --flavor prod
+make run-prod
 ```
 
 ### Android release signing

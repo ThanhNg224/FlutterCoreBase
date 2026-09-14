@@ -20,7 +20,7 @@ The engineering rules live in `docs/`, not in this file. Read the relevant docum
 ---
 
 ## Commands
-- **Run build_runner:** `dart run build_runner build --delete-conflicting-outputs`
-- **Analyze code:** `flutter analyze` (Must have 0 warnings/errors)
-- **Run all tests:** `flutter test`
+- **Regenerate and format code:** `make codegen`
+- **Analyze code:** `make analyze` (Must have 0 warnings/errors)
+- **Run all tests:** `make test`
 - **Run single test:** `flutter test test/path/to/test_file.dart`
