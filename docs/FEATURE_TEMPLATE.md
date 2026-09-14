@@ -54,8 +54,15 @@ lib/features/<feature_name>/
 5. **Step 5: Register Route & Catalog**
    - Add path in `core/routing/route_paths.dart`.
    - Register route in `core/routing/app_router.dart`.
-   - Add entry in `features/catalog/data/catalog_repository.dart`.
+   - Add entry in `features/catalog/data/repositories/catalog_repository.dart`.
 
 6. **Step 6: Code Generation & Verification**
    - Run `dart run build_runner build --delete-conflicting-outputs`.
    - Run `flutter analyze` and write unit tests in `test/features/<feature_name>/`.
+
+---
+
+## Thin & Showcase Feature Modules
+
+Features that only orchestrate cross-cutting core providers (such as `features/settings/` which directly interacts with `AppConfigController`, `LocaleNotifier`, and `ThemeModeNotifier`) or static showcase registries (such as `features/catalog/`) may omit redundant data sources, DTOs, or deep folder nesting to stay lean while strictly respecting layer boundaries.
+

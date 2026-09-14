@@ -13,7 +13,7 @@ This repository is governed by multiple engineering documents located in `docs/`
 | Document                       | Responsibility                                                                                                                    |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | **`docs/AGENTS.md`**           | AI workflow, engineering mindset, implementation strategy, decision making, and review process.                                  |
-| **`docs/ARCHITECTURE.md`**     | Feature-First Clean Architecture, Riverpod Generator patterns, dependency boundaries, data flow, and native bridge integration. |
+| **`docs/ARCHITECTURE.md`**     | Feature-First Clean Architecture, Riverpod Generator patterns, dependency boundaries, and data flow. |
 | **`docs/STANDARD.md`**         | Dart & Flutter coding conventions, formatting, design system, localization, forms, storage, error handling, logging, and code quality. |
 | **`docs/CORE_MODULES.md`**     | Core infrastructure inventory (Theme, Network, Storage, Routing, Constants, Reusable Widgets, Utils, Extensions).                 |
 | **`docs/FEATURE_TEMPLATE.md`** | Step-by-step guide and template structure for developing new feature modules.                                                    |

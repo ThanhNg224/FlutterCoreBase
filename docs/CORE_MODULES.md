@@ -7,7 +7,7 @@ The `lib/core/` directory contains shared, application-wide infrastructure that 
 ```text
 lib/core/
 ├── config/              # AppConfig, AppConfigController — cross-cutting runtime config
-├── constants/           # Global endpoints, constants, storage keys
+├── constants/           # ApiEndpoints, AppConstants, StorageKeys, AppAssets
 ├── errors/              # AppException, Failure, ErrorHandler, FailureL10n
 ├── extensions/          # BuildContext extensions (context.l10n)
 ├── localization/        # LocaleNotifier, multi-language switching
@@ -15,7 +15,7 @@ lib/core/
 ├── network/             # DioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider (isOnlineProvider)
 ├── routing/             # GoRouter configuration & RoutePaths
 ├── storage/             # LocalStorageService (SharedPreferences) & SecureStorageService (credentials)
-├── theme/               # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion
+├── theme/               # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion, ThemeModeNotifier
 ├── utils/               # FormValidators, Redaction — pure helpers shared by UI and logger
 └── widgets/             # Reusable UI components — see "Reusable UI Widgets" below for the current list
 ```
@@ -32,6 +32,7 @@ lib/core/
 - **`AppSemanticColors`**: A `ThemeExtension` for raw `Color` values (icons, borders, surfaces, status tokens) accessed via `context.colors`.
 - **`AppMotion`**: Accessible animation tokens and `.staggeredEntrance()` respecting reduced-motion accessibility settings.
 - **`AppSpacing`**: Standardized 8-point grid paddings, margins, and border radius tokens.
+- **`ThemeModeNotifier`**: `@Riverpod(keepAlive: true)` for dynamic app `ThemeMode` (Light, Dark, System) toggle and SharedPreferences persistence.
 
 ---
 
@@ -123,3 +124,22 @@ Always check this table before writing a new one-off widget:
 | `AppTextField` | Standard text input with label/hint/validator wiring. |
 | `AsyncValueWidget<T>` | Renders `AsyncValue<T>` loading/error/data states consistently; error state already maps `Failure` to `failure.localizedMessage(l10n)` — never render `err.toString()` in a custom error branch. |
 | `OfflineBanner` | Auto-shown/hidden via `isOnlineProvider`; wired once in `app.dart`, no per-screen setup needed. |
+
+---
+
+## 11. Constants (`core/constants/`)
+
+- **`ApiEndpoints`**: Base URLs (`prodUrl`, `devUrl`), API endpoint paths, and runtime credential defaults loaded via `String.fromEnvironment`.
+- **`AppConstants`**: Global application constants (`appName`, `connectTimeout`, `receiveTimeout`, `mockSdkDelay`).
+- **`AppAssets`**: Centralized asset paths for launcher and splash branding (`appIcon`, `appIconForeground`, `splashIcon`).
+- **`StorageKeys`**: Centralized persistent keys used across `ILocalStorageService` and `ISecureStorageService`.
+
+---
+
+## 12. Error Handling (`core/errors/`)
+
+- **`AppException`**: Base hierarchy for low-level application exceptions (`ServerException`, `NetworkException`, `PlatformException`, `StorageException`, `UnauthorizedException`, `UnexpectedException`).
+- **`Failure`**: Domain-level union type defined with `@freezed` for functional error returns (`Either<Failure, T>`).
+- **`ErrorHandler`**: Centralized error mapper (`handleException`, `handleDioError`) and async wrapper (`ErrorHandler.guard()`).
+- **`FailureL10n`**: Extension mapping each domain `Failure` instance to user-friendly localized copy via `failure.localizedMessage(context.l10n)`.
+
