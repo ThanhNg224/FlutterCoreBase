@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <!-- app info -->
   <title>Flutter Core Base</title>
   <meta name="description" content="A production-grade modern Flutter starter base project.">
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png">
 
   <!-- meta tags & icons -->
   <meta charset="UTF-8">
@@ -18,9 +16,11 @@
   <!-- flutter config -->
   <base href="$FLUTTER_BASE_HREF">
   <link rel="manifest" href="manifest.json">
-  <link rel="preload" href="assets/FontManifest.json" as="fetch" type="application/json" crossorigin="anonymous" />
+  <link rel="preload" href="assets/FontManifest.json" as="fetch" type="application/json" crossorigin="anonymous">
 
   <!-- Splashscreen -->
+  
+  
   <style id="splash-screen-style">
     html {
       height: 100%
@@ -29,7 +29,7 @@
     body {
       margin: 0;
       min-height: 100%;
-      background-color: #272625;
+      background-color: #1E56A0;
           background-size: 100% 100%;
     }
 
@@ -78,6 +78,12 @@
       bottom: 0;
       right: 0;
     }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #0F3A70;
+          }
+    }
   </style>
   <script id="splash-screen-script">
     function removeSplashFromWeb() {
@@ -88,12 +94,13 @@
   </script>
 </head>
 <body>
-  <!-- Splashscreen -->
   <picture id="splash">
-    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
-    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
-    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+      <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+      <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+      <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
   </picture>
+  <!-- Splashscreen -->
+  
   <!-- Flutter Bootstrap -->
   <script>
     {{flutter_js}}
@@ -127,5 +134,6 @@
     }
     _flutter.loader.load({config: userConfig});
   </script>
-</body>
-</html>
+
+
+</body></html>

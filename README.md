@@ -208,6 +208,25 @@ make codegen
 make branding
 ```
 
+**Making it yours.** The base ships a deliberately plain placeholder mark — concentric
+rounded squares in the brand blue — so it is obvious at a glance that the branding has
+not been set yet. To replace it, overwrite these three files and re-run `make branding`:
+
+| File | Used for | Notes |
+| --- | --- | --- |
+| `assets/branding/app_icon.png` | iOS + Android launcher icon | 1024×1024, full-bleed, no transparency |
+| `assets/branding/app_icon_foreground.png` | Android adaptive icon foreground | 1024×1024, transparent, keep the mark inside the centre ~60% — launchers crop the rest |
+| `assets/branding/splash_icon.png` | Native splash (light + dark) | 1024×1024, transparent, drawn on the splash colour |
+
+Splash and adaptive-icon background colours live in `pubspec.yaml` under
+`flutter_native_splash` and `flutter_launcher_icons`; they currently match
+`AppColors.primary` / `primaryDark`.
+
+`make branding` rewrites generated files under `android/app/src/main/res/`,
+`ios/Runner/Assets.xcassets/` and `web/`. **Commit those** — a fork that changes the
+source PNGs without re-running this keeps shipping the previous project's logo on the
+splash screen, which is exactly how this base ended up displaying someone else's brand.
+
 ### 4. Run Code Analysis & Unit Tests
 The codebase includes an extensive automated test suite (**139 passing tests**) covering error mapping, security redaction, WCAG contrast verification, reduced-motion compliance, controller lifecycles, the auth session/refresh flow, the architecture layer-boundary guard, and loopback HTTP network integration.
 
