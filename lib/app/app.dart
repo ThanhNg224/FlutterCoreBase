@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_core_base/core/constants/app_constants.dart';
 import 'package:flutter_core_base/core/localization/locale_provider.dart';
-import 'package:flutter_core_base/core/routing/app_router.dart';
+import 'package:flutter_core_base/app/routing/app_router.dart';
 import 'package:flutter_core_base/core/theme/app_theme.dart';
 import 'package:flutter_core_base/core/theme/theme_provider.dart';
 import 'package:flutter_core_base/core/widgets/offline_banner.dart';

@@ -4,7 +4,7 @@
 [![Dart](https://img.shields.io/badge/Dart-3.13+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Riverpod](https://img.shields.io/badge/State-Riverpod_Generator-blue?logo=flutter)](https://riverpod.dev)
 [![Architecture](https://img.shields.io/badge/Architecture-Feature--First_Clean-green)](#-architecture-pillars)
-[![Tests](https://img.shields.io/badge/Tests-83_Passed-success)](#-testing--quality-assurance)
+[![Tests](https://img.shields.io/badge/Tests-139_Passed-success)](#-testing--quality-assurance)
 
 A production-grade, highly maintainable Flutter starter base engineered with **Feature-First Clean Architecture**, **Riverpod Generator**, and enterprise-grade resilience, security, and accessibility standards.
 
@@ -17,13 +17,25 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
   - Zero framework dependencies in domain (`@freezed` entities & abstract repositories).
 * **Compile-Time State & DI (`flutter_riverpod` + `riverpod_generator`):**
   - Type-safe, declarative dependencies via `@riverpod` annotations.
-  - Zero memory leaks via automatic `autoDispose` controller lifecycles.
+  - Screen-level controllers are `autoDispose` by default; infrastructure
+    providers (router, theme, storage, config, Dio, auth session) are
+    `keepAlive: true` by design.
   - Granular widget rebuilds using `.select()`.
 * **Security by Construction:**
   - **Zero log leakage in release:** All logging routes to `SilentSink` via `LogPolicy` without runtime overhead.
   - **Compile-time redaction:** Logger data parameter strictly requires `Map<String, Redacted>`.
   - **Decoupled credential storage:** Non-sensitive settings in `SharedPreferences`, auth credentials strictly encrypted in `flutter_secure_storage`.
   - **Self-defending network layer:** `AuthInterceptor` auto-clears credential overrides on `401 Unauthorized`.
+* **Session Management Out of the Box:**
+  - `features/auth/` ships the full 3-layer slice: login, Keychain/Keystore-backed
+    session persistence, and restore-on-launch.
+  - `GoRouter.redirect` guards every route against `AuthController`, with a splash
+    while the session is restored so returning users never flash through login.
+  - `AuthInterceptor` refreshes once on 401 and replays the request, single-flight,
+    against an interceptor-free Dio so refresh can never recurse.
+* **Environment Is a Build-Time Fact:**
+  - `--dart-define=APP_ENV` (falling back to the native flavor) decides the backend.
+    The in-app toggle is a debug-only override and is compiled out of production builds.
 * **Functional Error Handling (`fpdart`):**
   - Repositories return `Either<Failure, T>` wrapped via `ErrorHandler.guard()`.
   - Zero raw exceptions or stack traces exposed to users; `FailureL10n` maps domain failures directly to localized ARB copy.
@@ -33,8 +45,10 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
   - System reduced-motion compliance via `AppMotion` respecting user accessibility settings.
   - Typography powered by **Inter** (`GoogleFonts.inter`) with full Vietnamese diacritics support.
   - Dynamic `ThemeModeNotifier` (Light / Dark / System) with semantic tokens via `AppSemanticColors` (`context.colors`).
-* **Offline-First Resiliency & Runtime Sandbox:**
-  - Real-time `OfflineBanner` automatically managed at the root router level via `connectivity_plus`.
+* **Connectivity Awareness & Runtime Sandbox:**
+  - Real-time `OfflineBanner` driven by `connectivity_plus` at the root builder
+    level. Note this is connectivity *awareness*, not offline-first: there is no
+    local cache or request queue, and adding one is left to the consuming project.
   - Modern skeleton loading via `AppShimmer` and `AppShimmerList`.
   - Hot-switch between Dev/Prod environments and Mock SDK mode on-the-fly at runtime without app restarts.
 * **Modern Build Toolchain:**
@@ -48,7 +62,7 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
 | --------------- | ---------- | ------- |
 | **Framework & Language** | Flutter 3.47+ · Dart 3.13+ | Cross-platform client SDK |
 | **State Management & DI** | `flutter_riverpod` · `riverpod_generator` | Reactive state & compile-time dependency injection |
-| **Declarative Routing** | `go_router` | Route matching, deep linking, parameter resolution |
+| **Declarative Routing** | `go_router` | Route matching, deep linking, `GoRouter.redirect` auth guard |
 | **Networking & Connectivity** | `dio` · `connectivity_plus` | HTTP client, security interceptors, connection listener |
 | **Functional & Immutability** | `fpdart` · `freezed` · `json_serializable` | Functional `Either<Failure, T>`, immutable entities & DTOs |
 | **Persistence & Encryption** | `shared_preferences` · `flutter_secure_storage` | Typed local preferences & Keystore/Keychain encryption |
@@ -61,20 +75,22 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
 
 ```text
 lib/
-├── app/
-│   ├── app.dart                        # MaterialApp.router (Theme, Locale, Router setup)
+├── app/                                 # Composition Root (the only layer allowed to import features)
+│   ├── app.dart                         # MaterialApp.router (Theme, Locale, Router setup)
+│   ├── network/                        # AppDioClient — composes AuthInterceptor + LoggingInterceptor
+│   ├── routing/                        # AppRouter — GoRouter instance + redirect guard, imports feature screens
 │   └── observers/
 │       └── app_provider_observer.dart  # Riverpod lifecycle logging & telemetry
 │
-├── core/                               # Core Infrastructure (Reusable across any app)
-│   ├── config/                         # AppConfig, AppConfigController (Dev/Prod, Tokens, Mock)
+├── core/                               # Core Infrastructure (Reusable across any app; must not import features/app)
+│   ├── config/                         # AppConfig, AppConfigController, AppEnvironment (build-time), DevTools (build gating)
 │   ├── constants/                      # ApiEndpoints, AppConstants, StorageKeys, AppAssets
 │   ├── errors/                         # Failure, AppException, ErrorHandler, FailureL10n
 │   ├── extensions/                     # BuildContext extensions (context.l10n)
 │   ├── localization/                   # LocaleNotifier
 │   ├── logging/                        # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted
-│   ├── network/                        # DioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider
-│   ├── routing/                        # AppRouter, RoutePaths
+│   ├── network/                        # AuthDioClient (interceptor-free), AuthInterceptor, LoggingInterceptor, ConnectivityProvider
+│   ├── routing/                        # RoutePaths (pure data; AppRouter itself lives under lib/app/)
 │   ├── storage/                        # LocalStorageService (SharedPreferences), SecureStorageService (credentials)
 │   ├── theme/                          # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion, ThemeModeNotifier
 │   ├── utils/                          # FormValidators, Redaction
@@ -85,6 +101,11 @@ lib/
 │   └── app_vi.arb                      # Vietnamese dictionary
 │
 └── features/                           # Feature Modules (Feature-First Clean Architecture)
+    ├── auth/                           # Login, session persistence, route guard
+    │   ├── data/                       # AuthRemoteDataSource, AuthLocalDataSource, AuthSessionDto, AuthRepositoryImpl
+    │   ├── domain/                     # AuthUser, AuthSession entities, IAuthRepository
+    │   └── presentation/               # AuthController (keepAlive), LoginScreen, SplashScreen, AccountScreen
+    │
     ├── catalog/                        # SDK Feature Catalog & Showcase Gallery
     │   ├── data/                       # CatalogRepository in repositories/ (implements ICatalogRepository)
     │   ├── domain/                     # CatalogFeature entity, ICatalogRepository
@@ -188,7 +209,7 @@ make branding
 ```
 
 ### 4. Run Code Analysis & Unit Tests
-The codebase includes an extensive automated test suite (**83 passing tests**) covering error mapping, security redaction, WCAG contrast verification, reduced-motion compliance, controller lifecycles, and loopback HTTP network integration.
+The codebase includes an extensive automated test suite (**139 passing tests**) covering error mapping, security redaction, WCAG contrast verification, reduced-motion compliance, controller lifecycles, the auth session/refresh flow, the architecture layer-boundary guard, and loopback HTTP network integration.
 
 ```bash
 # Static analysis (Enforces 0 warnings / 0 errors)
@@ -224,4 +245,4 @@ To add a new feature (e.g. `document_scanner`), follow the 3-layer structure in 
 3. **Presentation Layer (`features/<feature>/presentation/`):**
    - Create `@riverpod` controller and build UI using `AppTheme`, `AppColors`, and `AppSpacing`.
 4. **Routing & Registration:**
-   - Register route in `lib/core/routing/route_paths.dart` and `lib/core/routing/app_router.dart`.
+   - Register route in `lib/core/routing/route_paths.dart` and `lib/app/routing/app_router.dart`.

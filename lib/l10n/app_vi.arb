@@ -67,6 +67,7 @@
   "errorPlatform": "SDK gốc không thể hoàn thành tác vụ trên thiết bị này.",
   "errorStorage": "Không thể đọc dữ liệu cấu hình cục bộ của ứng dụng.",
   "errorUnexpected": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+  "errorDevToolsDisabled": "Cài đặt dành cho nhà phát triển không khả dụng trong bản dựng này.",
   "validationRequired": "Trường này là bắt buộc.",
   "validationEmail": "Vui lòng nhập địa chỉ email hợp lệ.",
   "validationMinLength": "Vui lòng nhập ít nhất {count} ký tự.",
@@ -81,5 +82,19 @@
   "saveButton": "Lưu",
   "confirmButton": "Xác nhận",
   "somethingWentWrongMessage": "Đã có lỗi xảy ra",
-  "pageNotFoundMessage": "Không tìm thấy trang: {uri}"
+  "pageNotFoundMessage": "Không tìm thấy trang: {uri}",
+
+  "loginTitle": "Đăng nhập",
+  "loginSubtitle": "Dùng thông tin demo bên dưới, hoặc trỏ màn hình này tới API của bạn.",
+  "emailLabel": "Email",
+  "emailHint": "ban@example.com",
+  "passwordLabel": "Mật khẩu",
+  "passwordHint": "Mật khẩu của bạn",
+  "loginButton": "Đăng nhập",
+  "logoutButton": "Đăng xuất",
+  "demoCredentialsHint": "Demo: mọi email đều đăng nhập được. Dùng locked@example.com để xem luồng lỗi.",
+  "sessionSectionTitle": "Phiên đăng nhập",
+  "signedInAsLabel": "Đang đăng nhập với",
+  "manageSessionLabel": "Quản lý phiên đăng nhập",
+  "restoringSessionMessage": "Đang khôi phục phiên đăng nhập…"
 }

@@ -18,6 +18,7 @@ abstract class AppTheme {
           onSecondary: Colors.white,
           surface: AppColors.surfaceLight,
           error: AppColors.errorOnLight,
+          onError: AppColors.onLightFill,
         );
 
     return ThemeData(
@@ -73,6 +74,7 @@ abstract class AppTheme {
           onSecondary: Colors.white,
           surface: AppColors.surfaceDark,
           error: AppColors.error,
+          onError: Colors.black,
         );
 
     return ThemeData(

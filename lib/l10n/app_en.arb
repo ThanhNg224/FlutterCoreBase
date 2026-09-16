@@ -93,6 +93,7 @@
   "errorPlatform": "The native SDK could not finish the operation on this device.",
   "errorStorage": "Could not read the app's local settings.",
   "errorUnexpected": "Something went wrong. Please try again.",
+  "errorDevToolsDisabled": "Developer settings are not available in this build.",
   "validationRequired": "This field is required.",
   "validationEmail": "Enter a valid email address.",
   "validationMinLength": "Enter at least {count} characters.",
@@ -112,5 +113,19 @@
     "placeholders": {
       "uri": { "type": "String" }
     }
-  }
+  },
+
+  "loginTitle": "Sign in",
+  "loginSubtitle": "Use the demo credentials below, or point this screen at your own API.",
+  "emailLabel": "Email",
+  "emailHint": "you@example.com",
+  "passwordLabel": "Password",
+  "passwordHint": "Your password",
+  "loginButton": "Sign in",
+  "logoutButton": "Sign out",
+  "demoCredentialsHint": "Demo: any email signs in. Use locked@example.com to see the failure path.",
+  "sessionSectionTitle": "Session",
+  "signedInAsLabel": "Signed in as",
+  "manageSessionLabel": "Manage your session",
+  "restoringSessionMessage": "Restoring your session…"
 }

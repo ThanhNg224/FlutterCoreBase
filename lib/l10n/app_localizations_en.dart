@@ -207,6 +207,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorUnexpected => 'Something went wrong. Please try again.';
 
   @override
+  String get errorDevToolsDisabled => 'Developer settings are not available in this build.';
+
+  @override
   String get validationRequired => 'This field is required.';
 
   @override
@@ -242,4 +245,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String pageNotFoundMessage(String uri) {
     return 'Page not found: $uri';
   }
+
+  @override
+  String get loginTitle => 'Sign in';
+
+  @override
+  String get loginSubtitle => 'Use the demo credentials below, or point this screen at your own API.';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get passwordHint => 'Your password';
+
+  @override
+  String get loginButton => 'Sign in';
+
+  @override
+  String get logoutButton => 'Sign out';
+
+  @override
+  String get demoCredentialsHint => 'Demo: any email signs in. Use locked@example.com to see the failure path.';
+
+  @override
+  String get sessionSectionTitle => 'Session';
+
+  @override
+  String get signedInAsLabel => 'Signed in as';
+
+  @override
+  String get manageSessionLabel => 'Manage your session';
+
+  @override
+  String get restoringSessionMessage => 'Restoring your session…';
 }

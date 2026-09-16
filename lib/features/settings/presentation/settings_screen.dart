@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/config/app_config.dart';
 import 'package:flutter_core_base/core/config/app_config_controller.dart';
+import 'package:flutter_core_base/core/config/dev_tools.dart';
 import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/localization/locale_provider.dart';
+import 'package:flutter_core_base/core/routing/route_paths.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/theme/theme_provider.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_core_base/core/widgets/app_snackbar.dart';
 import 'package:flutter_core_base/core/widgets/app_text_field.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -31,15 +34,30 @@ class SettingsScreen extends ConsumerWidget {
           child: ListView(
             padding: AppSpacing.pagePadding,
             children: [
-              AppSectionHeader(title: l10n.sdkEnvironmentTitle),
-              const _EnvironmentCard(),
-              const SizedBox(height: AppSpacing.l),
-              AppSectionHeader(
-                title: l10n.credentialsTitle,
-                subtitle: l10n.credentialsDescription,
+              AppSectionHeader(title: l10n.sessionSectionTitle),
+              AppCard(
+                onTap: () => context.push(RoutePaths.account),
+                child: Row(
+                  children: [
+                    const Icon(Icons.account_circle_outlined),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(child: Text(l10n.manageSessionLabel)),
+                    const Icon(Icons.chevron_right_rounded),
+                  ],
+                ),
               ),
-              const _CredentialsCard(),
               const SizedBox(height: AppSpacing.l),
+              if (DevTools.isEnabled) ...[
+                AppSectionHeader(title: l10n.sdkEnvironmentTitle),
+                const _EnvironmentCard(),
+                const SizedBox(height: AppSpacing.l),
+                AppSectionHeader(
+                  title: l10n.credentialsTitle,
+                  subtitle: l10n.credentialsDescription,
+                ),
+                const _CredentialsCard(),
+                const SizedBox(height: AppSpacing.l),
+              ],
               AppSectionHeader(title: l10n.appearanceThemeTitle),
               const _AppearanceCard(),
               const SizedBox(height: AppSpacing.l),
@@ -79,7 +97,14 @@ class _EnvironmentCard extends ConsumerWidget {
                   style: textTheme.bodySmall,
                 ),
                 value: isDev,
-                onChanged: controller.toggleEnvironment,
+                onChanged: (value) async {
+                  final result = await controller.toggleEnvironment(value);
+                  if (!context.mounted) return;
+                  result.fold(
+                    (failure) => AppSnackbar.showError(context, failure.localizedMessage(context.l10n)),
+                    (_) {},
+                  );
+                },
               ),
               const Divider(),
               Text(l10n.activeBaseUrlLabel, style: textTheme.bodySmall),
@@ -100,7 +125,14 @@ class _EnvironmentCard extends ConsumerWidget {
                   style: textTheme.bodySmall,
                 ),
                 value: config.mockSdkEnabled,
-                onChanged: controller.toggleMockSdk,
+                onChanged: (value) async {
+                  final result = await controller.toggleMockSdk(value);
+                  if (!context.mounted) return;
+                  result.fold(
+                    (failure) => AppSnackbar.showError(context, failure.localizedMessage(context.l10n)),
+                    (_) {},
+                  );
+                },
               ),
             ],
           ),

@@ -47,6 +47,13 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
   - **PROHIBITED:** Hardcoding arbitrary pixel values (e.g. `EdgeInsets.all(13)` or `BorderRadius.circular(15)`).
 - **Reusable Components:**
   - Always check and reuse `lib/core/widgets/` (`AppButton`, `AppBottomSheet`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AppShimmer`/`AppShimmerList`, `AppSnackbar`, `AppTextField`, `AsyncValueWidget`, `OfflineBanner`) before creating custom one-off UI widgets. See `docs/CORE_MODULES.md` for the current, authoritative list.
+- **The one exception:** `core/widgets/app_error_widget.dart` uses raw `AppColors`
+  tokens, literal `TextStyle`s, and untranslated copy on purpose. It is installed
+  as `ErrorWidget.builder`, so it renders after a subtree has already failed —
+  possibly outside `MaterialApp`, where `context.colors` (a force-unwrapped theme
+  extension) and `context.l10n` would both throw. An error fallback that can
+  itself fail is worse than an off-token one. Do not "fix" this file, and do not
+  cite it as precedent for anything else.
 
 ### 4. Localization & Forms (Strict Rules)
 - **Localization:**

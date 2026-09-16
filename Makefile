@@ -12,6 +12,9 @@ DRY_RUN ?=
 FORCE ?=
 SKIP_BUILD_CHECK ?=
 
+DART_DEFINE_DEV ?= --dart-define=APP_ENV=dev
+DART_DEFINE_PROD ?= --dart-define=APP_ENV=prod
+
 INIT_OPTIONS = \
   $(if $(CLEAN_SAMPLES),--clean-samples) \
   $(if $(DRY_RUN),--dry-run) \
@@ -81,13 +84,13 @@ branding: ## Regenerate launcher icons and native splash assets
 	$(DART) run flutter_native_splash:create
 
 run-dev: ## Run the development flavor
-	$(FLUTTER) run --flavor dev
+	$(FLUTTER) run --flavor dev $(DART_DEFINE_DEV)
 
 run-prod: ## Run the production flavor
-	$(FLUTTER) run --flavor prod
+	$(FLUTTER) run --flavor prod $(DART_DEFINE_PROD)
 
 build-apk-dev: ## Build the development debug APK
-	$(FLUTTER) build apk --debug --flavor dev
+	$(FLUTTER) build apk --debug --flavor dev $(DART_DEFINE_DEV)
 
 build-apk-prod: ## Build the production release APK
-	$(FLUTTER) build apk --release --flavor prod
+	$(FLUTTER) build apk --release --flavor prod $(DART_DEFINE_PROD)

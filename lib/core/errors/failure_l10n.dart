@@ -15,5 +15,6 @@ extension FailureL10n on Failure {
     PlatformFailure() => l10n.errorPlatform,
     StorageFailure() => l10n.errorStorage,
     UnexpectedFailure() => l10n.errorUnexpected,
+    DevToolsDisabledFailure() => l10n.errorDevToolsDisabled,
   };
 }

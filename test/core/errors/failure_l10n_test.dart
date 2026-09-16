@@ -12,6 +12,7 @@ void main() {
     Failure.platform(message: 'PlatformException(401, Something went wrong, ...)'),
     Failure.storage(message: 'raw storage text'),
     Failure.unexpected(message: 'raw unexpected text'),
+    Failure.devToolsDisabled(),
   ];
 
   for (final locale in AppLocalizations.supportedLocales) {

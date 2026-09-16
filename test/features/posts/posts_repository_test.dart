@@ -46,7 +46,7 @@ void main() {
           expect(posts.length, 2);
           expect(posts.first.id, 1);
           expect(posts.first.title, 'Test Title 1');
-          expect(posts.first.tags, contains('General'));
+          expect(posts.first.tags, isEmpty, reason: 'the mock DTO sent no tags, so the mapper must not fabricate any');
         },
       );
     });
@@ -82,6 +82,34 @@ void main() {
       final result = await repository.deletePost(1);
 
       expect(result.isRight(), isTrue);
+    });
+
+    test('toDomain is a pure copy and invents nothing', () {
+      const dto = PostDto(id: 7, title: 'T', body: 'B', userId: 3);
+
+      final post = dto.toDomain();
+
+      expect(post.id, 7);
+      expect(post.title, 'T');
+      expect(post.body, 'B');
+      expect(post.userId, 3);
+      expect(post.tags, isEmpty, reason: 'the API sent no tags, so the mapper must not fabricate any');
+      expect(post.createdAt, isNull, reason: 'the API sent no timestamp');
+    });
+
+    test('toDomain is deterministic', () {
+      const dto = PostDto(id: 1, title: 'T', body: 'B');
+      expect(dto.toDomain(), dto.toDomain());
+    });
+
+    test('toDomain passes through tags and createdAt when the wire supplies them', () {
+      final createdAt = DateTime.utc(2026, 1, 2, 3, 4);
+      final dto = PostDto(id: 1, title: 'T', body: 'B', tags: const ['a', 'b'], createdAt: createdAt);
+
+      final post = dto.toDomain();
+
+      expect(post.tags, ['a', 'b']);
+      expect(post.createdAt, createdAt);
     });
   });
 }

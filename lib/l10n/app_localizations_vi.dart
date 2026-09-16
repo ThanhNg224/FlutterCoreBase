@@ -206,6 +206,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorUnexpected => 'Đã có lỗi xảy ra. Vui lòng thử lại.';
 
   @override
+  String get errorDevToolsDisabled => 'Cài đặt dành cho nhà phát triển không khả dụng trong bản dựng này.';
+
+  @override
   String get validationRequired => 'Trường này là bắt buộc.';
 
   @override
@@ -241,4 +244,43 @@ class AppLocalizationsVi extends AppLocalizations {
   String pageNotFoundMessage(String uri) {
     return 'Không tìm thấy trang: $uri';
   }
+
+  @override
+  String get loginTitle => 'Đăng nhập';
+
+  @override
+  String get loginSubtitle => 'Dùng thông tin demo bên dưới, hoặc trỏ màn hình này tới API của bạn.';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get emailHint => 'ban@example.com';
+
+  @override
+  String get passwordLabel => 'Mật khẩu';
+
+  @override
+  String get passwordHint => 'Mật khẩu của bạn';
+
+  @override
+  String get loginButton => 'Đăng nhập';
+
+  @override
+  String get logoutButton => 'Đăng xuất';
+
+  @override
+  String get demoCredentialsHint => 'Demo: mọi email đều đăng nhập được. Dùng locked@example.com để xem luồng lỗi.';
+
+  @override
+  String get sessionSectionTitle => 'Phiên đăng nhập';
+
+  @override
+  String get signedInAsLabel => 'Đang đăng nhập với';
+
+  @override
+  String get manageSessionLabel => 'Quản lý phiên đăng nhập';
+
+  @override
+  String get restoringSessionMessage => 'Đang khôi phục phiên đăng nhập…';
 }

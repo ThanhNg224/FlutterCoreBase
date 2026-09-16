@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_core_base/core/theme/app_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 
 enum ButtonVariant { primary, secondary, outline, danger }
@@ -25,12 +24,14 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final effectiveOnPressed = isLoading ? null : onPressed;
-    final foreground = switch (variant) {
-      ButtonVariant.outline =>
-        Theme.of(context).outlinedButtonTheme.style?.foregroundColor?.resolve(const {}) ?? AppColors.primaryDark,
-      ButtonVariant.primary || ButtonVariant.danger => AppColors.onLightFill,
-      ButtonVariant.secondary => Colors.white,
+
+    final (Color background, Color foreground) = switch (variant) {
+      ButtonVariant.primary => (scheme.primary, scheme.onPrimary),
+      ButtonVariant.secondary => (scheme.secondary, scheme.onSecondary),
+      ButtonVariant.danger => (scheme.error, scheme.onError),
+      ButtonVariant.outline => (Colors.transparent, scheme.primary),
     };
 
     final child = Row(
@@ -53,21 +54,6 @@ class AppButton extends StatelessWidget {
     );
 
     final button = switch (variant) {
-      ButtonVariant.primary => ElevatedButton(
-        onPressed: effectiveOnPressed,
-        style: _filledStyle(AppColors.primary, foreground),
-        child: child,
-      ),
-      ButtonVariant.secondary => ElevatedButton(
-        onPressed: effectiveOnPressed,
-        style: _filledStyle(AppColors.secondary, foreground),
-        child: child,
-      ),
-      ButtonVariant.danger => ElevatedButton(
-        onPressed: effectiveOnPressed,
-        style: _filledStyle(AppColors.error, foreground),
-        child: child,
-      ),
       ButtonVariant.outline => OutlinedButton(
         onPressed: effectiveOnPressed,
         style: isLoading
@@ -76,6 +62,11 @@ class AppButton extends StatelessWidget {
                 side: BorderSide(color: foreground),
               )
             : null,
+        child: child,
+      ),
+      _ => ElevatedButton(
+        onPressed: effectiveOnPressed,
+        style: _filledStyle(background, foreground),
         child: child,
       ),
     };

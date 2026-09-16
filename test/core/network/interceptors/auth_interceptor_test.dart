@@ -32,11 +32,14 @@ class RecordingAdapter implements HttpClientAdapter {
 void main() {
   test('adds configured bearer token and client key to requests', () async {
     final adapter = RecordingAdapter();
+    final replay = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
     final dio = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
     dio.interceptors.add(
       AuthInterceptor(
         readConfig: () => const AppConfig(appToken: 'token-value', clientKey: 'client-key-value'),
-        clearCredentialOverrides: () async {},
+        readAccessToken: () => null,
+        refreshSession: () async => null,
+        replayClient: replay,
         baseUri: Uri.parse('https://api.example.test'),
       ),
     );
@@ -47,37 +50,49 @@ void main() {
     expect(adapter.requestOptions?.headers['X-Client-Key'], 'client-key-value');
   });
 
-  test('clears credential overrides after a 401 response', () async {
+  test('a 401 from our own API asks for a refresh exactly once', () async {
     final adapter = RecordingAdapter(statusCode: 401);
+    final replay = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
     final dio = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
-    var clearCalls = 0;
+    var refreshCalls = 0;
     dio.interceptors.add(
       AuthInterceptor(
         readConfig: AppConfig.new,
-        clearCredentialOverrides: () async => clearCalls++,
+        readAccessToken: () => null,
+        refreshSession: () async {
+          refreshCalls++;
+          return null;
+        },
+        replayClient: replay,
         baseUri: Uri.parse('https://api.example.test'),
       ),
     );
 
     await expectLater(dio.get<void>('/posts'), throwsA(isA<DioException>()));
 
-    expect(clearCalls, 1);
+    expect(refreshCalls, 1);
   });
 
-  test('does not clear credential overrides for a 401 from another origin', () async {
+  test('a 401 from another origin does not trigger a refresh', () async {
     final adapter = RecordingAdapter(statusCode: 401);
+    final replay = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
     final dio = Dio(BaseOptions(baseUrl: 'https://api.example.test'))..httpClientAdapter = adapter;
-    var clearCalls = 0;
+    var refreshCalls = 0;
     dio.interceptors.add(
       AuthInterceptor(
         readConfig: AppConfig.new,
-        clearCredentialOverrides: () async => clearCalls++,
+        readAccessToken: () => null,
+        refreshSession: () async {
+          refreshCalls++;
+          return null;
+        },
+        replayClient: replay,
         baseUri: Uri.parse('https://api.example.test'),
       ),
     );
 
     await expectLater(dio.get<void>('https://other.example.test/posts'), throwsA(isA<DioException>()));
 
-    expect(clearCalls, 0);
+    expect(refreshCalls, 0);
   });
 }

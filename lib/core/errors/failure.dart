@@ -30,4 +30,8 @@ sealed class Failure with _$Failure {
   const factory Failure.unexpected({
     required String message,
   }) = UnexpectedFailure;
+
+  const factory Failure.devToolsDisabled({
+    @Default('Developer tools are disabled in this build.') String message,
+  }) = DevToolsDisabledFailure;
 }

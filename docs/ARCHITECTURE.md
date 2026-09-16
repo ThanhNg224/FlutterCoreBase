@@ -114,3 +114,12 @@ We use `riverpod_annotation` (`@riverpod`) with code generation (`build_runner`)
 | **Domain**       |      No      |         -         |  No  | Yes (types only)  |
 | **Data**         |      No      |  Yes (implements) |  -   |        Yes        |
 | **Core**         |      No      |        No         |  No  |         -         |
+
+### Composition root
+
+`lib/app/` is the composition root and is the **only** place allowed to import
+features. Routing lives at `lib/app/routing/app_router.dart` for this reason;
+`core/routing/route_paths.dart` stays in `core` because it is pure data.
+
+This matrix is enforced by `test/architecture/layer_boundaries_test.dart`. If a
+change makes that test fail, the change is wrong — not the test.

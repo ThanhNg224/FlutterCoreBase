@@ -1,8 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'post.freezed.dart';
-part 'post.g.dart';
 
+/// Domain entity. Deliberately has no `fromJson`: wire parsing belongs to
+/// [PostDto] in the data layer, and giving the entity a JSON constructor is
+/// how a codebase quietly loses its DTO boundary.
 @freezed
 abstract class Post with _$Post {
   const factory Post({
@@ -10,9 +12,7 @@ abstract class Post with _$Post {
     required String title,
     required String body,
     @Default(1) int userId,
-    @Default([]) List<String> tags,
+    @Default(<String>[]) List<String> tags,
     DateTime? createdAt,
   }) = _Post;
-
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 }

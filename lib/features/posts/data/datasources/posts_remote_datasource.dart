@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_core_base/app/network/app_dio_client.dart';
 import 'package:flutter_core_base/core/config/app_config_controller.dart';
 import 'package:flutter_core_base/core/constants/api_endpoints.dart';
-import 'package:flutter_core_base/core/network/dio_client.dart';
+import 'package:flutter_core_base/core/constants/app_constants.dart';
 import 'package:flutter_core_base/features/posts/data/models/post_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,16 +27,21 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
   @override
   Future<List<PostDto>> getPosts({int page = 1, int limit = 10}) async {
     if (isMock) {
-      await Future<void>.delayed(const Duration(milliseconds: 300));
-      return List.generate(
-        limit,
-        (i) => PostDto(
-          id: (page - 1) * limit + i + 1,
-          title: 'Sample Article #${(page - 1) * limit + i + 1}: Clean Architecture & Riverpod',
-          body: 'This is a sample article demonstrating how Riverpod AsyncNotifier and Clean Architecture seamlessly manage remote data with error handling.',
-          userId: ((i % 3) + 1),
-        ),
-      );
+      await Future<void>.delayed(AppConstants.mockSdkDelay);
+      final now = DateTime.now();
+      return List.generate(limit, (i) {
+        final id = (page - 1) * limit + i + 1;
+        return PostDto(
+          id: id,
+          title: 'Sample Article #$id: Clean Architecture & Riverpod',
+          body:
+              'This is a sample article demonstrating how Riverpod AsyncNotifier and Clean '
+              'Architecture seamlessly manage remote data with error handling.',
+          userId: (i % 3) + 1,
+          tags: const ['General', 'Article'],
+          createdAt: now.subtract(Duration(hours: id * 3)),
+        );
+      });
     }
 
     final response = await dio.get<List<dynamic>>(
@@ -50,12 +56,14 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
   @override
   Future<PostDto> getPostDetail(int id) async {
     if (isMock) {
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await Future<void>.delayed(AppConstants.mockSdkDelay);
       return PostDto(
         id: id,
         title: 'Sample Article #$id: Deep Dive into Architecture',
         body: 'Detailed breakdown of Flutter Riverpod Generator, immutable Freezed models, and GoRouter declarative routing patterns.',
         userId: 1,
+        tags: const ['General', 'Article'],
+        createdAt: DateTime.now(),
       );
     }
 
@@ -66,12 +74,14 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
   @override
   Future<PostDto> createPost({required String title, required String body, int userId = 1}) async {
     if (isMock) {
-      await Future<void>.delayed(const Duration(milliseconds: 300));
+      await Future<void>.delayed(AppConstants.mockSdkDelay);
       return PostDto(
         id: DateTime.now().millisecondsSinceEpoch % 10000,
         title: title,
         body: body,
         userId: userId,
+        tags: const ['General', 'Article'],
+        createdAt: DateTime.now(),
       );
     }
 
@@ -85,7 +95,7 @@ class PostsRemoteDataSource implements IPostsRemoteDataSource {
   @override
   Future<void> deletePost(int id) async {
     if (isMock) {
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await Future<void>.delayed(AppConstants.mockSdkDelay);
       return;
     }
     await dio.delete<dynamic>('${ApiEndpoints.posts}/$id');
