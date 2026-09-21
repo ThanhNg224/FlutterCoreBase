@@ -32,7 +32,7 @@ final class PostsControllerProvider extends $AsyncNotifierProvider<PostsControll
   PostsController create() => PostsController();
 }
 
-String _$postsControllerHash() => r'eb653c08fa88bb42815c1c6b15508ce8317d77a2';
+String _$postsControllerHash() => r'fa7e1750a4fdb2126ebde3a4747cb440f8761cbc';
 
 abstract class _$PostsController extends $AsyncNotifier<PostsState> {
   FutureOr<PostsState> build();
