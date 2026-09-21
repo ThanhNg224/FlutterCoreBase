@@ -14,6 +14,8 @@ SKIP_BUILD_CHECK ?=
 
 DART_DEFINE_DEV ?= --dart-define=APP_ENV=dev
 DART_DEFINE_PROD ?= --dart-define=APP_ENV=prod
+TARGET_PLATFORMS ?= --target-platform=android-arm64,android-x64
+ABI ?= android-arm64
 
 INIT_OPTIONS = \
   $(if $(CLEAN_SAMPLES),--clean-samples) \
@@ -25,7 +27,7 @@ INIT_OPTIONS = \
 
 .PHONY: help init init-dry-run init-cli pub-get gen-l10n build-runner codegen setup \
   format format-check analyze test test-coverage verify ci branding run-dev run-prod \
-  build-apk-dev build-apk-prod
+  build-apk-dev build-apk-prod build-appbundle-prod clean deep-clean clean-artifacts
 
 help: ## Show available commands
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make <target> [VARIABLE=value]\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*##/ {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -83,14 +85,30 @@ branding: ## Regenerate launcher icons and native splash assets
 	$(DART) run flutter_launcher_icons
 	$(DART) run flutter_native_splash:create
 
-run-dev: ## Run the development flavor
-	$(FLUTTER) run --flavor dev $(DART_DEFINE_DEV)
+run-dev: ## Run the development environment
+	$(FLUTTER) run $(DART_DEFINE_DEV)
 
-run-prod: ## Run the production flavor
-	$(FLUTTER) run --flavor prod $(DART_DEFINE_PROD)
+run-prod: ## Run the production environment
+	$(FLUTTER) run $(DART_DEFINE_PROD)
 
-build-apk-dev: ## Build the development debug APK
-	$(FLUTTER) build apk --debug --flavor dev $(DART_DEFINE_DEV)
+build-apk-dev: ## Build the development debug APK (default: android-arm64, override with ABI=android-x64)
+	$(FLUTTER) build apk --debug $(DART_DEFINE_DEV) --target-platform=$(ABI)
 
-build-apk-prod: ## Build the production release APK
-	$(FLUTTER) build apk --release --flavor prod $(DART_DEFINE_PROD)
+build-apk-prod: ## Build the production release APK with obfuscation and symbol splitting (64-bit arm64 & x86_64 only)
+	$(FLUTTER) build apk --release $(DART_DEFINE_PROD) $(TARGET_PLATFORMS) --obfuscate --split-debug-info=build/app/outputs/symbols
+
+build-appbundle-prod: ## Build the production release App Bundle (AAB) with obfuscation and symbol splitting (64-bit arm64 & x86_64 only)
+	$(FLUTTER) build appbundle --release $(DART_DEFINE_PROD) $(TARGET_PLATFORMS) --obfuscate --split-debug-info=build/app/outputs/symbols
+
+clean-artifacts: ## Remove build outputs and test cache without clearing Gradle compilation cache
+	rm -rf build/app/outputs build/test_cache build/*.cache.dill
+
+clean: ## Clean build cache and temporary files
+	$(FLUTTER) clean
+	$(FLUTTER) pub get
+
+deep-clean: ## Deep clean including Flutter and native Android build caches
+	$(FLUTTER) clean
+	cd android && ./gradlew clean
+	$(FLUTTER) pub get
+

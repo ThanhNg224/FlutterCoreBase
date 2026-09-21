@@ -13,9 +13,9 @@ const _log = AppLogger('App');
 
 void main() async {
   // Fails fast if a release binary resolved to a non-production backend.
-  // `default-flavor: dev` in pubspec.yaml means a release build without an
-  // explicit `--flavor prod` compiles as dev; crashing here is loud and
-  // catchable, whereas quietly calling the dev API from a shipped app is not.
+  // Release builds must target production via `--dart-define=APP_ENV=prod`.
+  // Crashing here is loud and catchable, whereas quietly calling the dev API
+  // from a shipped app is not.
   AppEnvironment.guardReleaseBuild();
 
   WidgetsFlutterBinding.ensureInitialized();

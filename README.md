@@ -34,7 +34,7 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
   - `AuthInterceptor` refreshes once on 401 and replays the request, single-flight,
     against an interceptor-free Dio so refresh can never recurse.
 * **Environment Is a Build-Time Fact:**
-  - `--dart-define=APP_ENV` (falling back to the native flavor) decides the backend.
+  - `--dart-define=APP_ENV` decides the backend (`dev` or `prod`).
     The in-app toggle is a debug-only override and is compiled out of production builds.
 * **Functional Error Handling (`fpdart`):**
   - Repositories return `Either<Failure, T>` wrapped via `ErrorHandler.guard()`.
@@ -173,7 +173,7 @@ make setup                 # dependencies, localization, and code generation
 make format               # apply the canonical Dart formatting
 make verify                # format check, analyze, and tests
 make ci                   # codegen, format check, analyze, and coverage
-make run-dev               # run the dev flavor
+make run-dev               # run the dev environment
 make build-apk-dev         # build the dev debug APK
 ```
 
@@ -240,10 +240,10 @@ make test-coverage
 
 ### 5. Run Application
 ```bash
-# Run Development flavor
+# Run Development environment
 make run-dev
 
-# Run Production flavor
+# Run Production environment
 make run-prod
 ```
 

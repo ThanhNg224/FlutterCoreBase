@@ -216,7 +216,7 @@ class TestRefactoringOperations(unittest.TestCase):
             encoding="utf-8",
         )
         (self.root / "android" / "app" / "build.gradle.kts").write_text(
-            'namespace = "com.thanhng224.fluttercorebase"\napplicationId = "com.thanhng224.fluttercorebase"\nresValue("string", "app_name", "Flutter Core Base Dev")\nresValue("string", "app_name", "Flutter Core Base")\n',
+            'namespace = "com.thanhng224.fluttercorebase"\napplicationId = "com.thanhng224.fluttercorebase"\nresValue("string", "app_name", "Flutter Core Base")\n',
             encoding="utf-8",
         )
         (self.root / "android" / "app" / "src" / "main" / "kotlin" / "com" / "thanhng224" / "fluttercorebase" / "MainActivity.kt").write_text(
@@ -344,7 +344,6 @@ class TestRefactoringOperations(unittest.TestCase):
         gradle_content = (self.root / "android" / "app" / "build.gradle.kts").read_text(encoding="utf-8")
         self.assertIn('namespace = "com.acme.shop"', gradle_content)
         self.assertIn('applicationId = "com.acme.shop"', gradle_content)
-        self.assertIn('"Acme Shop Dev"', gradle_content)
         self.assertIn('"Acme Shop"', gradle_content)
 
         new_activity = self.root / "android" / "app" / "src" / "main" / "kotlin" / "com" / "acme" / "shop" / "MainActivity.kt"

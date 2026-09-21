@@ -1028,7 +1028,7 @@ def main() -> int:
         log_success("Project initialization complete! Your Flutter starter is ready.")
         print("\nNext steps:")
         print("  1. Review changes with: git status && git diff")
-        print("  2. Run development flavor: flutter run --flavor dev")
+        print("  2. Run development environment: make run-dev (or flutter run --dart-define=APP_ENV=dev)")
 
     return 0
 

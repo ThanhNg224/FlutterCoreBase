@@ -61,7 +61,6 @@ dev_dependencies:
   flutter_native_splash: ^2.4.8
 
 flutter:
-  default-flavor: dev
   uses-material-design: true
   generate: true
   assets:

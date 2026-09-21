@@ -45,7 +45,7 @@ lib/core/
 
 - **`AppConfig`**: Immutable cross-cutting runtime config (environment, base URL, credentials, mock SDK mode, version).
 - **`AppConfigController`**: `@Riverpod(keepAlive: true)` single source of truth for `AppConfig`, persisted via `LocalStorageService`. Defaults to the build-time environment (`AppEnvironment.build`); the persisted `StorageKeys.useDevEnvironment` toggle is a debug-only override, and all four runtime mutators are rejected with `Failure.devToolsDisabled()` when `DevTools.isEnabled` is false.
-- **`AppEnvironment`**: Pure, `@visibleForTesting`-seamed resolver for which backend environment this binary was *built* for — `--dart-define=APP_ENV` first, then the native build flavor, then production. No Riverpod, no storage.
+- **`AppEnvironment`**: Pure, `@visibleForTesting`-seamed resolver for which backend environment this binary was *built* for — `--dart-define=APP_ENV` first, then production. No Riverpod, no storage.
 - **`DevTools`**: Single predicate (`DevTools.isEnabled`) answering "may this build mutate its own runtime config?". True for any non-release build and for release builds of a non-production environment; false only for a production release build.
 
 ---

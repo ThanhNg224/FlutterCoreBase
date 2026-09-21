@@ -47,22 +47,11 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
+        resValue("string", "app_name", "Flutter Core Base")
+
         // Modern 64-bit mobile targets only (arm64-v8a real devices, x86_64 desktop emulators)
         ndk {
             abiFilters.addAll(listOf("arm64-v8a", "x86_64"))
-        }
-    }
-
-    flavorDimensions += "environment"
-    productFlavors {
-        create("dev") {
-            dimension = "environment"
-            applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "Flutter Core Base Dev")
-        }
-        create("prod") {
-            dimension = "environment"
-            resValue("string", "app_name", "Flutter Core Base")
         }
     }
 
@@ -78,6 +67,12 @@ android {
             if (releaseSigningConfig == null) {
                 logger.warn("android/key.properties is missing; using the debug signing key for local release builds.")
             }
+        }
+    }
+
+    packaging {
+        jniLibs {
+            excludes += listOf("lib/armeabi-v7a/**", "lib/x86/**")
         }
     }
 }

@@ -40,27 +40,16 @@ void main() {
       );
     });
 
-    test('this project sets default-flavor: dev, so appFlavor is never null', () {
-      // If this fails, someone removed `default-flavor: dev` from pubspec.yaml.
-      // That is a legitimate change, but guardReleaseBuild's premise and the
-      // Makefile's dart-defines both assume it is present — revisit them.
-      expect(appFlavor, isNotNull);
+    test('this project does not use native flavors, so appFlavor is null by default', () {
+      expect(appFlavor, isNull);
     });
 
-    test('an explicit APP_ENV overrides the project default flavor', () {
-      // Holds under all three CI invocations of this file: no define,
-      // --dart-define=APP_ENV=dev, and --dart-define=APP_ENV=prod.
+    test('APP_ENV resolves correctly or defaults to production', () {
       switch (AppEnvironment.dartDefine.toLowerCase()) {
-        case 'prod':
-          expect(
-            AppEnvironment.build,
-            Environment.production,
-            reason: 'APP_ENV=prod must beat default-flavor: dev — this is the whole point of the fix',
-          );
         case 'dev':
           expect(AppEnvironment.build, Environment.development);
         default:
-          expect(AppEnvironment.build, Environment.development, reason: 'default-flavor: dev applies');
+          expect(AppEnvironment.build, Environment.production);
       }
     });
   });
@@ -110,12 +99,11 @@ void main() {
       }
     });
 
-    test('the error message names the flags that fix it', () {
+    test('the error message names the flag that fixes it', () {
       try {
         AppEnvironment.verifyReleaseSafety(isReleaseBuild: true, environment: Environment.development);
         fail('expected a StateError');
       } on StateError catch (e) {
-        expect(e.message, contains('--flavor prod'));
         expect(e.message, contains('APP_ENV=prod'));
       }
     });
