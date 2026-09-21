@@ -33,7 +33,7 @@ lib/core/
 
 - **`AppColors`**: Brand palette, semantic status colors, and contrast-tested foreground colors (WCAG >= 4.5:1).
 - **`AppTheme`**: Builds Material 3 `ThemeData` for light/dark via `ColorScheme.fromSeed(seedColor: AppColors.primary)`, explicit `textTheme` mapping from `AppTypography`, `fontFamily: AppTypography.fontFamily`, button themes, `inputDecorationTheme`, `segmentedButtonTheme`, and `dividerTheme`.
-- **`AppTypography`**: Centralized text styles matching the design hierarchy, powered by **Inter** (`GoogleFonts.inter`) for clean legibility and full Vietnamese diacritics support.
+- **`AppTypography`**: Centralized text styles matching the design hierarchy, powered by **Inter** for clean legibility and full Vietnamese diacritics support. The font is bundled (`assets/fonts/`, SIL OFL 1.1) rather than fetched by `google_fonts` at runtime, so the first launch never needs network to render the app's own typeface. `test/core/theme/app_typography_test.dart` fails the build if a weight goes missing or the family name drifts from `pubspec.yaml`.
 - **`AppSemanticColors`**: A `ThemeExtension` for raw `Color` values (icons, borders, surfaces, status tokens) accessed via `context.colors`.
 - **`AppMotion`**: Accessible animation tokens and `.staggeredEntrance()` respecting reduced-motion accessibility settings.
 - **`AppSpacing`**: Standardized 8-point grid paddings, margins, and border radius tokens.

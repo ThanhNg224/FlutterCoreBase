@@ -33,7 +33,8 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
 
 ### 3. Design System & Theming (Strict Rules)
 - **Typography & Font Family:**
-  - The standard app font is **Inter** (`GoogleFonts.inter`), configured in `AppTypography` and `AppTheme`.
+  - The standard app font is **Inter**, **bundled** under `assets/fonts/` and declared in `pubspec.yaml` — not fetched at runtime. Configured in `AppTypography` and `AppTheme`.
+  - Only the four bundled weights (400/500/600/700) are available. Using another weight makes Flutter synthesise it, which looks wrong; add the `.ttf` and a `pubspec.yaml` entry instead.
   - Always use `AppTypography.<style>` or `Theme.of(context).textTheme.<slot>`.
   - **PROHIBITED:** Hardcoding arbitrary `TextStyle(fontSize: 15, ...)` or inline font families in feature widgets.
 - **Colors & Semantics:**

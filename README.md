@@ -44,7 +44,7 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
 * **Accessible Design System (WCAG 2.1 AA):**
   - Material 3 theme engine with automated tests verifying WCAG contrast ($\ge 4.5:1$ text, $\ge 3:1$ non-text).
   - System reduced-motion compliance via `AppMotion` respecting user accessibility settings.
-  - Typography powered by **Inter** (`GoogleFonts.inter`) with full Vietnamese diacritics support.
+  - Typography powered by **Inter**, bundled under `assets/fonts/` (SIL OFL 1.1) rather than fetched at runtime, with full Vietnamese diacritics support — the first launch never needs network to render the app's own typeface.
   - Dynamic `ThemeModeNotifier` (Light / Dark / System) with semantic tokens via `AppSemanticColors` (`context.colors`).
 * **Connectivity Awareness & Runtime Sandbox:**
   - Real-time `OfflineBanner` driven by `connectivity_plus` at the root builder
