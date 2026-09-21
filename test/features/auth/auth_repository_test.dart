@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_core_base/core/errors/app_exception.dart';
 import 'package:flutter_core_base/core/errors/failure.dart';
 import 'package:flutter_core_base/features/auth/data/datasources/auth_local_datasource.dart';
@@ -181,6 +182,34 @@ void main() {
 
     expect(result.isLeft(), isTrue);
     expect(local.stored, isNull, reason: 'an unrefreshable session must not survive');
+  });
+
+  test('non-unauthorized refresh failures retain the persisted session', () async {
+    final failures = <Object>[
+      const NetworkException(message: 'offline'),
+      DioException(
+        requestOptions: RequestOptions(path: '/refresh'),
+        type: DioExceptionType.connectionTimeout,
+      ),
+      const ServerException(message: 'server down', statusCode: 500),
+      const StorageException(message: 'storage unavailable'),
+      const UnexpectedException(message: 'unexpected failure'),
+    ];
+
+    for (final failure in failures) {
+      local.stored = dto();
+      reset(remote);
+      when(() => remote.refresh(any())).thenThrow(failure);
+
+      final result = await repository.refresh('r');
+
+      expect(result.isLeft(), isTrue, reason: 'expected failure for $failure');
+      expect(
+        local.stored?.accessToken,
+        'a',
+        reason: 'refresh failure $failure must not clear a recoverable session',
+      );
+    }
   });
 
   test('logout local clear is ordered before a later login write', () async {

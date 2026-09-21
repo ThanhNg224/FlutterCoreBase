@@ -25,6 +25,7 @@ class _StubRepository implements IAuthRepository {
   int loginCalls = 0;
   AuthSession loginSession = session();
   bool refreshSucceeds = true;
+  Failure? refreshFailure;
   Duration refreshDelay = Duration.zero;
   final List<Completer<Either<Failure, AuthSession>>> refreshCompleters = [];
   Completer<void>? logoutRemote;
@@ -66,6 +67,8 @@ class _StubRepository implements IAuthRepository {
       stored = null;
       return const Left(Failure.unauthorized());
     }
+    final failure = refreshFailure;
+    if (failure != null) return Left(failure);
     stored = session(access: 'a${refreshCalls + 1}');
     return Right(stored!);
   }
@@ -168,6 +171,36 @@ void main() {
 
     expect(token, isNull);
     expect(container.read(authControllerProvider).value, isNull);
+  });
+
+  test('non-unauthorized refresh failures retain the active session', () async {
+    final failures = <Failure>[
+      const Failure.network(),
+      const Failure.server(message: 'server down', statusCode: 500),
+      const Failure.storage(message: 'storage unavailable'),
+      const Failure.unexpected(message: 'unexpected failure'),
+    ];
+
+    for (final failure in failures) {
+      final repository = _StubRepository(stored: session())..refreshFailure = failure;
+      final container = _makeContainer(repository);
+      await container.read(authControllerProvider.future);
+      final notifier = container.read(authControllerProvider.notifier);
+
+      final token = await notifier.refreshSession();
+
+      expect(token, isNull, reason: 'refresh failure $failure must return null');
+      expect(
+        container.read(authControllerProvider).value?.accessToken,
+        'a',
+        reason: 'refresh failure $failure must retain controller state',
+      );
+      expect(
+        repository.stored?.accessToken,
+        'a',
+        reason: 'refresh failure $failure must retain persisted state',
+      );
+    }
   });
 
   test('refreshSession is a no-op without a session', () async {

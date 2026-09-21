@@ -62,8 +62,9 @@ class AuthController extends _$AuthController {
   ///
   /// Single-flight: a burst of 401s must produce one refresh, not one per
   /// request. Returns the new access token, or `null` when there is nothing to
-  /// refresh or the refresh was rejected — in which case the session is gone
-  /// and the router will redirect to login.
+  /// refresh or the refresh fails. Only an unauthorized failure clears the
+  /// session and lets the router redirect to login; recoverable failures keep
+  /// the current session so a later request can retry.
   Future<String?> refreshSession() {
     final inFlight = _refreshInFlight;
     if (inFlight != null) return inFlight.future;
@@ -107,7 +108,7 @@ class AuthController extends _$AuthController {
 
     return result.fold(
       (failure) {
-        state = const AsyncData(null);
+        if (failure is UnauthorizedFailure) state = const AsyncData(null);
         return null;
       },
       (session) {

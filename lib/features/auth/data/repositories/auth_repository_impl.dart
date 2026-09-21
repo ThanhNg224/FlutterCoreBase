@@ -54,8 +54,10 @@ class AuthRepositoryImpl implements IAuthRepository {
     });
 
     // A refresh token the server will not honour is worthless; keeping it only
-    // guarantees the same failure on the next launch.
-    if (result.isLeft()) {
+    // guarantees the same failure on the next launch. Transient failures must
+    // keep the current session so the caller can retry without signing in.
+    final failure = result.getLeft().toNullable();
+    if (failure is UnauthorizedFailure) {
       await _enqueueLocalMutation(() async {
         if (isSessionCurrent?.call() == false) return;
         await localDataSource.clear();
