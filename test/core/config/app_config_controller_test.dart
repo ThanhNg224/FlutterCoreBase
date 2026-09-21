@@ -280,4 +280,33 @@ void main() {
     final after = container.read(appConfigControllerProvider).requireValue;
     expect(after, before, reason: 'a rejected mutation must not alter state');
   });
+
+  test('ignores stored environment, mock, and credential overrides when dev tools are disabled', () async {
+    DevTools.setEnabledForTest(false);
+    addTearDown(DevTools.resetForTest);
+    AppEnvironment.setForTest(Environment.production);
+
+    final storage = FakeLocalStorageService()
+      ..setBool(StorageKeys.useDevEnvironment, true)
+      ..setBool(StorageKeys.mockSdkMode, true);
+    final secureStorage = FakeSecureStorageService();
+    await secureStorage.write(key: StorageKeys.secureAppToken, value: 'tampered-token');
+    await secureStorage.write(key: StorageKeys.secureClientKey, value: 'tampered-key');
+
+    final container = ProviderContainer(
+      overrides: [
+        localStorageServiceProvider.overrideWithValue(storage),
+        secureStorageServiceProvider.overrideWithValue(secureStorage),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final config = await container.read(appConfigControllerProvider.future);
+
+    expect(config.environment, Environment.production);
+    expect(config.baseUrl, ApiEndpoints.prodUrl);
+    expect(config.mockSdkEnabled, isFalse);
+    expect(config.appToken, ApiEndpoints.defaultProdToken);
+    expect(config.clientKey, ApiEndpoints.defaultProdClientKey);
+  });
 }

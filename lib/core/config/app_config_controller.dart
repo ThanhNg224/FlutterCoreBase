@@ -23,14 +23,24 @@ class AppConfigController extends _$AppConfigController {
     final storage = ref.watch(localStorageServiceProvider);
     final secureStorage = ref.watch(secureStorageServiceProvider);
     final buildEnvironment = AppEnvironment.build;
-    final useDev = storage.getBool(StorageKeys.useDevEnvironment) ?? (buildEnvironment == Environment.development);
+    final allowOverrides = DevTools.isEnabled;
+
+    final useDev = allowOverrides
+        ? (storage.getBool(StorageKeys.useDevEnvironment) ?? (buildEnvironment == Environment.development))
+        : (buildEnvironment == Environment.development);
+
     // A development build mocks the API by default, because the base ships
     // pointing at a placeholder host. Without this, a fresh clone deadlocks:
     // the route guard sends you to /login, login calls a domain that does not
     // resolve, and the switch that would fix it lives in Settings — which is
     // behind the guard you cannot get past. Production never mocks.
-    final mockSdk = storage.getBool(StorageKeys.mockSdkMode) ?? (buildEnvironment == Environment.development);
-    final credentials = await _readCredentialOverrides(storage, secureStorage);
+    final mockSdk = allowOverrides
+        ? (storage.getBool(StorageKeys.mockSdkMode) ?? (buildEnvironment == Environment.development))
+        : false;
+
+    final credentials = allowOverrides
+        ? await _readCredentialOverrides(storage, secureStorage)
+        : (appToken: null, clientKey: null);
 
     final env = useDev ? Environment.development : Environment.production;
     final baseUrl = useDev ? ApiEndpoints.devUrl : ApiEndpoints.prodUrl;
