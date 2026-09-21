@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_core_base/core/errors/app_exception.dart';
 import 'package:flutter_core_base/core/errors/failure.dart';
 import 'package:flutter_core_base/features/auth/data/datasources/auth_local_datasource.dart';
@@ -20,6 +22,22 @@ class _FakeLocal implements IAuthLocalDataSource {
 
   @override
   Future<void> clear() async => stored = null;
+}
+
+class _DelayedWriteLocal extends _FakeLocal {
+  final Completer<void> writeStarted = Completer<void>();
+  final Completer<void> allowWrite = Completer<void>();
+  bool _delayNextWrite = true;
+
+  @override
+  Future<void> write(AuthSessionDto session) async {
+    if (_delayNextWrite) {
+      _delayNextWrite = false;
+      writeStarted.complete();
+      await allowWrite.future;
+    }
+    stored = session;
+  }
 }
 
 AuthSessionDto dto({String access = 'a', String refresh = 'r'}) => AuthSessionDto(
@@ -57,6 +75,63 @@ void main() {
     expect(result.getOrElse((_) => throw StateError('expected a session')).user.email, 'demo@example.com');
   });
 
+  test('out-of-order logins only persist the current generation', () async {
+    final oldLogin = Completer<AuthSessionDto>();
+    final newLogin = Completer<AuthSessionDto>();
+    var loginCalls = 0;
+    when(
+      () => remote.login(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((_) => loginCalls++ == 0 ? oldLogin.future : newLogin.future);
+    var oldIsCurrent = true;
+
+    final oldFuture = repository.login(email: 'old@example.com', password: 'pw', isSessionCurrent: () => oldIsCurrent);
+    final newFuture = repository.login(email: 'new@example.com', password: 'pw', isSessionCurrent: () => true);
+
+    newLogin.complete(dto(access: 'new-account', refresh: 'new-refresh'));
+    await newFuture;
+    oldIsCurrent = false;
+    oldLogin.complete(dto(access: 'old-account', refresh: 'old-refresh'));
+    await oldFuture;
+
+    expect(local.stored?.accessToken, 'new-account');
+    expect(local.stored?.refreshToken, 'new-refresh');
+  });
+
+  test('a stale logout cannot clear a newer login queued ahead of it', () async {
+    final delayedLocal = _DelayedWriteLocal()..stored = dto();
+    repository = AuthRepositoryImpl(remoteDataSource: remote, localDataSource: delayedLocal);
+    var loginCalls = 0;
+    when(
+      () => remote.login(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((_) async {
+      loginCalls++;
+      return loginCalls == 1 ? dto(access: 'blocker') : dto(access: 'new-account', refresh: 'new-refresh');
+    });
+    when(() => remote.logout(any())).thenAnswer((_) async {});
+
+    final blocker = repository.login(email: 'old@example.com', password: 'pw');
+    await delayedLocal.writeStarted.future;
+    final newLogin = repository.login(
+      email: 'new@example.com',
+      password: 'pw',
+      isSessionCurrent: () => true,
+    );
+    final staleLogout = repository.logout(isSessionCurrent: () => false);
+    delayedLocal.allowWrite.complete();
+
+    await blocker;
+    await newLogin;
+    expect((await staleLogout).isRight(), isTrue);
+    expect(delayedLocal.stored?.accessToken, 'new-account');
+    verifyNever(() => remote.logout(any()));
+  });
+
   test('a rejected login maps to UnauthorizedFailure and persists nothing', () async {
     when(
       () => remote.login(
@@ -81,6 +156,23 @@ void main() {
     expect(local.stored?.accessToken, 'a2');
   });
 
+  test('a refresh rejected by the current-generation guard does not persist', () async {
+    local.stored = dto();
+    final remoteResult = Completer<AuthSessionDto>();
+    when(() => remote.refresh(any())).thenAnswer((_) => remoteResult.future);
+    var isCurrent = true;
+
+    final refreshFuture = repository.refresh('r', isSessionCurrent: () => isCurrent);
+    isCurrent = false;
+    remoteResult.complete(dto(access: 'stale', refresh: 'stale-r'));
+
+    final result = await refreshFuture;
+
+    expect(result.isRight(), isTrue);
+    expect(local.stored?.accessToken, 'a');
+    expect(local.stored?.refreshToken, 'r');
+  });
+
   test('a failed refresh clears the persisted session', () async {
     local.stored = dto();
     when(() => remote.refresh(any())).thenThrow(const UnauthorizedException(message: 'expired'));
@@ -89,6 +181,51 @@ void main() {
 
     expect(result.isLeft(), isTrue);
     expect(local.stored, isNull, reason: 'an unrefreshable session must not survive');
+  });
+
+  test('logout local clear is ordered before a later login write', () async {
+    local.stored = dto();
+    final remoteRevoke = Completer<void>();
+    when(() => remote.logout(any())).thenAnswer((_) => remoteRevoke.future);
+    when(
+      () => remote.login(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((_) async => dto(access: 'new-account', refresh: 'new-refresh'));
+
+    final logoutFuture = repository.logout();
+    await Future<void>.delayed(Duration.zero);
+    final loginResult = await repository.login(email: 'new@example.com', password: 'pw');
+
+    expect(loginResult.isRight(), isTrue);
+    expect(local.stored?.accessToken, 'new-account');
+
+    remoteRevoke.complete();
+    expect((await logoutFuture).isRight(), isTrue);
+    expect(local.stored?.accessToken, 'new-account');
+  });
+
+  test('a delayed stale refresh write is followed by logout clear', () async {
+    final delayedLocal = _DelayedWriteLocal()..stored = dto();
+    repository = AuthRepositoryImpl(remoteDataSource: remote, localDataSource: delayedLocal);
+    when(() => remote.refresh(any())).thenAnswer((_) async => dto(access: 'stale', refresh: 'stale-refresh'));
+    final remoteRevoke = Completer<void>();
+    when(() => remote.logout(any())).thenAnswer((_) => remoteRevoke.future);
+    var isCurrent = true;
+
+    final refreshFuture = repository.refresh('r', isSessionCurrent: () => isCurrent);
+    await delayedLocal.writeStarted.future;
+    isCurrent = false;
+    final logoutFuture = repository.logout();
+    await Future<void>.delayed(Duration.zero);
+    remoteRevoke.complete();
+    await Future<void>.delayed(Duration.zero);
+    delayedLocal.allowWrite.complete();
+
+    expect((await refreshFuture).isRight(), isTrue);
+    expect((await logoutFuture).isRight(), isTrue);
+    expect(delayedLocal.stored, isNull);
   });
 
   test('logout clears locally even when the remote revoke fails', () async {
