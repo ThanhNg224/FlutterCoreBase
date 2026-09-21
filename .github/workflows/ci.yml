@@ -3,6 +3,10 @@ name: CI
 on:
   push:
   pull_request:
+  # So the iOS job, which otherwise only runs on PRs into main, can still be
+  # triggered on demand — otherwise verifying an iOS fix would require opening
+  # a pull request first.
+  workflow_dispatch:
 
 jobs:
   verify:
@@ -62,6 +66,13 @@ jobs:
 
   build-ios:
     name: Build iOS (simulator, unsigned)
+    # macOS runners bill at 10x the Linux rate, so this one does not run on
+    # every push. It gates merges into main, and can be dispatched manually.
+    #
+    # The trade: an iOS-only break now surfaces at the PR into main rather than
+    # on the push to develop that caused it. Run this workflow by hand after
+    # touching ios/, the Podfile, or anything platform-channel shaped.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     runs-on: macos-latest
     steps:
       - name: Checkout repository
