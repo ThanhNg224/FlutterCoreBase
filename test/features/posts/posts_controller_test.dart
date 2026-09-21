@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_core_base/core/errors/failure.dart';
@@ -16,9 +18,17 @@ class FakePostsRepository implements IPostsRepository {
 
   bool shouldFail = false;
   bool shouldFailLoadMore = false;
+  Completer<Either<Failure, List<Post>>>? getPostsCompleter;
+  int lastRequestedPage = 1;
 
   @override
   Future<Either<Failure, List<Post>>> getPosts({int page = 1, int limit = 10}) async {
+    lastRequestedPage = page;
+    if (getPostsCompleter != null) {
+      final completer = getPostsCompleter!;
+      getPostsCompleter = null;
+      return completer.future;
+    }
     if (shouldFail || (shouldFailLoadMore && page > 1)) {
       return const Left(Failure.server(message: 'Server down'));
     }
@@ -121,6 +131,154 @@ void main() {
       expect(currentState.items, hasLength(10));
       expect(currentState.isLoadingMore, isFalse);
       expect(currentState.paginationFailure, const Failure.server(message: 'Server down'));
+    });
+
+    test('refresh preserves existing items and hasValue while network call is in-flight', () async {
+      await container.read(postsControllerProvider.future);
+      expect(container.read(postsControllerProvider).value?.items, hasLength(2));
+
+      final completer = Completer<Either<Failure, List<Post>>>();
+      fakeRepository.getPostsCompleter = completer;
+
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+
+      // Crucial: while refreshing existing data, state must not become AsyncLoading
+      // so AsyncValueWidget.when doesn't unmount the list into a full-screen shimmer/spinner
+      final inFlightState = container.read(postsControllerProvider);
+      expect(inFlightState.isLoading, isFalse);
+      expect(inFlightState.hasValue, isTrue);
+      expect(inFlightState.value?.items, hasLength(2));
+
+      completer.complete(const Right([Post(id: 42, title: 'Fresh', body: 'Body', userId: 1)]));
+      await refreshFuture;
+
+      final finishedState = container.read(postsControllerProvider).value!;
+      expect(finishedState.items, hasLength(1));
+      expect(finishedState.items.first.id, 42);
+    });
+
+    test('loadMore completing after refresh is discarded to prevent overwriting fresh data', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+
+      final loadMoreCompleter = Completer<Either<Failure, List<Post>>>();
+      fakeRepository.getPostsCompleter = loadMoreCompleter;
+
+      final loadMoreFuture = container.read(postsControllerProvider.notifier).loadMore();
+
+      // Trigger refresh while loadMore is awaiting
+      fakeRepository.posts = [
+        const Post(id: 999, title: 'Brand New Feed', body: 'After Refresh', userId: 1),
+      ];
+      await container.read(postsControllerProvider.notifier).refresh();
+
+      expect(container.read(postsControllerProvider).value?.items.map((p) => p.id), [999]);
+
+      // Complete the stale loadMore request
+      loadMoreCompleter.complete(
+        const Right([Post(id: 200, title: 'Stale page 2', body: 'Should be dropped', userId: 1)]),
+      );
+      await loadMoreFuture;
+
+      // State must still hold the refreshed items, not overwritten by stale loadMore
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.map((p) => p.id), [999]);
+    });
+
+    test('loadMore preserves posts created during in-flight fetch', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+
+      final loadMoreCompleter = Completer<Either<Failure, List<Post>>>();
+      fakeRepository.getPostsCompleter = loadMoreCompleter;
+
+      final loadMoreFuture = container.read(postsControllerProvider.notifier).loadMore();
+
+      // Create a post during loadMore
+      await container.read(postsControllerProvider.notifier).createPost(title: 'Created Post', body: 'Body');
+
+      expect(container.read(postsControllerProvider).value?.items.first.title, 'Created Post');
+
+      // Complete loadMore
+      loadMoreCompleter.complete(
+        const Right([Post(id: 201, title: 'Page 2 Post', body: 'Body', userId: 1)]),
+      );
+      await loadMoreFuture;
+
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.any((p) => p.title == 'Created Post'), isTrue);
+      expect(currentState.items.any((p) => p.id == 201), isTrue);
+    });
+
+    test('loadMore does not restore posts deleted during in-flight fetch', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+
+      final loadMoreCompleter = Completer<Either<Failure, List<Post>>>();
+      fakeRepository.getPostsCompleter = loadMoreCompleter;
+
+      final loadMoreFuture = container.read(postsControllerProvider.notifier).loadMore();
+
+      // Delete post 1 during loadMore
+      await container.read(postsControllerProvider.notifier).deletePost(1);
+
+      expect(container.read(postsControllerProvider).value?.items.any((p) => p.id == 1), isFalse);
+
+      // Complete loadMore
+      loadMoreCompleter.complete(
+        const Right([Post(id: 202, title: 'Page 2 Post', body: 'Body', userId: 1)]),
+      );
+      await loadMoreFuture;
+
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.any((p) => p.id == 1), isFalse);
+      expect(currentState.items.any((p) => p.id == 202), isTrue);
+    });
+
+    test('pagination page adapts after create and delete', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+      expect(fakeRepository.lastRequestedPage, 1);
+
+      // Create 10 posts so we now have 20 items (2 full pages)
+      for (int i = 0; i < 10; i++) {
+        await container.read(postsControllerProvider.notifier).createPost(title: 'Extra $i', body: 'Body');
+      }
+
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: 300 + index, title: 'Page 3 item $index', body: 'Body', userId: 1),
+      );
+
+      await container.read(postsControllerProvider.notifier).loadMore();
+      // Should have requested page 3 (because 20 items = 2 full pages)
+      expect(fakeRepository.lastRequestedPage, 3);
+
+      // Now delete 15 posts (leaving 6 items in memory)
+      final state = container.read(postsControllerProvider).value!;
+      final idsToDelete = state.items.take(15).map((p) => p.id).toList();
+      for (final id in idsToDelete) {
+        await container.read(postsControllerProvider.notifier).deletePost(id);
+      }
+
+      fakeRepository.posts = [
+        const Post(id: 400, title: 'Page 2 item', body: 'Body', userId: 1),
+      ];
+      await container.read(postsControllerProvider.notifier).loadMore();
+      // With 6 items left, pagination should adapt back to requesting page 2 rather than page 4
+      expect(fakeRepository.lastRequestedPage, 2);
     });
   });
 }
