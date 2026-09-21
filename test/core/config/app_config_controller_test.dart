@@ -154,8 +154,8 @@ void main() {
   test('updates and clears secure credential overrides', () async {
     // Pinned: this test asserts a production environment at the end, which
     // used to be true unconditionally (`?? false`). Now that the build
-    // environment is the default, it must be pinned rather than relying on
-    // this repo's `default-flavor: dev` to happen to resolve elsewhere.
+    // environment supplies the default, the test must state which environment
+    // it means instead of inheriting whatever the build happens to resolve to.
     AppEnvironment.setForTest(Environment.production);
     await container.read(appConfigControllerProvider.future);
     final controller = container.read(appConfigControllerProvider.notifier);
@@ -183,9 +183,11 @@ void main() {
     tearDown(AppEnvironment.resetForTest);
 
     test('with no stored override, a production build starts on production', () async {
-      // The environment must be pinned: this repo's `default-flavor: dev` makes
-      // the ambient AppEnvironment.build under test `development`, so an
-      // unpinned assertion would be testing pubspec.yaml, not this controller.
+      // The environment must be pinned. Leaving it ambient would make this
+      // assertion depend on how the suite was compiled (`--dart-define=APP_ENV`
+      // is empty under a plain `flutter test`, but CI also runs this file with
+      // it set), so an unpinned test would be testing the build, not the
+      // controller.
       AppEnvironment.setForTest(Environment.production);
       final container = makeContainer(); // use the helper already present in this file
       addTearDown(container.dispose);
