@@ -36,6 +36,10 @@ dependencies:
   flutter_secure_storage: ^11.2.0
 
   # Animation & UI Helpers
+  # Required by the Cupertino widgets that `.adaptive()` constructors and
+  # GlobalCupertinoLocalizations pull in on iOS. Without it the release build
+  # warns that the CupertinoIcons font family is referenced but absent.
+  cupertino_icons: ^1.0.8
   flutter_animate: ^4.5.0
   intl: ^0.20.2
   google_fonts: ^8.2.1
