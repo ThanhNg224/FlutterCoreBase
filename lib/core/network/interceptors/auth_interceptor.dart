@@ -86,6 +86,10 @@ class AuthInterceptor extends Interceptor {
   }
 
   void _applyCredentials(RequestOptions options) {
+    if (!_isCurrentApiRequest(options.uri)) {
+      return;
+    }
+
     final config = readConfig();
     // A real session outranks the developer's configured app token.
     final token = readAccessToken() ?? (config.appToken.isNotEmpty ? config.appToken : null);
