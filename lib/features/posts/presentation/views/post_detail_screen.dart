@@ -71,18 +71,20 @@ class PostDetailScreen extends ConsumerWidget {
                             post.body,
                             style: textTheme.bodyLarge?.copyWith(height: 1.6),
                           ),
-                          const SizedBox(height: AppSpacing.l),
-                          Wrap(
-                            spacing: AppSpacing.xs,
-                            runSpacing: AppSpacing.xs,
-                            children: post.tags.map((tag) {
-                              return Chip(
-                                label: Text(tag, style: textTheme.labelSmall),
-                                backgroundColor: colors.surface,
-                                side: BorderSide(color: colors.border),
-                              );
-                            }).toList(),
-                          ),
+                          if (post.tags.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.l),
+                            Wrap(
+                              spacing: AppSpacing.xs,
+                              runSpacing: AppSpacing.xs,
+                              children: post.tags.map((tag) {
+                                return Chip(
+                                  label: Text(tag, style: textTheme.labelSmall),
+                                  backgroundColor: colors.surface,
+                                  side: BorderSide(color: colors.border),
+                                );
+                              }).toList(),
+                            ),
+                          ],
                         ],
                       ),
                     ),

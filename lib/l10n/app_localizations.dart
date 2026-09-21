@@ -458,6 +458,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get errorUnexpected;
 
+  /// No description provided for @errorDevToolsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer settings are not available in this build.'**
+  String get errorDevToolsDisabled;
+
   /// No description provided for @validationRequired.
   ///
   /// In en, this message translates to:
@@ -523,6 +529,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Page not found: {uri}'**
   String pageNotFoundMessage(String uri);
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get loginTitle;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the demo credentials below, or point this screen at your own API.'**
+  String get loginSubtitle;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@example.com'**
+  String get emailHint;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password'**
+  String get passwordHint;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get loginButton;
+
+  /// No description provided for @logoutButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get logoutButton;
+
+  /// No description provided for @demoCredentialsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo: any email signs in. Use locked@example.com to see the failure path.'**
+  String get demoCredentialsHint;
+
+  /// No description provided for @sessionSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get sessionSectionTitle;
+
+  /// No description provided for @signedInAsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as'**
+  String get signedInAsLabel;
+
+  /// No description provided for @manageSessionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your session'**
+  String get manageSessionLabel;
+
+  /// No description provided for @restoringSessionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring your session…'**
+  String get restoringSessionMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

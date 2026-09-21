@@ -11,20 +11,22 @@ abstract class PostDto with _$PostDto {
     required String title,
     required String body,
     @JsonKey(name: 'userId') @Default(1) int userId,
+    @Default(<String>[]) List<String> tags,
+    DateTime? createdAt,
   }) = _PostDto;
 
   const PostDto._();
 
   factory PostDto.fromJson(Map<String, dynamic> json) => _$PostDtoFromJson(json);
 
-  Post toDomain() {
-    return Post(
-      id: id,
-      title: title,
-      body: body,
-      userId: userId,
-      tags: ['General', 'Article', 'User #$userId'],
-      createdAt: DateTime.now().subtract(Duration(hours: id * 3)),
-    );
-  }
+  /// Field-for-field copy. A mapper translates shapes; it never invents values.
+  /// Sample data belongs in the data source's mock branch, not here.
+  Post toDomain() => Post(
+    id: id,
+    title: title,
+    body: body,
+    userId: userId,
+    tags: tags,
+    createdAt: createdAt,
+  );
 }

@@ -92,7 +92,7 @@ extension FailurePatterns on Failure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( PlatformFailure value)?  platform,TResult Function( StorageFailure value)?  storage,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( PlatformFailure value)?  platform,TResult Function( StorageFailure value)?  storage,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( UnexpectedFailure value)?  unexpected,TResult Function( DevToolsDisabledFailure value)?  devToolsDisabled,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -101,7 +101,8 @@ return network(_that);case PlatformFailure() when platform != null:
 return platform(_that);case StorageFailure() when storage != null:
 return storage(_that);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that);case _:
+return unexpected(_that);case DevToolsDisabledFailure() when devToolsDisabled != null:
+return devToolsDisabled(_that);case _:
   return orElse();
 
 }
@@ -119,7 +120,7 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( PlatformFailure value)  platform,required TResult Function( StorageFailure value)  storage,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( UnexpectedFailure value)  unexpected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( PlatformFailure value)  platform,required TResult Function( StorageFailure value)  storage,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( UnexpectedFailure value)  unexpected,required TResult Function( DevToolsDisabledFailure value)  devToolsDisabled,}){
 final _that = this;
 switch (_that) {
 case ServerFailure():
@@ -128,7 +129,8 @@ return network(_that);case PlatformFailure():
 return platform(_that);case StorageFailure():
 return storage(_that);case UnauthorizedFailure():
 return unauthorized(_that);case UnexpectedFailure():
-return unexpected(_that);}
+return unexpected(_that);case DevToolsDisabledFailure():
+return devToolsDisabled(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -142,7 +144,7 @@ return unexpected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( PlatformFailure value)?  platform,TResult? Function( StorageFailure value)?  storage,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( UnexpectedFailure value)?  unexpected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( PlatformFailure value)?  platform,TResult? Function( StorageFailure value)?  storage,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( UnexpectedFailure value)?  unexpected,TResult? Function( DevToolsDisabledFailure value)?  devToolsDisabled,}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -151,7 +153,8 @@ return network(_that);case PlatformFailure() when platform != null:
 return platform(_that);case StorageFailure() when storage != null:
 return storage(_that);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that);case _:
+return unexpected(_that);case DevToolsDisabledFailure() when devToolsDisabled != null:
+return devToolsDisabled(_that);case _:
   return null;
 
 }
@@ -168,7 +171,7 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode)?  server,TResult Function( String message)?  network,TResult Function( String message,  String? errorCode)?  platform,TResult Function( String message)?  storage,TResult Function( String message)?  unauthorized,TResult Function( String message)?  unexpected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode)?  server,TResult Function( String message)?  network,TResult Function( String message,  String? errorCode)?  platform,TResult Function( String message)?  storage,TResult Function( String message)?  unauthorized,TResult Function( String message)?  unexpected,TResult Function( String message)?  devToolsDisabled,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.statusCode);case NetworkFailure() when network != null:
@@ -176,7 +179,8 @@ return network(_that.message);case PlatformFailure() when platform != null:
 return platform(_that.message,_that.errorCode);case StorageFailure() when storage != null:
 return storage(_that.message);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that.message);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that.message);case _:
+return unexpected(_that.message);case DevToolsDisabledFailure() when devToolsDisabled != null:
+return devToolsDisabled(_that.message);case _:
   return orElse();
 
 }
@@ -194,7 +198,7 @@ return unexpected(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode)  server,required TResult Function( String message)  network,required TResult Function( String message,  String? errorCode)  platform,required TResult Function( String message)  storage,required TResult Function( String message)  unauthorized,required TResult Function( String message)  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode)  server,required TResult Function( String message)  network,required TResult Function( String message,  String? errorCode)  platform,required TResult Function( String message)  storage,required TResult Function( String message)  unauthorized,required TResult Function( String message)  unexpected,required TResult Function( String message)  devToolsDisabled,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
 return server(_that.message,_that.statusCode);case NetworkFailure():
@@ -202,7 +206,8 @@ return network(_that.message);case PlatformFailure():
 return platform(_that.message,_that.errorCode);case StorageFailure():
 return storage(_that.message);case UnauthorizedFailure():
 return unauthorized(_that.message);case UnexpectedFailure():
-return unexpected(_that.message);}
+return unexpected(_that.message);case DevToolsDisabledFailure():
+return devToolsDisabled(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -216,7 +221,7 @@ return unexpected(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode)?  server,TResult? Function( String message)?  network,TResult? Function( String message,  String? errorCode)?  platform,TResult? Function( String message)?  storage,TResult? Function( String message)?  unauthorized,TResult? Function( String message)?  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode)?  server,TResult? Function( String message)?  network,TResult? Function( String message,  String? errorCode)?  platform,TResult? Function( String message)?  storage,TResult? Function( String message)?  unauthorized,TResult? Function( String message)?  unexpected,TResult? Function( String message)?  devToolsDisabled,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.statusCode);case NetworkFailure() when network != null:
@@ -224,7 +229,8 @@ return network(_that.message);case PlatformFailure() when platform != null:
 return platform(_that.message,_that.errorCode);case StorageFailure() when storage != null:
 return storage(_that.message);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that.message);case UnexpectedFailure() when unexpected != null:
-return unexpected(_that.message);case _:
+return unexpected(_that.message);case DevToolsDisabledFailure() when devToolsDisabled != null:
+return devToolsDisabled(_that.message);case _:
   return null;
 
 }
@@ -636,6 +642,74 @@ class _$UnexpectedFailureCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
   return _then(UnexpectedFailure(
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class DevToolsDisabledFailure implements Failure {
+  const DevToolsDisabledFailure({this.message = 'Developer tools are disabled in this build.'});
+  
+
+@override@JsonKey() final  String message;
+
+/// Create a copy of Failure
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DevToolsDisabledFailureCopyWith<DevToolsDisabledFailure> get copyWith => _$DevToolsDisabledFailureCopyWithImpl<DevToolsDisabledFailure>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is DevToolsDisabledFailure&&(identical(other.message, message) || other.message == message));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
+
+@override
+String toString() {
+    return 'Failure.devToolsDisabled(message: $message)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DevToolsDisabledFailureCopyWith<$Res> implements $FailureCopyWith<$Res> {
+  factory $DevToolsDisabledFailureCopyWith(DevToolsDisabledFailure value, $Res Function(DevToolsDisabledFailure) _then) = _$DevToolsDisabledFailureCopyWithImpl;
+@override @useResult
+$Res call({
+ String message
+});
+
+
+
+
+}
+/// @nodoc
+class _$DevToolsDisabledFailureCopyWithImpl<$Res>
+    implements $DevToolsDisabledFailureCopyWith<$Res> {
+  _$DevToolsDisabledFailureCopyWithImpl(this._self, this._then);
+
+  final DevToolsDisabledFailure _self;
+  final $Res Function(DevToolsDisabledFailure) _then;
+
+/// Create a copy of Failure
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(DevToolsDisabledFailure(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));

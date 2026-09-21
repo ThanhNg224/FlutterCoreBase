@@ -53,12 +53,17 @@ lib/features/<feature_name>/
 
 5. **Step 5: Register Route & Catalog**
    - Add path in `core/routing/route_paths.dart`.
-   - Register route in `core/routing/app_router.dart`.
+   - Register route in `lib/app/routing/app_router.dart`.
    - Add entry in `features/catalog/data/repositories/catalog_repository.dart`.
 
 6. **Step 6: Code Generation & Verification**
    - Run `make codegen` (or `dart run build_runner build` followed by `dart format .`).
    - Run `make verify` (or `flutter analyze` and `flutter test`) and write unit tests in `test/features/<feature_name>/`.
+
+7. **Step 7: Confirm the boundaries hold**
+   - Run `flutter test test/architecture/layer_boundaries_test.dart`. A new
+     feature that imports another feature, or a `core/` file that imports a
+     feature, fails here rather than in review.
 
 ---
 

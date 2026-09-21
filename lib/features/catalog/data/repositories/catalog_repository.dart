@@ -20,11 +20,20 @@ class CatalogRepository implements ICatalogRepository {
         CatalogFeature(
           id: 'posts',
           title: 'Posts & Feed Demo',
-          description: 'REST API CRUD, Riverpod AsyncNotifier, caching, pagination, and pull-to-refresh.',
+          description: 'REST API CRUD, Riverpod AsyncNotifier, pagination, and pull-to-refresh.',
           routePath: RoutePaths.posts,
           category: FeatureCategory.data,
           iconKey: CatalogIconKeys.feed,
           tags: ['REST API', 'Riverpod', 'CRUD', 'Pagination'],
+        ),
+        CatalogFeature(
+          id: 'auth',
+          title: 'Authentication & Session',
+          description: 'Login, Keychain-backed session persistence, route guards, and 401 refresh-and-replay.',
+          routePath: RoutePaths.settings,
+          category: FeatureCategory.config,
+          iconKey: CatalogIconKeys.settings,
+          tags: ['Auth', 'GoRouter guard', 'Secure storage'],
         ),
         CatalogFeature(
           id: 'settings',

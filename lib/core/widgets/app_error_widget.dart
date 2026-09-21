@@ -5,9 +5,19 @@ import 'package:flutter_core_base/core/theme/app_spacing.dart';
 
 /// Replaces Flutter's default red/grey box when a subtree fails to build.
 ///
-/// Deliberately not localized and dependency-free: this is installed as
-/// [ErrorWidget.builder], which receives no [BuildContext].
-/// In debug mode the exception details are shown; release builds show a friendly panel.
+/// **Deliberately exempt from the design-system rules in `docs/STANDARD.md`.**
+/// This is installed as [ErrorWidget.builder], so it renders *after* some
+/// subtree has already failed — possibly above or outside [MaterialApp]. It
+/// therefore cannot reach `context.colors` (a force-unwrapped theme extension
+/// that would throw when absent) or `Theme.of(context).textTheme`, and it
+/// supplies its own [Directionality] and [Material] for the same reason.
+/// Raw [AppColors] tokens and literal [TextStyle]s here are the correct call:
+/// an error fallback that can itself fail to render is worse than an
+/// off-token one. It is also not localized, because `context.l10n` would
+/// throw under exactly the same conditions.
+///
+/// In debug mode the exception details are shown; release builds show a
+/// friendly panel.
 class AppErrorWidget extends StatelessWidget {
   final FlutterErrorDetails details;
 

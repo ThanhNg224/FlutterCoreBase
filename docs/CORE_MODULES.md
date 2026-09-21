@@ -6,19 +6,24 @@ The `lib/core/` directory contains shared, application-wide infrastructure that 
 
 ```text
 lib/core/
-├── config/              # AppConfig, AppConfigController — cross-cutting runtime config
+├── config/              # AppConfig, AppConfigController, AppEnvironment, DevTools — cross-cutting runtime config
 ├── constants/           # ApiEndpoints, AppConstants, StorageKeys, AppAssets
 ├── errors/              # AppException, Failure, ErrorHandler, FailureL10n
 ├── extensions/          # BuildContext extensions (context.l10n)
 ├── localization/        # LocaleNotifier, multi-language switching
 ├── logging/             # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted
-├── network/             # DioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider (isOnlineProvider)
-├── routing/             # GoRouter configuration & RoutePaths
+├── network/             # AuthDioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider (isOnlineProvider)
+├── routing/             # RoutePaths (pure data — AppRouter itself lives at lib/app/routing/)
 ├── storage/             # LocalStorageService (SharedPreferences) & SecureStorageService (credentials)
 ├── theme/               # AppColors, AppTheme, AppTypography, AppSpacing, AppSemanticColors, AppMotion, ThemeModeNotifier
 ├── utils/               # FormValidators, Redaction — pure helpers shared by UI and logger
 └── widgets/             # Reusable UI components — see "Reusable UI Widgets" below for the current list
 ```
+
+> `lib/app/` is the composition root (the only layer allowed to import
+> features): `lib/app/routing/app_router.dart` (GoRouter instance + the auth
+> redirect guard) and `lib/app/network/app_dio_client.dart` (the app's Dio,
+> composed with `AuthInterceptor`) both live there instead of under `core/`.
 
 > This file is the single source of truth for what exists in `core/`. `CLAUDE.md`, `AGENTS.md`, `docs/STANDARD.md`, `README.md`, and `.github/copilot-instructions.md` all point back here instead of duplicating the full widget/util list — update it first when adding a new shared component.
 
@@ -39,7 +44,9 @@ lib/core/
 ## 2. Config (`core/config/`)
 
 - **`AppConfig`**: Immutable cross-cutting runtime config (environment, base URL, credentials, mock SDK mode, version).
-- **`AppConfigController`**: `@Riverpod(keepAlive: true)` single source of truth for `AppConfig`, persisted via `LocalStorageService`.
+- **`AppConfigController`**: `@Riverpod(keepAlive: true)` single source of truth for `AppConfig`, persisted via `LocalStorageService`. Defaults to the build-time environment (`AppEnvironment.build`); the persisted `StorageKeys.useDevEnvironment` toggle is a debug-only override, and all four runtime mutators are rejected with `Failure.devToolsDisabled()` when `DevTools.isEnabled` is false.
+- **`AppEnvironment`**: Pure, `@visibleForTesting`-seamed resolver for which backend environment this binary was *built* for — `--dart-define=APP_ENV` first, then production. No Riverpod, no storage.
+- **`DevTools`**: Single predicate (`DevTools.isEnabled`) answering "may this build mutate its own runtime config?". True for any non-release build and for release builds of a non-production environment; false only for a production release build.
 
 ---
 
@@ -69,19 +76,20 @@ Enforces two safety guarantees by construction:
 
 ---
 
-## 5. Networking (`core/network/`)
+## 5. Networking (`core/network/` & `app/network/`)
 
-- **`DioClient`**: `@Riverpod(keepAlive: true)` HTTP client with timeouts, rebuilt from `AppConfigController` when the environment changes.
-- **`AuthInterceptor`**: Attaches `Authorization`/`X-Client-Key` from `AppConfig` to every request; clears credential overrides on a 401 scoped to the app's own `baseUrl`.
+- **`AppDioClient`** (`lib/app/network/app_dio_client.dart`, `dioClientProvider`): `@Riverpod(keepAlive: true)` HTTP client with timeouts, rebuilt from `AppConfigController` when the environment changes. Composes `AuthInterceptor` with the auth session, so it lives in `app/` rather than `core/` (wiring auth means reaching into a feature).
+- **`AuthDioClient`** (`core/network/auth_dio_client.dart`, `authDioProvider`): a second, interceptor-free Dio used by the auth data source and by `AuthInterceptor`'s own replay, so a refresh/replay call can never recurse back through itself.
+- **`AuthInterceptor`**: Attaches the bearer token to every request; on a 401 scoped to the app's own `baseUrl`, single-flight refreshes the session via `AuthController` and replays the original request against `AuthDioClient`.
 - **`LoggingInterceptor`**: Logs request/response method and endpoints via `AppLogger` without exposing sensitive bodies.
-- **`ConnectivityProvider`** (`isOnlineProvider`): `Stream<bool>` from `connectivity_plus`; drives `OfflineBanner`.
+- **`ConnectivityProvider`** (`isOnlineProvider`): `Stream<bool>` from `connectivity_plus`; drives `OfflineBanner`. This is connectivity awareness only — there is no local cache or request queue.
 
 ---
 
-## 6. Routing (`core/routing/`)
+## 6. Routing (`core/routing/` & `app/routing/`)
 
-- **`RoutePaths`**: Constants for all route paths.
-- **`AppRouter`**: Declarative GoRouter instance provided via Riverpod (`appRouterProvider`).
+- **`RoutePaths`** (`core/routing/route_paths.dart`): Constants for all route paths. Pure data, so it stays in `core/`.
+- **`AppRouter`** (`lib/app/routing/app_router.dart`, `appRouterProvider`): Declarative GoRouter instance provided via Riverpod, including the `redirect` guard that reads `AuthController` and sends unauthenticated users to `login`/`splash`. Lives under `lib/app/` — the composition root — because it imports feature screens, which `core/` must never do (enforced by `test/architecture/layer_boundaries_test.dart`).
 
 ---
 

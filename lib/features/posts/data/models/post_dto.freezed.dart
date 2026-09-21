@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PostDto {
 
- int get id; String get title; String get body;@JsonKey(name: 'userId') int get userId;
+ int get id; String get title; String get body;@JsonKey(name: 'userId') int get userId; List<String> get tags; DateTime? get createdAt;
 /// Create a copy of PostDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $PostDtoCopyWith<PostDto> get copyWith => _$PostDtoCopyWithImpl<PostDto>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as PostDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.userId, _this.userId) || other.userId == _this.userId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PostDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PostDto;
-  return Object.hash(runtimeType,_this.id,_this.title,_this.body,_this.userId);
+  return Object.hash(runtimeType,_this.id,_this.title,_this.body,_this.userId,const DeepCollectionEquality().hash(_this.tags),_this.createdAt);
 }
 
 @override
 String toString() {
   final _this = this as PostDto;
-  return 'PostDto(id: ${_this.id}, title: ${_this.title}, body: ${_this.body}, userId: ${_this.userId})';
+  return 'PostDto(id: ${_this.id}, title: ${_this.title}, body: ${_this.body}, userId: ${_this.userId}, tags: ${_this.tags}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $PostDtoCopyWith<$Res>  {
   factory $PostDtoCopyWith(PostDto value, $Res Function(PostDto) _then) = _$PostDtoCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String body,@JsonKey(name: 'userId') int userId
+ int id, String title, String body,@JsonKey(name: 'userId') int userId, List<String> tags, DateTime? createdAt
 });
 
 
@@ -71,13 +71,15 @@ class _$PostDtoCopyWithImpl<$Res>
 
 /// Create a copy of PostDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? body = null,Object? userId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? body = null,Object? userId = null,Object? tags = null,Object? createdAt = freezed,}) {
   return _then(PostDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as int,
+as int,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -162,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String body, @JsonKey(name: 'userId')  int userId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String body, @JsonKey(name: 'userId')  int userId,  List<String> tags,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PostDto() when $default != null:
-return $default(_that.id,_that.title,_that.body,_that.userId);case _:
+return $default(_that.id,_that.title,_that.body,_that.userId,_that.tags,_that.createdAt);case _:
   return orElse();
 
 }
@@ -183,10 +185,10 @@ return $default(_that.id,_that.title,_that.body,_that.userId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String body, @JsonKey(name: 'userId')  int userId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String body, @JsonKey(name: 'userId')  int userId,  List<String> tags,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _PostDto():
-return $default(_that.id,_that.title,_that.body,_that.userId);case _:
+return $default(_that.id,_that.title,_that.body,_that.userId,_that.tags,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +205,10 @@ return $default(_that.id,_that.title,_that.body,_that.userId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String body, @JsonKey(name: 'userId')  int userId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String body, @JsonKey(name: 'userId')  int userId,  List<String> tags,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PostDto() when $default != null:
-return $default(_that.id,_that.title,_that.body,_that.userId);case _:
+return $default(_that.id,_that.title,_that.body,_that.userId,_that.tags,_that.createdAt);case _:
   return null;
 
 }
@@ -218,13 +220,21 @@ return $default(_that.id,_that.title,_that.body,_that.userId);case _:
 @JsonSerializable()
 
 class _PostDto extends PostDto {
-  const _PostDto({required this.id, required this.title, required this.body, @JsonKey(name: 'userId') this.userId = 1}): super._();
+  const _PostDto({required this.id, required this.title, required this.body, @JsonKey(name: 'userId') this.userId = 1,  List<String> tags = const <String>[], this.createdAt}): _tags = tags,super._();
   factory _PostDto.fromJson(Map<String, dynamic> json) => _$PostDtoFromJson(json);
 
 @override final  int id;
 @override final  String title;
 @override final  String body;
 @override@JsonKey(name: 'userId') final  int userId;
+ final  List<String> _tags;
+@override@JsonKey() List<String> get tags {
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tags);
+}
+
+@override final  DateTime? createdAt;
 
 /// Create a copy of PostDto
 /// with the given fields replaced by the non-null parameter values.
@@ -239,18 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PostDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.userId, userId) || other.userId == userId)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,title,body,userId);
+    return Object.hash(runtimeType,id,title,body,userId,const DeepCollectionEquality().hash(_tags),createdAt);
 }
 
 @override
 String toString() {
-    return 'PostDto(id: $id, title: $title, body: $body, userId: $userId)';
+    return 'PostDto(id: $id, title: $title, body: $body, userId: $userId, tags: $tags, createdAt: $createdAt)';
 }
 
 
@@ -261,7 +271,7 @@ abstract mixin class _$PostDtoCopyWith<$Res> implements $PostDtoCopyWith<$Res> {
   factory _$PostDtoCopyWith(_PostDto value, $Res Function(_PostDto) _then) = __$PostDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String body,@JsonKey(name: 'userId') int userId
+ int id, String title, String body,@JsonKey(name: 'userId') int userId, List<String> tags, DateTime? createdAt
 });
 
 
@@ -278,13 +288,15 @@ class __$PostDtoCopyWithImpl<$Res>
 
 /// Create a copy of PostDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? body = null,Object? userId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? body = null,Object? userId = null,Object? tags = null,Object? createdAt = freezed,}) {
   return _then(_PostDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as int,
+as int,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

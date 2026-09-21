@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dio_client.dart';
+part of 'app_dio_client.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,16 +8,28 @@ part of 'dio_client.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Configured Dio HTTP client provider
+/// The application's HTTP client.
+///
+/// Lives in `lib/app/` rather than `core/` because wiring `AuthInterceptor`
+/// means reaching into the auth feature, and `core` is not allowed to know
+/// features exist. Composition is the composition root's job.
 
 @ProviderFor(dioClient)
 final dioClientProvider = DioClientProvider._();
 
-/// Configured Dio HTTP client provider
+/// The application's HTTP client.
+///
+/// Lives in `lib/app/` rather than `core/` because wiring `AuthInterceptor`
+/// means reaching into the auth feature, and `core` is not allowed to know
+/// features exist. Composition is the composition root's job.
 
 final class DioClientProvider extends $FunctionalProvider<AsyncValue<Dio>, Dio, FutureOr<Dio>>
     with $FutureModifier<Dio>, $FutureProvider<Dio> {
-  /// Configured Dio HTTP client provider
+  /// The application's HTTP client.
+  ///
+  /// Lives in `lib/app/` rather than `core/` because wiring `AuthInterceptor`
+  /// means reaching into the auth feature, and `core` is not allowed to know
+  /// features exist. Composition is the composition root's job.
   DioClientProvider._()
     : super(
         from: null,
@@ -42,4 +54,4 @@ final class DioClientProvider extends $FunctionalProvider<AsyncValue<Dio>, Dio, 
   }
 }
 
-String _$dioClientHash() => r'5073ed91c34ad5780e2f96db1195720a3e78a008';
+String _$dioClientHash() => r'42f7fd139497b9217737b5c7b1ff8c853a21ed86';

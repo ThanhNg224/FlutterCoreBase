@@ -6,6 +6,7 @@ abstract class AppConstants {
   static const Duration connectTimeout = Duration(seconds: 15);
   static const Duration receiveTimeout = Duration(seconds: 15);
 
-  // Default Mock Delay
-  static const Duration mockSdkDelay = Duration(milliseconds: 1800);
+  // Default mock latency, chosen so skeleton loaders are visible without
+  // making the demo feel broken.
+  static const Duration mockSdkDelay = Duration(milliseconds: 400);
 }

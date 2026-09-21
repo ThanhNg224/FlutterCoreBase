@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_core_base/core/theme/app_colors.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
+import 'package:flutter_core_base/core/theme/app_theme.dart';
 
 /// WCAG 2.1 relative luminance.
 double _luminance(Color c) {
@@ -87,6 +88,30 @@ void main() {
 
     test('the raw fill palette is documented as unsafe for light foreground', () {
       expect(_contrast(AppColors.warning, AppColors.surfaceLight), lessThan(_aaText));
+    });
+
+    test('error foreground on error background clears 4.5:1 in both themes', () {
+      for (final theme in [AppTheme.lightTheme, AppTheme.darkTheme]) {
+        final scheme = theme.colorScheme;
+        expect(
+          _contrast(scheme.onError, scheme.error),
+          greaterThanOrEqualTo(_aaText),
+          reason: '${theme.brightness}: onError on error',
+        );
+      }
+    });
+
+    test('semantic status error is readable on the surface it is drawn on', () {
+      for (final entry in {
+        AppTheme.lightTheme: AppSemanticColors.light,
+        AppTheme.darkTheme: AppSemanticColors.dark,
+      }.entries) {
+        expect(
+          _contrast(entry.value.statusError, entry.key.scaffoldBackgroundColor),
+          greaterThanOrEqualTo(_aaText),
+          reason: '${entry.key.brightness}: statusError on scaffold background',
+        );
+      }
     });
   });
 }

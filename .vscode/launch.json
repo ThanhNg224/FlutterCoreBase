@@ -7,7 +7,8 @@
             "type": "dart",
             "args": [
                 "--flavor",
-                "dev"
+                "dev",
+                "--dart-define=APP_ENV=dev"
             ]
         },
         {
@@ -16,7 +17,8 @@
             "type": "dart",
             "args": [
                 "--flavor",
-                "prod"
+                "prod",
+                "--dart-define=APP_ENV=prod"
             ]
         },
         {
@@ -26,7 +28,8 @@
             "flutterMode": "release",
             "args": [
                 "--flavor",
-                "prod"
+                "prod",
+                "--dart-define=APP_ENV=prod"
             ]
         }
     ]

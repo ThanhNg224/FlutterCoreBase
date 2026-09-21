@@ -32,7 +32,7 @@ final class AppConfigControllerProvider extends $AsyncNotifierProvider<AppConfig
   AppConfigController create() => AppConfigController();
 }
 
-String _$appConfigControllerHash() => r'05465fd863ef54253a269c73189d8b156122b1c7';
+String _$appConfigControllerHash() => r'8876467d791420b3f443c24c8dd8abc8fbdb12c2';
 
 abstract class _$AppConfigController extends $AsyncNotifier<AppConfig> {
   FutureOr<AppConfig> build();

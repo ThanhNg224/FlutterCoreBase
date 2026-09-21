@@ -19,3 +19,8 @@ jobs:
 
       - name: Verify and test with coverage
         run: make ci
+
+      - name: Verify dart-define wiring in both directions
+        run: |
+          flutter test --dart-define=APP_ENV=dev test/core/config/app_environment_test.dart
+          flutter test --dart-define=APP_ENV=prod test/core/config/app_environment_test.dart

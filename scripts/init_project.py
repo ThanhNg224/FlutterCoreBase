@@ -623,7 +623,10 @@ void main() {{
 
 ROUTE_PATHS_CLEAN_TEMPLATE = """/// Centralized route paths for GoRouter
 abstract class RoutePaths {
+  static const String splash = '/splash';
+  static const String login = '/login';
   static const String home = '/';
+  static const String account = '/account';
   static const String settings = '/settings';
 }
 """
@@ -633,6 +636,11 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:{dart_name}/core/extensions/context_extensions.dart';
 import 'package:{dart_name}/core/routing/route_paths.dart';
+import 'package:{dart_name}/features/auth/domain/entities/auth_session.dart';
+import 'package:{dart_name}/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:{dart_name}/features/auth/presentation/views/account_screen.dart';
+import 'package:{dart_name}/features/auth/presentation/views/login_screen.dart';
+import 'package:{dart_name}/features/auth/presentation/views/splash_screen.dart';
 import 'package:{dart_name}/features/home/presentation/home_screen.dart';
 import 'package:{dart_name}/features/settings/presentation/settings_screen.dart';
 
@@ -642,14 +650,51 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rootNav');
 
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {{
+  // GoRouter needs a Listenable to know when to re-run `redirect`. Bridge the
+  // provider into one rather than rebuilding the router on every auth change,
+  // which would drop the navigation stack.
+  final authState = ValueNotifier<AsyncValue<AuthSession?>>(const AsyncLoading());
+  ref.listen(authControllerProvider, (_, next) => authState.value = next, fireImmediately: true);
+  ref.onDispose(authState.dispose);
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: RoutePaths.home,
     debugLogDiagnostics: true,
+    refreshListenable: authState,
+    redirect: (context, state) {{
+      final auth = authState.value;
+      final location = state.matchedLocation;
+
+      if (auth.isLoading) {{
+        return location == RoutePaths.splash ? null : RoutePaths.splash;
+      }}
+
+      final isSignedIn = auth.value != null;
+      final isOnAuthRoute = location == RoutePaths.login || location == RoutePaths.splash;
+
+      // Returning the current location would make GoRouter loop, so each arm
+      // returns null once the user is already where they belong.
+      if (!isSignedIn) return location == RoutePaths.login ? null : RoutePaths.login;
+      if (isOnAuthRoute) return RoutePaths.home;
+      return null;
+    }},
     routes: [
+      GoRoute(
+        path: RoutePaths.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
       GoRoute(
         path: RoutePaths.home,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.account,
+        builder: (context, state) => const AccountScreen(),
       ),
       GoRoute(
         path: RoutePaths.settings,
@@ -697,9 +742,11 @@ def clean_sample_code(root: Path, cfg: ProjectConfig) -> None:
     if not cfg.dry_run:
         route_paths_file.write_text(ROUTE_PATHS_CLEAN_TEMPLATE, encoding="utf-8")
 
-    # Update app_router.dart
-    app_router_file = root / "lib" / "core" / "routing" / "app_router.dart"
+    # Update app_router.dart. It lives under lib/app/ because routing is a
+    # composition-root concern: it imports features, and lib/core/ may not.
+    app_router_file = root / "lib" / "app" / "routing" / "app_router.dart"
     if not cfg.dry_run:
+        app_router_file.parent.mkdir(parents=True, exist_ok=True)
         content = APP_ROUTER_CLEAN_TEMPLATE.format(dart_name=cfg.dart_name)
         app_router_file.write_text(content, encoding="utf-8")
 
@@ -981,7 +1028,7 @@ def main() -> int:
         log_success("Project initialization complete! Your Flutter starter is ready.")
         print("\nNext steps:")
         print("  1. Review changes with: git status && git diff")
-        print("  2. Run development flavor: flutter run --flavor dev")
+        print("  2. Run development environment: make run-dev (or flutter run --dart-define=APP_ENV=dev)")
 
     return 0
 

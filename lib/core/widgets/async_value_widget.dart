@@ -3,9 +3,8 @@ import 'package:flutter_core_base/core/errors/failure.dart';
 import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/logging/logging.dart';
-import 'package:flutter_core_base/core/theme/app_colors.dart';
+import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
-import 'package:flutter_core_base/core/theme/app_typography.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const _log = AppLogger('AsyncValueWidget');
@@ -40,22 +39,25 @@ class AsyncValueWidget<T> extends StatelessWidget {
               _log.error('unexpected AsyncValue error', data: {'errorType': Redacted.type(err)});
             }
 
+            final colors = context.colors;
+            final textTheme = Theme.of(context).textTheme;
+
             return Center(
               child: Padding(
                 padding: AppSpacing.pagePadding,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error_outline_rounded, color: AppColors.error, size: 48),
+                    Icon(Icons.error_outline_rounded, color: colors.statusError, size: 48),
                     const SizedBox(height: AppSpacing.m),
                     Text(
                       context.l10n.somethingWentWrongMessage,
-                      style: AppTypography.titleMedium.copyWith(color: AppColors.error),
+                      style: textTheme.titleMedium?.copyWith(color: colors.statusError),
                     ),
                     const SizedBox(height: AppSpacing.s),
                     Text(
                       message,
-                      style: AppTypography.bodyMedium,
+                      style: textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -63,11 +65,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
               ),
             );
           },
-      loading:
-          loading ??
-          () => const Center(
-            child: CircularProgressIndicator(),
-          ),
+      loading: loading ?? () => const Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 }

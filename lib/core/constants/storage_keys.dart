@@ -8,4 +8,5 @@ abstract class StorageKeys {
   static const String secureAppToken = 'secure_app_token_override';
   static const String secureClientKey = 'secure_app_client_key_override';
   static const String mockSdkMode = 'app_mock_sdk_mode';
+  static const String secureAuthSession = 'secure_auth_session';
 }

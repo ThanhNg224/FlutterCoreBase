@@ -179,6 +179,9 @@ class TestRefactoringOperations(unittest.TestCase):
         (self.root / "lib" / "app").mkdir(parents=True)
         (self.root / "lib" / "core" / "constants").mkdir(parents=True)
         (self.root / "lib" / "core" / "routing").mkdir(parents=True)
+        (self.root / "lib" / "app" / "routing").mkdir(parents=True)
+        (self.root / "lib" / "features" / "auth" / "presentation").mkdir(parents=True)
+        (self.root / "test" / "features" / "auth").mkdir(parents=True)
         (self.root / "lib" / "l10n").mkdir(parents=True)
         (self.root / "test" / "support").mkdir(parents=True)
         (self.root / "android" / "app" / "src" / "main" / "kotlin" / "com" / "thanhng224" / "fluttercorebase").mkdir(parents=True)
@@ -213,7 +216,7 @@ class TestRefactoringOperations(unittest.TestCase):
             encoding="utf-8",
         )
         (self.root / "android" / "app" / "build.gradle.kts").write_text(
-            'namespace = "com.thanhng224.fluttercorebase"\napplicationId = "com.thanhng224.fluttercorebase"\nresValue("string", "app_name", "Flutter Core Base Dev")\nresValue("string", "app_name", "Flutter Core Base")\n',
+            'namespace = "com.thanhng224.fluttercorebase"\napplicationId = "com.thanhng224.fluttercorebase"\nresValue("string", "app_name", "Flutter Core Base")\n',
             encoding="utf-8",
         )
         (self.root / "android" / "app" / "src" / "main" / "kotlin" / "com" / "thanhng224" / "fluttercorebase" / "MainActivity.kt").write_text(
@@ -341,7 +344,6 @@ class TestRefactoringOperations(unittest.TestCase):
         gradle_content = (self.root / "android" / "app" / "build.gradle.kts").read_text(encoding="utf-8")
         self.assertIn('namespace = "com.acme.shop"', gradle_content)
         self.assertIn('applicationId = "com.acme.shop"', gradle_content)
-        self.assertIn('"Acme Shop Dev"', gradle_content)
         self.assertIn('"Acme Shop"', gradle_content)
 
         new_activity = self.root / "android" / "app" / "src" / "main" / "kotlin" / "com" / "acme" / "shop" / "MainActivity.kt"
@@ -455,12 +457,47 @@ class TestRefactoringOperations(unittest.TestCase):
         self.assertNotIn("catalog", route_paths)
         self.assertNotIn("posts", route_paths)
 
-        # Verify app_router.dart
-        app_router = (self.root / "lib" / "core" / "routing" / "app_router.dart").read_text(encoding="utf-8")
+        # Auth paths must survive: settings_screen.dart is not a sample and it
+        # navigates to RoutePaths.account, so dropping them would leave the
+        # cleaned project unable to compile.
+        self.assertIn("static const String login = '/login';", route_paths)
+        self.assertIn("static const String splash = '/splash';", route_paths)
+        self.assertIn("static const String account = '/account';", route_paths)
+
+        # Verify app_router.dart. It lives under lib/app/, not lib/core/:
+        # routing imports features, and core may not.
+        stale_router = self.root / "lib" / "core" / "routing" / "app_router.dart"
+        self.assertFalse(
+            stale_router.exists(),
+            "clean_sample_code must not resurrect the pre-move router path",
+        )
+        app_router = (self.root / "lib" / "app" / "routing" / "app_router.dart").read_text(encoding="utf-8")
         self.assertIn("initialLocation: RoutePaths.home", app_router)
         self.assertIn("builder: (context, state) => const HomeScreen()", app_router)
         self.assertNotIn("CatalogScreen", app_router)
         self.assertNotIn("PostsScreen", app_router)
+
+        # Auth is infrastructure, not a sample: the cleaned router keeps the guard.
+        self.assertIn("refreshListenable: authState", app_router)
+        self.assertIn("authControllerProvider", app_router)
+        self.assertIn("const LoginScreen()", app_router)
+        self.assertIn("const SplashScreen()", app_router)
+        self.assertIn("const AccountScreen()", app_router)
+
+    def test_clean_samples_keeps_the_auth_slice(self):
+        cfg = ProjectConfig(
+            app_name="Acme Shop",
+            dart_name="acme_shop",
+            bundle_id="com.acme.shop",
+            clean_samples=True,
+        )
+        clean_sample_code(self.root, cfg)
+
+        # Auth is infrastructure every new project needs on day one. Deleting it
+        # with the posts/catalog samples would strip login, the route guard and
+        # session persistence from every rebranded project.
+        self.assertTrue((self.root / "lib" / "features" / "auth").is_dir())
+        self.assertTrue((self.root / "test" / "features" / "auth").is_dir())
 
     def test_ios_display_name_escapes_xml(self):
         cfg = ProjectConfig(
