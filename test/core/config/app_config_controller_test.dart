@@ -36,6 +36,8 @@ class FakeLocalStorageService implements ILocalStorageService {
   final _bools = <String, bool>{};
   final _strings = <String, String>{};
   final _doubles = <String, double>{};
+  final _ints = <String, int>{};
+  final _stringLists = <String, List<String>>{};
 
   @override
   Future<bool> setString(String key, String value) async {
@@ -65,10 +67,30 @@ class FakeLocalStorageService implements ILocalStorageService {
   double? getDouble(String key) => _doubles[key];
 
   @override
+  Future<bool> setInt(String key, int value) async {
+    _ints[key] = value;
+    return true;
+  }
+
+  @override
+  int? getInt(String key) => _ints[key];
+
+  @override
+  Future<bool> setStringList(String key, List<String> value) async {
+    _stringLists[key] = value;
+    return true;
+  }
+
+  @override
+  List<String>? getStringList(String key) => _stringLists[key];
+
+  @override
   Future<bool> remove(String key) async {
     _bools.remove(key);
     _strings.remove(key);
     _doubles.remove(key);
+    _ints.remove(key);
+    _stringLists.remove(key);
     return true;
   }
 
@@ -77,6 +99,8 @@ class FakeLocalStorageService implements ILocalStorageService {
     _bools.clear();
     _strings.clear();
     _doubles.clear();
+    _ints.clear();
+    _stringLists.clear();
     return true;
   }
 }

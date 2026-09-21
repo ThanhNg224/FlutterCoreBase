@@ -437,8 +437,14 @@ abstract class AppLocalizations {
   /// No description provided for @errorUnauthorized.
   ///
   /// In en, this message translates to:
-  /// **'The server rejected these credentials. Check the app token and client key under Settings.'**
+  /// **'Your session has expired. Please sign in again.'**
   String get errorUnauthorized;
+
+  /// No description provided for @loginRejectedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password.'**
+  String get loginRejectedMessage;
 
   /// No description provided for @errorPlatform.
   ///

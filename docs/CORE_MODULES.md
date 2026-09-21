@@ -112,8 +112,8 @@ this without touching global handlers.
 
 ## 7. Storage (`core/storage/` & `core/constants/storage_keys.dart`)
  
-- **`ILocalStorageService` & `LocalStorageService`**: Typed abstraction and wrapper around `SharedPreferences` for non-sensitive, type-safe key-value persistence.
-- **`ISecureStorageService` & `SecureStorageService`**: `flutter_secure_storage`-backed storage for credential overrides (app token, client key) only. Never put credentials in `ILocalStorageService`.
+- **`ILocalStorageService` & `LocalStorageService`**: Typed abstraction and wrapper around `SharedPreferences` for non-sensitive, type-safe key-value persistence. Covers `String`, `bool`, `double`, `int`, and `List<String>` — always add a new type here rather than reaching for `SharedPreferences` directly in a feature.
+- **`ISecureStorageService` & `SecureStorageService`**: `flutter_secure_storage`-backed storage for credential overrides (app token, client key) only. Never put credentials in `ILocalStorageService`. The provider (`core/storage/storage_providers.dart`) declares platform options explicitly instead of relying on package defaults: Android uses `AndroidOptions()` (v11+ already wraps stored data in AES/GCM with an RSA-OAEP-wrapped key — there is no `encryptedSharedPreferences` flag to set on this major version), and iOS/macOS use `KeychainAccessibility.first_unlock_this_device` so tokens never sync via iCloud Keychain and stay inaccessible before the device's first unlock.
 - **`StorageKeys`**: Centralized repository of all persistent storage keys.
 - **`storageProviders`**: Injected via `ProviderScope` override in `main.dart` (`localStorageServiceProvider`).
 
