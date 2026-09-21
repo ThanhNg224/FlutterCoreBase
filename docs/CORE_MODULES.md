@@ -11,7 +11,7 @@ lib/core/
 ├── errors/              # AppException, Failure, ErrorHandler, FailureL10n
 ├── extensions/          # BuildContext extensions (context.l10n)
 ├── localization/        # LocaleNotifier, multi-language switching
-├── logging/             # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted
+├── logging/             # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted, CrashReporter, ErrorReporting
 ├── network/             # AuthDioClient, AuthInterceptor, LoggingInterceptor, ConnectivityProvider (isOnlineProvider)
 ├── routing/             # RoutePaths (pure data — AppRouter itself lives at lib/app/routing/)
 ├── storage/             # LocalStorageService (SharedPreferences) & SecureStorageService (credentials)
@@ -73,6 +73,23 @@ Enforces two safety guarantees by construction:
 | `Redacted.type(v)` | Entity type name |
 | `Redacted.count(n)` / `Redacted.flag(b)` | Cardinality and booleans |
 | `Redacted.unredacted(v, because:)` | Verbatim values that carry no sensitive data |
+
+**Crash reporting (`CrashReporter` & `ErrorReporting`)**
+
+`ErrorReporting.install()` — called once from `main()`, before `runApp` — is the
+single place that wires all three global error boundaries: `FlutterError.onError`
+(framework build/layout/paint errors), `PlatformDispatcher.instance.onError`
+(uncaught async errors) and `ErrorWidget.builder`. Both handlers log through
+`AppLogger` and then unconditionally forward to a `CrashReporter`, because
+logging is silent-by-design in release while a crash must still be reported —
+the reporter call is never gated by `LogPolicy`. The base ships with
+`NoopCrashReporter` (does nothing, no vendor dependency); a real project wires
+Sentry/Crashlytics/etc. by implementing `CrashReporter` and passing it to
+`ErrorReporting.install(reporter: ...)` — no other file needs to change. See
+`README.md` for the wiring snippet and `test/core/logging/error_reporting_test.dart`
+for the pure, `@visibleForTesting` seams (`handleFlutterError`,
+`handlePlatformError`, `setReporterForTest`, `setDebugModeForTest`) used to test
+this without touching global handlers.
 
 ---
 

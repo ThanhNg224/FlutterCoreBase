@@ -4,7 +4,7 @@
 [![Dart](https://img.shields.io/badge/Dart-3.13+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Riverpod](https://img.shields.io/badge/State-Riverpod_Generator-blue?logo=flutter)](https://riverpod.dev)
 [![Architecture](https://img.shields.io/badge/Architecture-Feature--First_Clean-green)](#-architecture-pillars)
-[![Tests](https://img.shields.io/badge/Tests-139_Passed-success)](#-testing--quality-assurance)
+[![Tests](https://img.shields.io/badge/Tests-147_Passed-success)](#-testing--quality-assurance)
 
 A production-grade, highly maintainable Flutter starter base engineered with **Feature-First Clean Architecture**, **Riverpod Generator**, and enterprise-grade resilience, security, and accessibility standards.
 
@@ -24,6 +24,7 @@ A production-grade, highly maintainable Flutter starter base engineered with **F
 * **Security by Construction:**
   - **Zero log leakage in release:** All logging routes to `SilentSink` via `LogPolicy` without runtime overhead.
   - **Compile-time redaction:** Logger data parameter strictly requires `Map<String, Redacted>`.
+  - **Crash reporting survives the silent-in-release logger:** `ErrorReporting.install()` wires `FlutterError.onError`, `PlatformDispatcher.onError` and `ErrorWidget.builder` to `AppLogger` *and* an injectable `CrashReporter` — the reporter always fires, even when `LogPolicy` silences the console.
   - **Decoupled credential storage:** Non-sensitive settings in `SharedPreferences`, auth credentials strictly encrypted in `flutter_secure_storage`.
   - **Self-defending network layer:** `AuthInterceptor` auto-clears credential overrides on `401 Unauthorized`.
 * **Session Management Out of the Box:**
@@ -88,7 +89,7 @@ lib/
 │   ├── errors/                         # Failure, AppException, ErrorHandler, FailureL10n
 │   ├── extensions/                     # BuildContext extensions (context.l10n)
 │   ├── localization/                   # LocaleNotifier
-│   ├── logging/                        # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted
+│   ├── logging/                        # AppLogger, LogLevel, LogPolicy, LogRecord, LogSink, Redacted, CrashReporter, ErrorReporting
 │   ├── network/                        # AuthDioClient (interceptor-free), AuthInterceptor, LoggingInterceptor, ConnectivityProvider
 │   ├── routing/                        # RoutePaths (pure data; AppRouter itself lives under lib/app/)
 │   ├── storage/                        # LocalStorageService (SharedPreferences), SecureStorageService (credentials)
@@ -134,6 +135,37 @@ The repository follows strict architectural and coding standards detailed in `do
 | [FEATURE_TEMPLATE.md](docs/FEATURE_TEMPLATE.md) | Step-by-step guide for creating new feature modules. |
 | [GIT_FLOW.md](docs/GIT_FLOW.md) | Branching strategy, Conventional Commits, and collaboration rules. |
 | [AGENTS.md](docs/AGENTS.md) | AI assistant engineering workflow and source of truth guidelines. |
+
+---
+
+## 🩹 Plugging In Crash Reporting (Sentry, Crashlytics, ...)
+
+The base ships with no vendor crash-reporting dependency, but the seam is already
+wired: `lib/main.dart` calls `ErrorReporting.install(...)` once, before `runApp`,
+covering `FlutterError.onError`, `PlatformDispatcher.onError` and
+`ErrorWidget.builder` in one place. To send crashes to a real backend, implement
+`CrashReporter` (`lib/core/logging/crash_reporter.dart`) and pass it in — no other
+call site changes:
+
+```dart
+final class SentryCrashReporter implements CrashReporter {
+  const SentryCrashReporter();
+
+  @override
+  void recordError(Object error, StackTrace? stackTrace, {required bool fatal, String? context}) {
+    Sentry.captureException(error, stackTrace: stackTrace, hint: Hint.withMap({'fatal': fatal, 'context': context}));
+  }
+}
+
+// main.dart
+ErrorReporting.install(
+  reporter: const SentryCrashReporter(),
+  errorWidgetBuilder: (details) => AppErrorWidget(details: details),
+);
+```
+
+See `docs/CORE_MODULES.md` (§4 Logging) for the full contract, including why the
+reporter must never be gated behind `LogPolicy`.
 
 ---
 
@@ -228,7 +260,7 @@ source PNGs without re-running this keeps shipping the previous project's logo o
 splash screen, which is exactly how this base ended up displaying someone else's brand.
 
 ### 4. Run Code Analysis & Unit Tests
-The codebase includes an extensive automated test suite (**139 passing tests**) covering error mapping, security redaction, WCAG contrast verification, reduced-motion compliance, controller lifecycles, the auth session/refresh flow, the architecture layer-boundary guard, and loopback HTTP network integration.
+The codebase includes an extensive automated test suite (**147 passing tests**) covering error mapping, security redaction, WCAG contrast verification, reduced-motion compliance, controller lifecycles, the auth session/refresh flow, the architecture layer-boundary guard, crash-reporting wiring, and loopback HTTP network integration.
 
 ```bash
 # Static analysis (Enforces 0 warnings / 0 errors)
