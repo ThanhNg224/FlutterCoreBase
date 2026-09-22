@@ -5,9 +5,12 @@ import 'package:flutter_core_base/core/theme/app_motion.dart';
 
 import '../../support/widget_harness.dart';
 
-Future<List<Widget>> _entranceUnder(WidgetTester tester, {required bool disableAnimations}) async {
-  late List<Widget> result;
-  final children = <Widget>[const Text('a'), const Text('b'), const Text('c')];
+Future<Widget> _entranceUnder(
+  WidgetTester tester, {
+  required int index,
+  required bool disableAnimations,
+}) async {
+  late Widget result;
 
   await tester.pumpWidget(
     harness(
@@ -15,8 +18,8 @@ Future<List<Widget>> _entranceUnder(WidgetTester tester, {required bool disableA
         data: MediaQueryData(disableAnimations: disableAnimations),
         child: Builder(
           builder: (context) {
-            result = children.staggeredEntrance(context);
-            return Column(children: result);
+            result = const Text('a').entranceAt(context, index);
+            return result;
           },
         ),
       ),
@@ -27,21 +30,45 @@ Future<List<Widget>> _entranceUnder(WidgetTester tester, {required bool disableA
 }
 
 void main() {
-  group('staggeredEntrance', () {
-    testWidgets('animates when the platform allows motion', (tester) async {
-      final result = await _entranceUnder(tester, disableAnimations: false);
+  group('entranceAt', () {
+    testWidgets('animates a leading item when the platform allows motion', (tester) async {
+      final result = await _entranceUnder(tester, index: 0, disableAnimations: false);
 
-      expect(result, isA<AnimateList>());
-      expect(find.byType(Animate), findsNWidgets(3));
+      expect(result, isA<Animate>());
+      expect(find.byType(Animate), findsOneWidget);
+      expect(find.text('a'), findsOneWidget);
     });
 
-    testWidgets('returns children untouched under reduced motion', (tester) async {
-      final result = await _entranceUnder(tester, disableAnimations: true);
+    testWidgets('returns the item untouched under reduced motion', (tester) async {
+      final result = await _entranceUnder(tester, index: 0, disableAnimations: true);
 
-      expect(result, isNot(isA<AnimateList>()));
+      expect(result, isNot(isA<Animate>()));
       expect(find.byType(Animate), findsNothing);
       expect(find.text('a'), findsOneWidget);
-      expect(find.text('c'), findsOneWidget);
+    });
+
+    testWidgets('returns the item untouched past the stagger cap', (tester) async {
+      // Delay grows with the index, so an unbounded paged list would leave deep
+      // items blank for many seconds. Past the cap they must render instantly.
+      final result = await _entranceUnder(
+        tester,
+        index: AppMotion.maxStaggeredItems,
+        disableAnimations: false,
+      );
+
+      expect(result, isNot(isA<Animate>()));
+      expect(find.byType(Animate), findsNothing);
+      expect(find.text('a'), findsOneWidget);
+    });
+
+    testWidgets('still animates the last item below the cap', (tester) async {
+      final result = await _entranceUnder(
+        tester,
+        index: AppMotion.maxStaggeredItems - 1,
+        disableAnimations: false,
+      );
+
+      expect(result, isA<Animate>());
     });
   });
 }

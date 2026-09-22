@@ -1,15 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter_core_base/core/errors/failure.dart';
+import 'package:flutter_core_base/core/pagination/paged_state.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 
-part 'posts_state.freezed.dart';
-
-@freezed
-abstract class PostsState with _$PostsState {
-  const factory PostsState({
-    @Default(<Post>[]) List<Post> items,
-    @Default(true) bool hasMore,
-    @Default(false) bool isLoadingMore,
-    Failure? paginationFailure,
-  }) = _PostsState;
-}
+/// The posts feed is a plain paged list; all of its state lives in the shared
+/// [PagedState]. Kept as an alias so call sites read as `PostsState`.
+typedef PostsState = PagedState<Post>;

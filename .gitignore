@@ -52,3 +52,6 @@ app.*.map.json
 
 macos/Flutter/ephemeral
 coverage/
+
+# Agent-generated implementation plans (local working notes, not project docs)
+docs/superpowers/
