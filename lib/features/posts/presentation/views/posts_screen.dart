@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
 import 'package:flutter_core_base/core/errors/failure_l10n.dart';
-import 'package:flutter_core_base/core/theme/app_motion.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
 import 'package:flutter_core_base/core/theme/app_spacing.dart';
 import 'package:flutter_core_base/core/widgets/app_bottom_sheet.dart';
 import 'package:flutter_core_base/core/widgets/app_button.dart';
 import 'package:flutter_core_base/core/widgets/app_dialog.dart';
+import 'package:flutter_core_base/core/widgets/app_paged_list_view.dart';
 import 'package:flutter_core_base/core/widgets/app_shimmer.dart';
 import 'package:flutter_core_base/core/widgets/async_value_widget.dart';
+import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_controller.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_state.dart';
 import 'package:flutter_core_base/features/posts/presentation/widgets/create_post_bottom_sheet.dart';
@@ -17,36 +18,10 @@ import 'package:flutter_core_base/features/posts/presentation/widgets/post_card.
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class PostsScreen extends ConsumerStatefulWidget {
+class PostsScreen extends ConsumerWidget {
   const PostsScreen({super.key});
 
-  @override
-  ConsumerState<PostsScreen> createState() => _PostsScreenState();
-}
-
-class _PostsScreenState extends ConsumerState<PostsScreen> {
-  final _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      ref.read(postsControllerProvider.notifier).loadMore();
-    }
-  }
-
-  void _showCreateBottomSheet() {
+  void _showCreateBottomSheet(BuildContext context, WidgetRef ref) {
     AppBottomSheet.show<void>(
       context: context,
       title: context.l10n.createPostTitle,
@@ -59,11 +34,11 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
     );
   }
 
-  Future<void> _deletePost(int id) async {
-    final result = await ref.read(postsControllerProvider.notifier).deletePost(id);
-    if (!mounted) return;
-
+  Future<void> _deletePost(BuildContext context, WidgetRef ref, int id) async {
     final l10n = context.l10n;
+    final result = await ref.read(postsControllerProvider.notifier).deletePost(id);
+    if (!context.mounted) return;
+
     result.fold(
       (failure) => AppDialog.showResultDialog(
         context: context,
@@ -75,8 +50,68 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
     );
   }
 
+  void _confirmDelete(BuildContext context, WidgetRef ref, Post post) {
+    final l10n = context.l10n;
+    AppDialog.showActionDialog(
+      context: context,
+      icon: Icons.delete_outline_rounded,
+      title: l10n.deletePostTitle,
+      message: l10n.deletePostConfirmation(post.title),
+      primaryLabel: l10n.deleteButton,
+      secondaryLabel: l10n.cancelButton,
+      onPrimary: () => _deletePost(context, ref, post.id),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Center(
+      child: Padding(
+        padding: AppSpacing.pagePadding,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.inbox_outlined, size: 64, color: context.colors.textHint),
+            const SizedBox(height: AppSpacing.m),
+            Text(l10n.noPostsFound, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.m),
+            AppButton(
+              label: l10n.createFirstPostButton,
+              onPressed: () => _showCreateBottomSheet(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Inline progress / retry rendered under the last loaded page. A failed page
+  /// must never blank out the posts already on screen.
+  Widget? _buildFooter(BuildContext context, WidgetRef ref, PostsState postsState) {
+    if (postsState.isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
+        child: Center(child: CircularProgressIndicator.adaptive()),
+      );
+    }
+
+    final failure = postsState.paginationFailure;
+    if (failure == null) return null;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+      child: Center(
+        child: TextButton.icon(
+          onPressed: () => ref.read(postsControllerProvider.notifier).loadMore(),
+          icon: const Icon(Icons.refresh_rounded),
+          label: Text(failure.localizedMessage(context.l10n)),
+        ),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final postsAsync = ref.watch(postsControllerProvider);
     final l10n = context.l10n;
 
@@ -98,85 +133,20 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
             value: postsAsync,
             loading: AppShimmerList.new,
             data: (postsState) {
-              final posts = postsState.items;
-              if (posts.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: AppSpacing.pagePadding,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.inbox_outlined, size: 64, color: context.colors.textHint),
-                        const SizedBox(height: AppSpacing.m),
-                        Text(
-                          l10n.noPostsFound,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: AppSpacing.m),
-                        AppButton(
-                          label: l10n.createFirstPostButton,
-                          onPressed: _showCreateBottomSheet,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+              if (postsState.items.isEmpty) {
+                return _buildEmptyState(context, ref);
               }
 
-              final postWidgets = posts.map<Widget>((post) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.s),
-                  child: PostCard(
-                    post: post,
-                    onTap: () => context.push('${RoutePaths.posts}/${post.id}'),
-                    onDelete: () {
-                      AppDialog.showActionDialog(
-                        context: context,
-                        icon: Icons.delete_outline_rounded,
-                        title: l10n.deletePostTitle,
-                        message: l10n.deletePostConfirmation(post.title),
-                        primaryLabel: l10n.deleteButton,
-                        secondaryLabel: l10n.cancelButton,
-                        onPrimary: () => _deletePost(post.id),
-                      );
-                    },
-                  ),
-                );
-              }).toList();
-
-              final animatedItems = postWidgets.staggeredEntrance(context);
-
-              return RefreshIndicator(
+              return AppPagedListView<Post>(
+                items: postsState.items,
+                keyProvider: (post) => ValueKey(post.id),
                 onRefresh: () => ref.read(postsControllerProvider.notifier).refresh(),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: AppSpacing.pagePadding,
-                  itemCount:
-                      animatedItems.length + (postsState.isLoadingMore || postsState.paginationFailure != null ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index < animatedItems.length) {
-                      return animatedItems[index];
-                    }
-                    if (postsState.isLoadingMore) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
-                        child: Center(child: CircularProgressIndicator.adaptive()),
-                      );
-                    }
-                    final failure = postsState.paginationFailure!;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
-                      child: Center(
-                        child: TextButton.icon(
-                          onPressed: () => ref.read(postsControllerProvider.notifier).loadMore(),
-                          icon: const Icon(Icons.refresh_rounded),
-                          label: Text(
-                            failure.localizedMessage(l10n),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                onLoadMore: () => ref.read(postsControllerProvider.notifier).loadMore(),
+                footer: _buildFooter(context, ref, postsState),
+                itemBuilder: (context, post, index) => PostCard(
+                  post: post,
+                  onTap: () => context.push('${RoutePaths.posts}/${post.id}'),
+                  onDelete: () => _confirmDelete(context, ref, post),
                 ),
               );
             },
@@ -184,7 +154,7 @@ class _PostsScreenState extends ConsumerState<PostsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showCreateBottomSheet,
+        onPressed: () => _showCreateBottomSheet(context, ref),
         icon: const Icon(Icons.add_rounded),
         label: Text(l10n.newPostButton),
       ),

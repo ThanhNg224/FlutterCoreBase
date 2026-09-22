@@ -223,14 +223,6 @@ class TestRefactoringOperations(unittest.TestCase):
             "package com.thanhng224.fluttercorebase\nimport io.flutter.embedding.android.FlutterActivity\nclass MainActivity : FlutterActivity()\n",
             encoding="utf-8",
         )
-        (self.root / "ios" / "Flutter" / "Flavor.xcconfig").write_text(
-            "PRODUCT_BUNDLE_IDENTIFIER=com.thanhng224.fluttercorebase\n",
-            encoding="utf-8",
-        )
-        (self.root / "ios" / "Flutter" / "Debug-dev.xcconfig").write_text(
-            "PRODUCT_BUNDLE_IDENTIFIER=com.thanhng224.fluttercorebase.dev\n",
-            encoding="utf-8",
-        )
         (self.root / "ios" / "Runner.xcodeproj" / "project.pbxproj").write_text(
             "PRODUCT_BUNDLE_IDENTIFIER = com.thanhng224.fluttercorebase;\n",
             encoding="utf-8",
@@ -355,11 +347,8 @@ class TestRefactoringOperations(unittest.TestCase):
         self.assertFalse(old_dir.exists())
 
         # 3. iOS checks
-        flavor_content = (self.root / "ios" / "Flutter" / "Flavor.xcconfig").read_text(encoding="utf-8")
-        self.assertIn("PRODUCT_BUNDLE_IDENTIFIER=com.acme.shop", flavor_content)
-
-        dev_flavor = (self.root / "ios" / "Flutter" / "Debug-dev.xcconfig").read_text(encoding="utf-8")
-        self.assertIn("PRODUCT_BUNDLE_IDENTIFIER=com.acme.shop.dev", dev_flavor)
+        ios_pbx = (self.root / "ios" / "Runner.xcodeproj" / "project.pbxproj").read_text(encoding="utf-8")
+        self.assertIn("PRODUCT_BUNDLE_IDENTIFIER = com.acme.shop;", ios_pbx)
 
         ios_info = (self.root / "ios" / "Runner" / "Info.plist").read_text(encoding="utf-8")
         self.assertIn("<string>Acme Shop</string>", ios_info)

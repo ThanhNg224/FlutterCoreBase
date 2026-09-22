@@ -8,6 +8,8 @@
 library;
 
 export 'package:flutter_core_base/core/logging/app_logger.dart';
+export 'package:flutter_core_base/core/logging/crash_reporter.dart';
+export 'package:flutter_core_base/core/logging/error_reporting.dart';
 export 'package:flutter_core_base/core/logging/log_level.dart';
 export 'package:flutter_core_base/core/logging/log_policy.dart';
 export 'package:flutter_core_base/core/logging/log_record.dart';

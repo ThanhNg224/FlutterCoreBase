@@ -8,6 +8,10 @@ abstract interface class ILocalStorageService {
   bool? getBool(String key);
   Future<bool> setDouble(String key, double value);
   double? getDouble(String key);
+  Future<bool> setInt(String key, int value);
+  int? getInt(String key);
+  Future<bool> setStringList(String key, List<String> value);
+  List<String>? getStringList(String key);
   Future<bool> remove(String key);
   Future<bool> clear();
 }
@@ -35,6 +39,18 @@ class LocalStorageService implements ILocalStorageService {
 
   @override
   double? getDouble(String key) => _prefs.getDouble(key);
+
+  @override
+  Future<bool> setInt(String key, int value) => _prefs.setInt(key, value);
+
+  @override
+  int? getInt(String key) => _prefs.getInt(key);
+
+  @override
+  Future<bool> setStringList(String key, List<String> value) => _prefs.setStringList(key, value);
+
+  @override
+  List<String>? getStringList(String key) => _prefs.getStringList(key);
 
   @override
   Future<bool> remove(String key) => _prefs.remove(key);

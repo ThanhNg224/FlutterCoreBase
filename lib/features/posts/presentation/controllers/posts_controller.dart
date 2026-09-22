@@ -1,4 +1,5 @@
 import 'package:flutter_core_base/core/errors/failure.dart';
+import 'package:flutter_core_base/core/pagination/paginator.dart';
 import 'package:flutter_core_base/features/posts/data/repositories/posts_repository_impl.dart';
 import 'package:flutter_core_base/features/posts/domain/entities/post.dart';
 import 'package:flutter_core_base/features/posts/presentation/controllers/posts_state.dart';
@@ -9,16 +10,29 @@ part 'posts_controller.g.dart';
 
 @riverpod
 class PostsController extends _$PostsController {
-  int _currentPage = 1;
   static const int _pageSize = 10;
+
+  final Paginator<Post, int> _paginator = Paginator<Post, int>(
+    pageSize: _pageSize,
+    idOf: (post) => post.id,
+  );
 
   @override
   FutureOr<PostsState> build() async {
-    _currentPage = 1;
-    final result = await _fetchPosts(page: _currentPage);
+    final token = _paginator.beginReload();
+    final result = await _fetchPosts(page: 1);
+
+    if (_paginator.isReloadStale(token)) {
+      final currentState = state;
+      if (currentState.hasError) {
+        Error.throwWithStackTrace(currentState.error!, currentState.stackTrace!);
+      }
+      return currentState.value ?? const PostsState();
+    }
+
     return result.fold(
       (failure) => throw failure,
-      (items) => PostsState(items: items, hasMore: items.length == _pageSize),
+      _paginator.onFirstPage,
     );
   }
 
@@ -28,33 +42,42 @@ class PostsController extends _$PostsController {
   }
 
   Future<void> refresh() async {
-    state = const AsyncValue.loading();
-    _currentPage = 1;
-    final result = await _fetchPosts(page: _currentPage);
-    state = result.fold(
-      (failure) => AsyncValue.error(failure, StackTrace.current),
-      (items) => AsyncValue.data(PostsState(items: items, hasMore: items.length == _pageSize)),
-    );
+    final token = _paginator.beginReload(tracksInFlight: true);
+    try {
+      if (!state.hasValue) {
+        state = const AsyncValue.loading();
+      }
+      final result = await _fetchPosts(page: 1);
+      if (_paginator.isReloadStale(token)) return;
+
+      state = result.fold(
+        (failure) => AsyncValue.error(failure, StackTrace.current),
+        (items) => AsyncValue.data(_paginator.onFirstPage(items)),
+      );
+    } finally {
+      _paginator.endReload();
+    }
   }
 
   Future<void> loadMore() async {
     final current = state.value;
-    if (current == null || current.isLoadingMore || !current.hasMore || state.isLoading || state.hasError) return;
+    if (!_paginator.canLoadMore(current, isLoading: state.isLoading, hasError: state.hasError)) {
+      return;
+    }
 
-    state = AsyncValue.data(current.copyWith(isLoadingMore: true, paginationFailure: null));
-    final nextPage = _currentPage + 1;
+    final token = _paginator.pageToken;
+    final nextPage = _paginator.nextPage;
+    state = AsyncValue.data(current!.copyWith(isLoadingMore: true, paginationFailure: null));
+
     final result = await _fetchPosts(page: nextPage);
+    if (_paginator.isPageStale(token)) return;
+
+    final latest = state.value;
+    if (latest == null) return;
+
     state = result.fold(
-      (failure) => AsyncValue.data(current.copyWith(paginationFailure: failure)),
-      (newItems) {
-        _currentPage = nextPage;
-        return AsyncValue.data(
-          current.copyWith(
-            items: [...current.items, ...newItems],
-            hasMore: newItems.length == _pageSize,
-          ),
-        );
-      },
+      (failure) => AsyncValue.data(latest.copyWith(isLoadingMore: false, paginationFailure: failure)),
+      (newItems) => AsyncValue.data(_paginator.onNextPage(latest, newItems, page: nextPage)),
     );
   }
 
@@ -65,10 +88,8 @@ class PostsController extends _$PostsController {
     return result.fold(
       Left.new,
       (newPost) {
-        final current = state.value;
-        if (current != null) {
-          state = AsyncValue.data(current.copyWith(items: [newPost, ...current.items]));
-        }
+        final next = _paginator.onItemInserted(state.value, newPost);
+        if (next != null) state = AsyncValue.data(next);
         return Right(newPost);
       },
     );
@@ -81,10 +102,8 @@ class PostsController extends _$PostsController {
     return result.fold(
       Left.new,
       (_) {
-        final current = state.value;
-        if (current != null) {
-          state = AsyncValue.data(current.copyWith(items: current.items.where((post) => post.id != id).toList()));
-        }
+        final next = _paginator.onItemRemoved(state.value, id);
+        if (next != null) state = AsyncValue.data(next);
         return const Right(null);
       },
     );

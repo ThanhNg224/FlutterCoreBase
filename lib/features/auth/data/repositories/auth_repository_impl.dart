@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_core_base/core/errors/error_handler.dart';
 import 'package:flutter_core_base/core/errors/failure.dart';
 import 'package:flutter_core_base/core/logging/logging.dart';
@@ -15,48 +17,93 @@ const _log = AppLogger('Auth');
 class AuthRepositoryImpl implements IAuthRepository {
   final IAuthRemoteDataSource remoteDataSource;
   final IAuthLocalDataSource localDataSource;
+  Future<void> _localMutationTail = Future<void>.value();
 
-  const AuthRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
+  AuthRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
 
   @override
-  Future<Either<Failure, AuthSession>> login({required String email, required String password}) {
+  Future<Either<Failure, AuthSession>> login({
+    required String email,
+    required String password,
+    bool Function()? isSessionCurrent,
+  }) {
     return ErrorHandler.guard(() async {
       final dto = await remoteDataSource.login(email: email, password: password);
-      await localDataSource.write(dto);
+      await _enqueueLocalMutation(() async {
+        if (isSessionCurrent?.call() == false) return;
+        await localDataSource.write(dto);
+      });
       _log.info('session established', data: {'user': Redacted.secret(dto.userId)});
       return dto.toDomain();
     });
   }
 
   @override
-  Future<Either<Failure, AuthSession>> refresh(String refreshToken) async {
+  Future<Either<Failure, AuthSession>> refresh(
+    String refreshToken, {
+    bool Function()? isSessionCurrent,
+  }) async {
     final result = await ErrorHandler.guard(() async {
       final dto = await remoteDataSource.refresh(refreshToken);
-      await localDataSource.write(dto);
-      return dto.toDomain();
+      final session = dto.toDomain();
+      return _enqueueLocalMutation(() async {
+        if (isSessionCurrent?.call() == false) return session;
+        await localDataSource.write(dto);
+        return session;
+      });
     });
 
     // A refresh token the server will not honour is worthless; keeping it only
-    // guarantees the same failure on the next launch.
-    if (result.isLeft()) {
-      await localDataSource.clear();
-      _log.warn('refresh failed, session cleared');
+    // guarantees the same failure on the next launch. Transient failures must
+    // keep the current session so the caller can retry without signing in.
+    final failure = result.getLeft().toNullable();
+    if (failure is UnauthorizedFailure) {
+      await _enqueueLocalMutation(() async {
+        if (isSessionCurrent?.call() == false) return;
+        await localDataSource.clear();
+        _log.warn('refresh failed, session cleared');
+      });
     }
     return result;
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
-    final stored = await localDataSource.read();
-    if (stored != null) {
+  Future<Either<Failure, void>> logout({bool Function()? isSessionCurrent}) async {
+    final clearResult = await ErrorHandler.guard(
+      () => _enqueueLocalMutation(() async {
+        if (isSessionCurrent?.call() == false) return null;
+        final stored = await localDataSource.read();
+        await localDataSource.clear();
+        return stored;
+      }),
+    );
+    if (clearResult.isLeft()) return Left(clearResult.getLeft().toNullable()!);
+
+    final stored = clearResult.getOrElse((_) => null);
+    if (stored != null && isSessionCurrent?.call() != false) {
       try {
         await remoteDataSource.logout(stored.refreshToken);
       } catch (error) {
-        // Best effort. The local clear below is what the user actually asked for.
+        // Best effort. The local clear above is what the user actually asked for.
         _log.warn('remote revoke failed', data: {'errorType': Redacted.type(error)});
       }
     }
-    return ErrorHandler.guard(() => localDataSource.clear());
+    return const Right(null);
+  }
+
+  Future<T> _enqueueLocalMutation<T>(Future<T> Function() operation) {
+    final previous = _localMutationTail;
+    final next = Completer<void>();
+    final result = () async {
+      await previous;
+      try {
+        return await operation();
+      } finally {
+        if (!next.isCompleted) next.complete();
+      }
+    }();
+    _localMutationTail = next.future;
+    return result;
   }
 
   @override

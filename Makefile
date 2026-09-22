@@ -27,7 +27,8 @@ INIT_OPTIONS = \
 
 .PHONY: help init init-dry-run init-cli pub-get gen-l10n build-runner codegen setup \
   format format-check analyze test test-coverage verify ci branding run-dev run-prod \
-  build-apk-dev build-apk-prod build-appbundle-prod clean deep-clean clean-artifacts
+  build-apk-dev build-apk-prod build-appbundle-prod clean deep-clean clean-artifacts \
+  hooks-install
 
 help: ## Show available commands
 	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make <target> [VARIABLE=value]\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*##/ {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -60,7 +61,7 @@ build-runner: ## Generate Riverpod, Freezed, and JSON bindings
 codegen: pub-get gen-l10n build-runner ## Resolve dependencies and regenerate generated code
 	$(DART) format .
 
-setup: codegen ## Prepare a fresh checkout for development
+setup: codegen hooks-install ## Prepare a fresh checkout for development
 
 format: ## Format all Dart files
 	$(DART) format .
@@ -111,4 +112,8 @@ deep-clean: ## Deep clean including Flutter and native Android build caches
 	$(FLUTTER) clean
 	cd android && ./gradlew clean
 	$(FLUTTER) pub get
+
+hooks-install: ## Wire up .githooks (auto flutter-clean on push once build/.dart_tool grow past 2GiB)
+	git config core.hooksPath .githooks
+	chmod +x .githooks/pre-push
 

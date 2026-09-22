@@ -37,3 +37,4 @@ Use Conventional Commits format:
 1. **NO Co-author Metadata:** Never append co-author signatures (`Co-authored-by: ...`) to commit messages.
 2. **Logical Atomic Commits:** Group related changes together logically; avoid unorganized blobs.
 3. **Pre-commit Verification:** Run `make verify` (or `flutter analyze` and `flutter test`) before committing.
+4. **Disk Hygiene:** `make setup` installs a `pre-push` hook (`.githooks/pre-push`) that auto-runs `flutter clean` once `build/` + `.dart_tool/` exceed 2GiB, so local build caches don't grow unbounded. Run `make hooks-install` manually if you skipped `make setup`.

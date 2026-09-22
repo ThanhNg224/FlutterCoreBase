@@ -1,0 +1,15 @@
+#!/bin/sh
+# Auto-clean local Flutter build caches once they outgrow disk-friendly bounds.
+# Installed via `make hooks-install` (also runs as part of `make setup`).
+
+threshold_kb=$((2 * 1024 * 1024)) # 2 GiB
+
+size_kb=$(du -sk build .dart_tool 2>/dev/null | awk '{sum += $1} END {print sum + 0}')
+
+if [ "$size_kb" -gt "$threshold_kb" ]; then
+  size_human=$(du -sh build .dart_tool 2>/dev/null | awk '{printf "%s ", $1}')
+  echo "pre-push: build/ + .dart_tool/ are large ($size_human) — running flutter clean."
+  flutter clean >/dev/null 2>&1 || echo "pre-push: flutter clean failed, continuing anyway."
+fi
+
+exit 0

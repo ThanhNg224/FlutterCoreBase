@@ -36,6 +36,8 @@ class FakeLocalStorageService implements ILocalStorageService {
   final _bools = <String, bool>{};
   final _strings = <String, String>{};
   final _doubles = <String, double>{};
+  final _ints = <String, int>{};
+  final _stringLists = <String, List<String>>{};
 
   @override
   Future<bool> setString(String key, String value) async {
@@ -65,10 +67,30 @@ class FakeLocalStorageService implements ILocalStorageService {
   double? getDouble(String key) => _doubles[key];
 
   @override
+  Future<bool> setInt(String key, int value) async {
+    _ints[key] = value;
+    return true;
+  }
+
+  @override
+  int? getInt(String key) => _ints[key];
+
+  @override
+  Future<bool> setStringList(String key, List<String> value) async {
+    _stringLists[key] = value;
+    return true;
+  }
+
+  @override
+  List<String>? getStringList(String key) => _stringLists[key];
+
+  @override
   Future<bool> remove(String key) async {
     _bools.remove(key);
     _strings.remove(key);
     _doubles.remove(key);
+    _ints.remove(key);
+    _stringLists.remove(key);
     return true;
   }
 
@@ -77,6 +99,8 @@ class FakeLocalStorageService implements ILocalStorageService {
     _bools.clear();
     _strings.clear();
     _doubles.clear();
+    _ints.clear();
+    _stringLists.clear();
     return true;
   }
 }
@@ -130,8 +154,8 @@ void main() {
   test('updates and clears secure credential overrides', () async {
     // Pinned: this test asserts a production environment at the end, which
     // used to be true unconditionally (`?? false`). Now that the build
-    // environment is the default, it must be pinned rather than relying on
-    // this repo's `default-flavor: dev` to happen to resolve elsewhere.
+    // environment supplies the default, the test must state which environment
+    // it means instead of inheriting whatever the build happens to resolve to.
     AppEnvironment.setForTest(Environment.production);
     await container.read(appConfigControllerProvider.future);
     final controller = container.read(appConfigControllerProvider.notifier);
@@ -159,9 +183,11 @@ void main() {
     tearDown(AppEnvironment.resetForTest);
 
     test('with no stored override, a production build starts on production', () async {
-      // The environment must be pinned: this repo's `default-flavor: dev` makes
-      // the ambient AppEnvironment.build under test `development`, so an
-      // unpinned assertion would be testing pubspec.yaml, not this controller.
+      // The environment must be pinned. Leaving it ambient would make this
+      // assertion depend on how the suite was compiled (`--dart-define=APP_ENV`
+      // is empty under a plain `flutter test`, but CI also runs this file with
+      // it set), so an unpinned test would be testing the build, not the
+      // controller.
       AppEnvironment.setForTest(Environment.production);
       final container = makeContainer(); // use the helper already present in this file
       addTearDown(container.dispose);
@@ -253,5 +279,34 @@ void main() {
 
     final after = container.read(appConfigControllerProvider).requireValue;
     expect(after, before, reason: 'a rejected mutation must not alter state');
+  });
+
+  test('ignores stored environment, mock, and credential overrides when dev tools are disabled', () async {
+    DevTools.setEnabledForTest(false);
+    addTearDown(DevTools.resetForTest);
+    AppEnvironment.setForTest(Environment.production);
+
+    final storage = FakeLocalStorageService()
+      ..setBool(StorageKeys.useDevEnvironment, true)
+      ..setBool(StorageKeys.mockSdkMode, true);
+    final secureStorage = FakeSecureStorageService();
+    await secureStorage.write(key: StorageKeys.secureAppToken, value: 'tampered-token');
+    await secureStorage.write(key: StorageKeys.secureClientKey, value: 'tampered-key');
+
+    final container = ProviderContainer(
+      overrides: [
+        localStorageServiceProvider.overrideWithValue(storage),
+        secureStorageServiceProvider.overrideWithValue(secureStorage),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final config = await container.read(appConfigControllerProvider.future);
+
+    expect(config.environment, Environment.production);
+    expect(config.baseUrl, ApiEndpoints.prodUrl);
+    expect(config.mockSdkEnabled, isFalse);
+    expect(config.appToken, ApiEndpoints.defaultProdToken);
+    expect(config.clientKey, ApiEndpoints.defaultProdClientKey);
   });
 }

@@ -3,6 +3,10 @@ name: CI
 on:
   push:
   pull_request:
+  # So the iOS job, which otherwise only runs on PRs into main, can still be
+  # triggered on demand — otherwise verifying an iOS fix would require opening
+  # a pull request first.
+  workflow_dispatch:
 
 jobs:
   verify:
@@ -24,3 +28,81 @@ jobs:
         run: |
           flutter test --dart-define=APP_ENV=dev test/core/config/app_environment_test.dart
           flutter test --dart-define=APP_ENV=prod test/core/config/app_environment_test.dart
+
+  # `verify` only analyses and tests: it never compiles for a real platform, so
+  # a change that breaks the Android or iOS build used to merge green. That is
+  # not hypothetical -- an iOS xcconfig once pointed at the wrong CocoaPods
+  # config for months and CI never noticed, because CI never built iOS.
+  build-android:
+    name: Build Android (release)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.0'
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: make pub-get
+
+      - name: Generate code and localizations
+        run: make gen-l10n build-runner
+
+      # Release, not debug: R8/ProGuard shrinking and the obfuscation flags are
+      # where Android builds actually break, and a debug build exercises none of it.
+      - name: Build release APK
+        run: make build-apk-prod
+
+  build-ios:
+    name: Build iOS (simulator, unsigned)
+    # macOS runners bill at 10x the Linux rate, so this one does not run on
+    # every push. It gates merges into main, and can be dispatched manually.
+    #
+    # The trade: an iOS-only break now surfaces at the PR into main rather than
+    # on the push to develop that caused it. Run this workflow by hand after
+    # touching ios/, the Podfile, or anything platform-channel shaped.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.base_ref == 'main')
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.0'
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: make pub-get
+
+      - name: Generate code and localizations
+        run: make gen-l10n build-runner
+
+      # `pod install` run explicitly rather than implicitly through the build,
+      # so a CocoaPods integration failure is its own red step with its own log
+      # instead of a confusing "No Xcode build settings have been found".
+      - name: Install CocoaPods dependencies
+        run: pod install --project-directory=ios
+
+      # --simulator avoids needing signing certificates in CI.
+      - name: Build iOS for the simulator
+        run: flutter build ios --simulator --no-codesign --dart-define=APP_ENV=prod
+
+  build-web:
+    name: Build Web
+    uses: ./.github/workflows/build_web.yml
+    with:
+      wasm: false

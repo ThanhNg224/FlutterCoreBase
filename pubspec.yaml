@@ -36,9 +36,12 @@ dependencies:
   flutter_secure_storage: ^11.2.0
 
   # Animation & UI Helpers
+  # Required by the Cupertino widgets that `.adaptive()` constructors and
+  # GlobalCupertinoLocalizations pull in on iOS. Without it the release build
+  # warns that the CupertinoIcons font family is referenced but absent.
+  cupertino_icons: ^1.0.8
   flutter_animate: ^4.5.0
   intl: ^0.20.2
-  google_fonts: ^8.2.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +70,24 @@ flutter:
     - assets/branding/app_icon.png
     - assets/branding/app_icon_foreground.png
     - assets/branding/splash_icon.png
+
+  # Inter is bundled rather than fetched by `google_fonts` at runtime: a
+  # runtime fetch means the first launch needs network to render the app's own
+  # typeface, falls back to the system font when offline, and flashes when the
+  # download lands. Static weights rather than the variable file because
+  # `fontWeight` maps to them identically on every platform.
+  # SIL Open Font License 1.1 — see assets/fonts/Inter-LICENSE.txt.
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
 
 flutter_launcher_icons:
   android: true

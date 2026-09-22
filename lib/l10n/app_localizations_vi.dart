@@ -194,7 +194,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorServer => 'Máy chủ không thể xử lý yêu cầu lúc này. Vui lòng thử lại sau giây lát.';
 
   @override
-  String get errorUnauthorized => 'Thông tin xác thực không hợp lệ. Vui lòng kiểm tra lại cấu hình trong Cài đặt.';
+  String get errorUnauthorized => 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+
+  @override
+  String get loginRejectedMessage => 'Email hoặc mật khẩu không đúng.';
 
   @override
   String get errorPlatform => 'SDK gốc không thể hoàn thành tác vụ trên thiết bị này.';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_core_base/app/routing/auth_redirect.dart';
 import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/routing/route_paths.dart';
 import 'package:flutter_core_base/features/auth/domain/entities/auth_session.dart';
@@ -31,23 +32,10 @@ GoRouter appRouter(Ref ref) {
     initialLocation: RoutePaths.catalog,
     debugLogDiagnostics: true,
     refreshListenable: authState,
-    redirect: (context, state) {
-      final auth = authState.value;
-      final location = state.matchedLocation;
-
-      if (auth.isLoading) {
-        return location == RoutePaths.splash ? null : RoutePaths.splash;
-      }
-
-      final isSignedIn = auth.value != null;
-      final isOnAuthRoute = location == RoutePaths.login || location == RoutePaths.splash;
-
-      // Returning the current location would make GoRouter loop, so each arm
-      // returns null once the user is already where they belong.
-      if (!isSignedIn) return location == RoutePaths.login ? null : RoutePaths.login;
-      if (isOnAuthRoute) return RoutePaths.catalog;
-      return null;
-    },
+    redirect: (context, state) => resolveAuthRedirect(
+      session: authState.value,
+      location: state.matchedLocation,
+    ),
     routes: [
       GoRoute(
         path: RoutePaths.splash,

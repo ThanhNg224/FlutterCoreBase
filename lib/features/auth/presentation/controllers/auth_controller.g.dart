@@ -47,7 +47,7 @@ final class AuthControllerProvider extends $AsyncNotifierProvider<AuthController
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'6d4eab0b699ce1ee0b27c8f37b2f4ef6c6295e63';
+String _$authControllerHash() => r'7924c7a7de20b5dfac67f6c9475e39a265e89f02';
 
 /// The application's single source of truth for "is someone signed in?".
 ///

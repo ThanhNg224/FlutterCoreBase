@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_core_base/core/errors/failure.dart';
 import 'package:flutter_core_base/core/errors/failure_l10n.dart';
 import 'package:flutter_core_base/core/extensions/context_extensions.dart';
 import 'package:flutter_core_base/core/theme/app_semantic_colors.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_core_base/core/widgets/app_card.dart';
 import 'package:flutter_core_base/core/widgets/app_snackbar.dart';
 import 'package:flutter_core_base/core/widgets/app_text_field.dart';
 import 'package:flutter_core_base/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:flutter_core_base/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -48,10 +50,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     // On success the router's redirect takes over; there is nothing to do here.
     result.fold(
-      (failure) => AppSnackbar.showError(context, failure.localizedMessage(context.l10n)),
+      (failure) => AppSnackbar.showError(context, _messageFor(failure, context.l10n)),
       (_) {},
     );
   }
+
+  /// On this screen specifically, a rejected login attempt must read as
+  /// "wrong email or password" — not [FailureL10n]'s generic
+  /// `errorUnauthorized` copy, which now covers a mid-session expiry and
+  /// mentions re-authenticating, not first-time credentials. Every other
+  /// failure (network, server, ...) keeps the shared mapping.
+  String _messageFor(Failure failure, AppLocalizations l10n) => switch (failure) {
+    UnauthorizedFailure() => l10n.loginRejectedMessage,
+    _ => failure.localizedMessage(l10n),
+  };
 
   @override
   Widget build(BuildContext context) {

@@ -33,7 +33,8 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
 
 ### 3. Design System & Theming (Strict Rules)
 - **Typography & Font Family:**
-  - The standard app font is **Inter** (`GoogleFonts.inter`), configured in `AppTypography` and `AppTheme`.
+  - The standard app font is **Inter**, **bundled** under `assets/fonts/` and declared in `pubspec.yaml` — not fetched at runtime. Configured in `AppTypography` and `AppTheme`.
+  - Only the four bundled weights (400/500/600/700) are available. Using another weight makes Flutter synthesise it, which looks wrong; add the `.ttf` and a `pubspec.yaml` entry instead.
   - Always use `AppTypography.<style>` or `Theme.of(context).textTheme.<slot>`.
   - **PROHIBITED:** Hardcoding arbitrary `TextStyle(fontSize: 15, ...)` or inline font families in feature widgets.
 - **Colors & Semantics:**
@@ -46,7 +47,7 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
   - Always use `AppSpacing.pagePadding`, `cardPadding`, `dialogPadding`.
   - **PROHIBITED:** Hardcoding arbitrary pixel values (e.g. `EdgeInsets.all(13)` or `BorderRadius.circular(15)`).
 - **Reusable Components:**
-  - Always check and reuse `lib/core/widgets/` (`AppButton`, `AppBottomSheet`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppSectionHeader`, `AppShimmer`/`AppShimmerList`, `AppSnackbar`, `AppTextField`, `AsyncValueWidget`, `OfflineBanner`) before creating custom one-off UI widgets. See `docs/CORE_MODULES.md` for the current, authoritative list.
+  - Always check and reuse `lib/core/widgets/` (`AppButton`, `AppBottomSheet`, `AppCard`, `AppDialog`, `AppErrorWidget`, `AppPagedListView`/`AppPagedSliverList`, `AppSectionHeader`, `AppShimmer`/`AppShimmerList`, `AppSnackbar`, `AppTextField`, `AsyncValueWidget`, `OfflineBanner`) before creating custom one-off UI widgets. See `docs/CORE_MODULES.md` for the current, authoritative list.
 - **The one exception:** `core/widgets/app_error_widget.dart` uses raw `AppColors`
   tokens, literal `TextStyle`s, and untranslated copy on purpose. It is installed
   as `ErrorWidget.builder`, so it renders after a subtree has already failed —

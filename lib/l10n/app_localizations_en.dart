@@ -194,8 +194,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorServer => 'The server could not complete this request. Please try again in a moment.';
 
   @override
-  String get errorUnauthorized =>
-      'The server rejected these credentials. Check the app token and client key under Settings.';
+  String get errorUnauthorized => 'Your session has expired. Please sign in again.';
+
+  @override
+  String get loginRejectedMessage => 'Incorrect email or password.';
 
   @override
   String get errorPlatform => 'The native SDK could not finish the operation on this device.';
