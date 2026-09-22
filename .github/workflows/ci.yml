@@ -31,7 +31,7 @@ jobs:
 
   # `verify` only analyses and tests: it never compiles for a real platform, so
   # a change that breaks the Android or iOS build used to merge green. That is
-  # not hypothetical -- six iOS flavor xcconfigs pointed at the wrong CocoaPods
+  # not hypothetical -- an iOS xcconfig once pointed at the wrong CocoaPods
   # config for months and CI never noticed, because CI never built iOS.
   build-android:
     name: Build Android (release)

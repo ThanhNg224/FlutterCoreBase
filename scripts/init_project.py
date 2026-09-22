@@ -410,13 +410,6 @@ def refactor_ios_and_macos(root: Path, current: dict[str, str], cfg: ProjectConf
     new_dart = cfg.dart_name
     escaped_app = escape_xml_text(new_app)
 
-    # iOS Flavor & xcconfig
-    ios_flutter = root / "ios" / "Flutter"
-    if ios_flutter.is_dir():
-        for cfg_file in ios_flutter.glob("*.xcconfig"):
-            replace_in_file(cfg_file, rf"PRODUCT_BUNDLE_IDENTIFIER={re.escape(old_bundle)}\.dev", f"PRODUCT_BUNDLE_IDENTIFIER={new_bundle}.dev", cfg.dry_run)
-            replace_in_file(cfg_file, rf"PRODUCT_BUNDLE_IDENTIFIER={re.escape(old_bundle)}", f"PRODUCT_BUNDLE_IDENTIFIER={new_bundle}", cfg.dry_run)
-
     # iOS project.pbxproj
     ios_pbx = root / "ios" / "Runner.xcodeproj" / "project.pbxproj"
     if ios_pbx.is_file():

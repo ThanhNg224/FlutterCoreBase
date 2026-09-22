@@ -6,8 +6,6 @@
             "request": "launch",
             "type": "dart",
             "args": [
-                "--flavor",
-                "dev",
                 "--dart-define=APP_ENV=dev"
             ]
         },
@@ -16,8 +14,6 @@
             "request": "launch",
             "type": "dart",
             "args": [
-                "--flavor",
-                "prod",
                 "--dart-define=APP_ENV=prod"
             ]
         },
@@ -27,8 +23,6 @@
             "type": "dart",
             "flutterMode": "release",
             "args": [
-                "--flavor",
-                "prod",
                 "--dart-define=APP_ENV=prod"
             ]
         }
