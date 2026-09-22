@@ -28,10 +28,7 @@ class LoggingInterceptor extends Interceptor {
       data: {
         'type': Redacted.unredacted(err.type.name, because: 'DioExceptionType enum name'),
         'url': _endpoint(err.requestOptions.uri),
-        'reason': Redacted.unredacted(
-          err.message ?? 'no message',
-          because: 'Dio summary message',
-        ),
+        'reason': Redacted.unredacted(_safeReason(err.type), because: 'fixed Dio failure category'),
       },
     );
     super.onError(err, handler);
@@ -42,30 +39,58 @@ class LoggingInterceptor extends Interceptor {
     '_page',
     'limit',
     '_limit',
-    'sort',
-    'order',
-    'filter',
   };
 
+  static final _nonNegativeDecimal = RegExp(r'^[0-9]+$');
+  static const _maxPaginationDigits = 9;
+
   static Redacted _endpoint(Uri uri) {
-    if (uri.queryParameters.isEmpty) {
-      final cleanUri = uri.hasFragment ? uri.removeFragment() : uri;
+    final cleanUri = uri.removeFragment().replace(userInfo: '');
+    if (uri.queryParametersAll.isEmpty) {
       return Redacted.unredacted(cleanUri.toString(), because: 'endpoint path without query or payload');
     }
 
-    final sanitizedQuery = <String, String>{};
-    for (final entry in uri.queryParameters.entries) {
-      if (_allowedQueryKeys.contains(entry.key.toLowerCase())) {
-        sanitizedQuery[entry.key] = entry.value;
-      } else {
-        sanitizedQuery[entry.key] = 'REDACTED';
-      }
+    final normalizedQuery = <String, List<String>>{};
+    for (final entry in uri.queryParametersAll.entries) {
+      normalizedQuery.putIfAbsent(entry.key.toLowerCase(), () => []).addAll(entry.value);
     }
 
-    final cleanUri = uri.hasFragment ? uri.removeFragment() : uri;
+    final sanitizedQuery = <String, String>{};
+    for (final entry in normalizedQuery.entries) {
+      final key = entry.key;
+      final values = entry.value;
+      final isAllowed = _allowedQueryKeys.contains(key);
+      final hasOneSafeValue = values.length == 1 && _isSafeValue(key, values.single);
+      sanitizedQuery[key] = isAllowed && hasOneSafeValue ? values.single : 'REDACTED';
+    }
+
     final sanitizedUri = cleanUri.replace(
       queryParameters: sanitizedQuery.isNotEmpty ? sanitizedQuery : null,
     );
     return Redacted.unredacted(sanitizedUri.toString(), because: 'endpoint metadata with query allowlist');
+  }
+
+  static bool _isSafeValue(String key, String value) {
+    return switch (key) {
+      'page' ||
+      '_page' ||
+      'limit' ||
+      '_limit' => value.length <= _maxPaginationDigits && _nonNegativeDecimal.hasMatch(value),
+      _ => false,
+    };
+  }
+
+  static String _safeReason(DioExceptionType type) {
+    return switch (type) {
+      DioExceptionType.cancel => 'cancelled',
+      DioExceptionType.connectionTimeout ||
+      DioExceptionType.sendTimeout ||
+      DioExceptionType.receiveTimeout ||
+      DioExceptionType.transformTimeout => 'timeout',
+      DioExceptionType.badCertificate => 'bad_certificate',
+      DioExceptionType.connectionError => 'connection',
+      DioExceptionType.badResponse => 'response',
+      DioExceptionType.unknown => 'unknown',
+    };
   }
 }
