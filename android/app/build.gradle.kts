@@ -40,6 +40,10 @@ android {
         }
     }
 
+    buildFeatures {
+        resValues = true
+    }
+
     defaultConfig {
         applicationId = "com.thanhng224.fluttercorebase"
         minSdk = flutter.minSdkVersion
