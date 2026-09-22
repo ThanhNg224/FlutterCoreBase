@@ -18,15 +18,22 @@ class FakePostsRepository implements IPostsRepository {
 
   bool shouldFail = false;
   bool shouldFailLoadMore = false;
-  Completer<Either<Failure, List<Post>>>? getPostsCompleter;
+  final Map<int, List<Completer<Either<Failure, List<Post>>>>> getPostsCompleters = {};
+  Post? postToCreate;
   int lastRequestedPage = 1;
+
+  Completer<Either<Failure, List<Post>>> enqueueGetPosts(int page) {
+    final completer = Completer<Either<Failure, List<Post>>>();
+    getPostsCompleters.putIfAbsent(page, () => []).add(completer);
+    return completer;
+  }
 
   @override
   Future<Either<Failure, List<Post>>> getPosts({int page = 1, int limit = 10}) async {
     lastRequestedPage = page;
-    if (getPostsCompleter != null) {
-      final completer = getPostsCompleter!;
-      getPostsCompleter = null;
+    final pending = getPostsCompleters[page];
+    if (pending != null && pending.isNotEmpty) {
+      final completer = pending.removeAt(0);
       return completer.future;
     }
     if (shouldFail || (shouldFailLoadMore && page > 1)) {
@@ -43,7 +50,8 @@ class FakePostsRepository implements IPostsRepository {
 
   @override
   Future<Either<Failure, Post>> createPost({required String title, required String body, int userId = 1}) async {
-    final newPost = Post(id: posts.length + 1, title: title, body: body, userId: userId);
+    final newPost = postToCreate ?? Post(id: posts.length + 1, title: title, body: body, userId: userId);
+    postToCreate = null;
     posts.insert(0, newPost);
     return Right(newPost);
   }
@@ -76,6 +84,47 @@ void main() {
 
       expect(state.items.length, 2);
       expect(state.items[0].id, 1);
+    });
+
+    test('initial build cannot overwrite a newer refresh result', () async {
+      final initialBuild = fakeRepository.enqueueGetPosts(1);
+      final refresh = fakeRepository.enqueueGetPosts(1);
+
+      final buildFuture = container.read(postsControllerProvider.future);
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+
+      refresh.complete(const Right([Post(id: 42, title: 'Fresh', body: 'Body', userId: 1)]));
+      await refreshFuture;
+
+      initialBuild.complete(const Right([Post(id: 1, title: 'Stale', body: 'Body', userId: 1)]));
+      await buildFuture;
+
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items.map((post) => post.id), [42]);
+    });
+
+    test('stale initial build preserves a newer refresh error', () async {
+      final initialBuild = fakeRepository.enqueueGetPosts(1);
+      final refresh = fakeRepository.enqueueGetPosts(1);
+
+      final buildFuture = container.read(postsControllerProvider.future);
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+
+      refresh.complete(const Left(Failure.server(message: 'Refresh failed')));
+      await refreshFuture;
+      expect(container.read(postsControllerProvider).hasError, isTrue);
+
+      initialBuild.complete(const Right([Post(id: 1, title: 'Stale', body: 'Body', userId: 1)]));
+      try {
+        await buildFuture;
+      } catch (_) {
+        // The stale build rethrows the newer refresh error to preserve it.
+      }
+
+      final currentState = container.read(postsControllerProvider);
+      expect(currentState.hasError, isTrue);
+      expect(currentState.error, const Failure.server(message: 'Refresh failed'));
+      expect(currentState.stackTrace, isNotNull);
     });
 
     test('createPost adds new post to the top of the list', () async {
@@ -137,8 +186,7 @@ void main() {
       await container.read(postsControllerProvider.future);
       expect(container.read(postsControllerProvider).value?.items, hasLength(2));
 
-      final completer = Completer<Either<Failure, List<Post>>>();
-      fakeRepository.getPostsCompleter = completer;
+      final completer = fakeRepository.enqueueGetPosts(1);
 
       final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
 
@@ -157,6 +205,85 @@ void main() {
       expect(finishedState.items.first.id, 42);
     });
 
+    test('loadMore is ignored while a refresh request is in-flight', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+
+      final refreshCompleter = fakeRepository.enqueueGetPosts(1);
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+
+      await container.read(postsControllerProvider.notifier).loadMore();
+      expect(fakeRepository.lastRequestedPage, 1);
+
+      refreshCompleter.complete(
+        Right(List.generate(10, (index) => Post(id: 100 + index, title: 'Fresh $index', body: 'Body', userId: 1))),
+      );
+      await refreshFuture;
+    });
+
+    test('create invalidates an in-flight refresh so it cannot erase the mutation', () async {
+      await container.read(postsControllerProvider.future);
+      final refreshCompleter = fakeRepository.enqueueGetPosts(1);
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+
+      const createdPost = Post(id: 77, title: 'Created', body: 'Body', userId: 1);
+      fakeRepository.postToCreate = createdPost;
+      await container.read(postsControllerProvider.notifier).createPost(title: 'Created', body: 'Body');
+
+      refreshCompleter.complete(const Right([Post(id: 1, title: 'Stale refresh', body: 'Body', userId: 1)]));
+      await refreshFuture;
+
+      final currentItems = container.read(postsControllerProvider).value!.items;
+      expect(currentItems.map((post) => post.id), [createdPost.id, 1, 2]);
+      expect(currentItems.first.id, createdPost.id);
+    });
+
+    test('create deduplicates a post already returned by refresh', () async {
+      await container.read(postsControllerProvider.future);
+      final refreshCompleter = fakeRepository.enqueueGetPosts(1);
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+      refreshCompleter.complete(
+        const Right([
+          Post(id: 77, title: 'From refresh', body: 'Body', userId: 1),
+          Post(id: 1, title: 'Post 1', body: 'Body 1', userId: 1),
+        ]),
+      );
+      await refreshFuture;
+
+      fakeRepository.postToCreate = const Post(id: 77, title: 'Created', body: 'Body', userId: 1);
+      await container.read(postsControllerProvider.notifier).createPost(title: 'Created', body: 'Body');
+
+      final currentItems = container.read(postsControllerProvider).value!.items;
+      expect(currentItems.where((post) => post.id == 77), hasLength(1));
+    });
+
+    test('delete invalidates an in-flight refresh so a deleted post cannot return', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+      final refreshCompleter = fakeRepository.enqueueGetPosts(1);
+      final refreshFuture = container.read(postsControllerProvider.notifier).refresh();
+
+      await container.read(postsControllerProvider.notifier).deletePost(1);
+      refreshCompleter.complete(
+        Right([
+          const Post(id: 1, title: 'Deleted', body: 'Body', userId: 1),
+          const Post(id: 99, title: 'Refresh result', body: 'Body', userId: 1),
+        ]),
+      );
+      await refreshFuture;
+
+      final currentItems = container.read(postsControllerProvider).value!.items;
+      expect(currentItems.any((post) => post.id == 1), isFalse);
+      expect(currentItems.any((post) => post.id == 99), isFalse);
+      expect(currentItems, hasLength(9));
+    });
+
     test('loadMore completing after refresh is discarded to prevent overwriting fresh data', () async {
       fakeRepository.posts = List.generate(
         10,
@@ -165,7 +292,7 @@ void main() {
       await container.read(postsControllerProvider.future);
 
       final loadMoreCompleter = Completer<Either<Failure, List<Post>>>();
-      fakeRepository.getPostsCompleter = loadMoreCompleter;
+      fakeRepository.getPostsCompleters[2] = [loadMoreCompleter];
 
       final loadMoreFuture = container.read(postsControllerProvider.notifier).loadMore();
 
@@ -196,7 +323,7 @@ void main() {
       await container.read(postsControllerProvider.future);
 
       final loadMoreCompleter = Completer<Either<Failure, List<Post>>>();
-      fakeRepository.getPostsCompleter = loadMoreCompleter;
+      fakeRepository.getPostsCompleters[2] = [loadMoreCompleter];
 
       final loadMoreFuture = container.read(postsControllerProvider.notifier).loadMore();
 
@@ -213,7 +340,17 @@ void main() {
 
       final currentState = container.read(postsControllerProvider).value!;
       expect(currentState.items.any((p) => p.title == 'Created Post'), isTrue);
-      expect(currentState.items.any((p) => p.id == 201), isTrue);
+      expect(currentState.items.any((p) => p.id == 201), isFalse);
+      expect(currentState.isLoadingMore, isFalse);
+
+      final retryCompleter = fakeRepository.enqueueGetPosts(2);
+      final retryFuture = container.read(postsControllerProvider.notifier).loadMore();
+      expect(fakeRepository.lastRequestedPage, 2);
+      retryCompleter.complete(const Right([Post(id: 201, title: 'Page 2 Post', body: 'Body', userId: 1)]));
+      await retryFuture;
+
+      final retriedState = container.read(postsControllerProvider).value!;
+      expect(retriedState.items.any((p) => p.id == 201), isTrue);
     });
 
     test('loadMore does not restore posts deleted during in-flight fetch', () async {
@@ -224,7 +361,7 @@ void main() {
       await container.read(postsControllerProvider.future);
 
       final loadMoreCompleter = Completer<Either<Failure, List<Post>>>();
-      fakeRepository.getPostsCompleter = loadMoreCompleter;
+      fakeRepository.getPostsCompleters[2] = [loadMoreCompleter];
 
       final loadMoreFuture = container.read(postsControllerProvider.notifier).loadMore();
 
@@ -235,13 +372,71 @@ void main() {
 
       // Complete loadMore
       loadMoreCompleter.complete(
-        const Right([Post(id: 202, title: 'Page 2 Post', body: 'Body', userId: 1)]),
+        const Right([
+          Post(id: 1, title: 'Deleted from page 2', body: 'Body', userId: 1),
+          Post(id: 202, title: 'Page 2 Post', body: 'Body', userId: 1),
+        ]),
       );
       await loadMoreFuture;
 
       final currentState = container.read(postsControllerProvider).value!;
       expect(currentState.items.any((p) => p.id == 1), isFalse);
-      expect(currentState.items.any((p) => p.id == 202), isTrue);
+      expect(currentState.items.any((p) => p.id == 202), isFalse);
+      expect(currentState.isLoadingMore, isFalse);
+
+      final retryCompleter = fakeRepository.enqueueGetPosts(2);
+      final retryFuture = container.read(postsControllerProvider.notifier).loadMore();
+      expect(fakeRepository.lastRequestedPage, 2);
+      retryCompleter.complete(const Right([Post(id: 202, title: 'Page 2 Post', body: 'Body', userId: 1)]));
+      await retryFuture;
+
+      final retriedState = container.read(postsControllerProvider).value!;
+      expect(retriedState.items.any((p) => p.id == 202), isTrue);
+    });
+
+    test('loadMore advances by requested page when a full page contains duplicates', () async {
+      fakeRepository.posts = List.generate(
+        10,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+
+      final pageTwoCompleter = fakeRepository.enqueueGetPosts(2);
+      final pageTwoFuture = container.read(postsControllerProvider.notifier).loadMore();
+      pageTwoCompleter.complete(
+        Right([
+          const Post(id: 1, title: 'Duplicate 1', body: 'Body', userId: 1),
+          const Post(id: 2, title: 'Duplicate 2', body: 'Body', userId: 1),
+          ...List.generate(
+            8,
+            (index) => Post(id: 100 + index, title: 'New $index', body: 'Body', userId: 1),
+          ),
+        ]),
+      );
+      await pageTwoFuture;
+
+      final pageThreeCompleter = fakeRepository.enqueueGetPosts(3);
+      final pageThreeFuture = container.read(postsControllerProvider.notifier).loadMore();
+      pageThreeCompleter.complete(const Right([]));
+      await pageThreeFuture;
+
+      expect(fakeRepository.lastRequestedPage, 3);
+    });
+
+    test('create after a terminal short page keeps pagination closed', () async {
+      fakeRepository.posts = List.generate(
+        9,
+        (index) => Post(id: index + 1, title: 'Post $index', body: 'Body $index', userId: 1),
+      );
+      await container.read(postsControllerProvider.future);
+      expect(container.read(postsControllerProvider).value!.hasMore, isFalse);
+
+      fakeRepository.postToCreate = const Post(id: 99, title: 'Created', body: 'Body', userId: 1);
+      await container.read(postsControllerProvider.notifier).createPost(title: 'Created', body: 'Body');
+
+      final currentState = container.read(postsControllerProvider).value!;
+      expect(currentState.items, hasLength(10));
+      expect(currentState.hasMore, isFalse);
     });
 
     test('pagination page adapts after create and delete', () async {

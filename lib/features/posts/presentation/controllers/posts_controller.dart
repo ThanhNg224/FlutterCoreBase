@@ -12,17 +12,30 @@ part 'posts_controller.g.dart';
 @riverpod
 class PostsController extends _$PostsController {
   int _currentPage = 1;
-  int _generation = 0;
+  int _stateGeneration = 0;
+  int _paginationGeneration = 0;
+  int _refreshInFlightCount = 0;
+  final Set<int> _deletedPostIds = <int>{};
   static const int _pageSize = 10;
 
   @override
   FutureOr<PostsState> build() async {
-    _generation++;
+    final generation = ++_stateGeneration;
+    ++_paginationGeneration;
     _currentPage = 1;
     final result = await _fetchPosts(page: _currentPage);
+    if (generation != _stateGeneration) {
+      final currentState = state;
+      if (currentState.hasError) {
+        Error.throwWithStackTrace(currentState.error!, currentState.stackTrace!);
+      }
+      return currentState.value ?? const PostsState();
+    }
+
     return result.fold(
       (failure) => throw failure,
       (items) {
+        _deletedPostIds.clear();
         _currentPage = max(1, items.length ~/ _pageSize);
         return PostsState(items: items, hasMore: items.length == _pageSize);
       },
@@ -35,33 +48,47 @@ class PostsController extends _$PostsController {
   }
 
   Future<void> refresh() async {
-    final generation = ++_generation;
-    if (!state.hasValue) {
-      state = const AsyncValue.loading();
-    }
-    _currentPage = 1;
-    final result = await _fetchPosts(page: _currentPage);
-    if (generation != _generation) return;
+    final generation = ++_stateGeneration;
+    ++_paginationGeneration;
+    ++_refreshInFlightCount;
+    try {
+      if (!state.hasValue) {
+        state = const AsyncValue.loading();
+      }
+      _currentPage = 1;
+      final result = await _fetchPosts(page: _currentPage);
+      if (generation != _stateGeneration) return;
 
-    state = result.fold(
-      (failure) => AsyncValue.error(failure, StackTrace.current),
-      (items) {
-        _currentPage = max(1, items.length ~/ _pageSize);
-        return AsyncValue.data(PostsState(items: items, hasMore: items.length == _pageSize));
-      },
-    );
+      state = result.fold(
+        (failure) => AsyncValue.error(failure, StackTrace.current),
+        (items) {
+          _deletedPostIds.clear();
+          _currentPage = max(1, items.length ~/ _pageSize);
+          return AsyncValue.data(PostsState(items: items, hasMore: items.length == _pageSize));
+        },
+      );
+    } finally {
+      --_refreshInFlightCount;
+    }
   }
 
   Future<void> loadMore() async {
     final current = state.value;
-    if (current == null || current.isLoadingMore || !current.hasMore || state.isLoading || state.hasError) return;
+    if (current == null ||
+        current.isLoadingMore ||
+        !current.hasMore ||
+        state.isLoading ||
+        state.hasError ||
+        _refreshInFlightCount > 0) {
+      return;
+    }
 
-    final generation = _generation;
+    final generation = _paginationGeneration;
     state = AsyncValue.data(current.copyWith(isLoadingMore: true, paginationFailure: null));
-    final nextPage = max(1, current.items.length ~/ _pageSize) + 1;
+    final nextPage = _currentPage + 1;
     final result = await _fetchPosts(page: nextPage);
 
-    if (generation != _generation) return;
+    if (generation != _paginationGeneration) return;
 
     final latest = state.value;
     if (latest == null) return;
@@ -75,9 +102,11 @@ class PostsController extends _$PostsController {
       ),
       (newItems) {
         final existingIds = latest.items.map((p) => p.id).toSet();
-        final uniqueNewItems = newItems.where((p) => !existingIds.contains(p.id)).toList();
+        final uniqueNewItems = newItems
+            .where((p) => !existingIds.contains(p.id) && !_deletedPostIds.contains(p.id))
+            .toList();
         final updatedItems = [...latest.items, ...uniqueNewItems];
-        _currentPage = max(1, updatedItems.length ~/ _pageSize);
+        _currentPage = nextPage;
         return AsyncValue.data(
           latest.copyWith(
             isLoadingMore: false,
@@ -97,11 +126,20 @@ class PostsController extends _$PostsController {
     return result.fold(
       Left.new,
       (newPost) {
+        ++_stateGeneration;
+        ++_paginationGeneration;
+        _deletedPostIds.remove(newPost.id);
         final current = state.value;
         if (current != null) {
-          final updatedItems = [newPost, ...current.items];
+          final updatedItems = [newPost, ...current.items.where((post) => post.id != newPost.id)];
           _currentPage = max(1, updatedItems.length ~/ _pageSize);
-          state = AsyncValue.data(current.copyWith(items: updatedItems));
+          state = AsyncValue.data(
+            current.copyWith(
+              items: updatedItems,
+              isLoadingMore: false,
+              paginationFailure: null,
+            ),
+          );
         }
         return Right(newPost);
       },
@@ -115,11 +153,20 @@ class PostsController extends _$PostsController {
     return result.fold(
       Left.new,
       (_) {
+        ++_stateGeneration;
+        ++_paginationGeneration;
+        _deletedPostIds.add(id);
         final current = state.value;
         if (current != null) {
           final updatedItems = current.items.where((post) => post.id != id).toList();
           _currentPage = max(1, updatedItems.length ~/ _pageSize);
-          state = AsyncValue.data(current.copyWith(items: updatedItems));
+          state = AsyncValue.data(
+            current.copyWith(
+              items: updatedItems,
+              isLoadingMore: false,
+              paginationFailure: null,
+            ),
+          );
         }
         return const Right(null);
       },
