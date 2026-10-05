@@ -3,10 +3,17 @@
 ## Git & Collaboration Workflow
 
 ### 1. Branching Strategy
-- `main` / `master`: Production-ready, stable codebase.
+
+> **Lưu ý về Repository Base Template (Giai đoạn Solo Maintainer):**
+> - Đối với repo base template này, mọi thay đổi được phát triển trực tiếp trên nhánh `main` để tinh gọn workflow và tránh phức tạp hóa việc bảo trì.
+> - Khi dự án được khởi tạo thành dự án thực tế qua `scripts/init_project.py` (hoặc `make init`), dự án sẽ vận hành đầy đủ theo mô hình GitFlow dưới đây.
+
+- `main`: Production-ready, stable codebase.
 - `develop`: Integration branch for ongoing development.
 - `feature/<feature-name>`: Dedicated branch for specific features or refactor tasks.
 - `bugfix/<issue-name>`: Dedicated branch for resolving bugs.
+- `release/<version>`: Release preparation and staging.
+- `hotfix/<issue-name>`: Emergency production bug fixes.
 
 ---
 

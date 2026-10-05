@@ -148,6 +148,7 @@ class ProjectConfig:
     dry_run: bool = False
     force: bool = False
     skip_build_check: bool = False
+    no_gitflow: bool = False
 
     @property
     def app_class_name(self) -> str:
@@ -899,6 +900,7 @@ def interactive_wizard(current: dict[str, str], cli_args: argparse.Namespace) ->
         dry_run=cli_args.dry_run,
         force=cli_args.force,
         skip_build_check=cli_args.skip_build_check,
+        no_gitflow=getattr(cli_args, "no_gitflow", False),
     )
 
 
@@ -915,7 +917,36 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true", help="Preview modifications without touching filesystem")
     parser.add_argument("--force", action="store_true", help="Bypass git uncommitted changes check")
     parser.add_argument("--skip-build-check", action="store_true", help="Skip flutter analyze and flutter test checks")
+    parser.add_argument("--no-gitflow", action="store_true", help="Skip switching to develop branch and configuring GitFlow")
     return parser.parse_args()
+
+
+def configure_gitflow_for_new_project(root: Path) -> None:
+    """Setup GitFlow develop branch and configure dependabot for production."""
+    dependabot_file = root / ".github" / "dependabot.yml"
+    if dependabot_file.exists():
+        try:
+            content = dependabot_file.read_text(encoding="utf-8")
+            if "target-branch:" not in content:
+                content = content.replace('directory: "/"\n', 'directory: "/"\n    target-branch: "develop"\n')
+                dependabot_file.write_text(content, encoding="utf-8")
+                log_info("Configured .github/dependabot.yml to target 'develop' branch.")
+        except Exception as e:
+            log_warn(f"Could not update dependabot.yml: {e}")
+
+    if (root / ".git").exists():
+        try:
+            branch_res = subprocess.run(["git", "branch", "--show-current"], cwd=root, capture_output=True, text=True)
+            current_branch = branch_res.stdout.strip()
+            if current_branch != "develop":
+                check_res = subprocess.run(["git", "rev-parse", "--verify", "develop"], cwd=root, capture_output=True)
+                if check_res.returncode == 0:
+                    subprocess.run(["git", "checkout", "develop"], cwd=root, check=True, capture_output=True)
+                else:
+                    subprocess.run(["git", "checkout", "-b", "develop"], cwd=root, check=True, capture_output=True)
+                log_success("GitFlow: Checked out branch 'develop'.")
+        except Exception as e:
+            log_warn(f"Note: Could not automatically switch to 'develop' branch: {e}")
 
 
 def main() -> int:
@@ -956,6 +987,7 @@ def main() -> int:
             dry_run=args.dry_run,
             force=args.force,
             skip_build_check=args.skip_build_check,
+            no_gitflow=args.no_gitflow,
         )
     else:
         cfg = interactive_wizard(current, args)
@@ -1018,10 +1050,15 @@ def main() -> int:
     if cfg.dry_run:
         log_success("Dry run completed successfully. No files were modified.")
     else:
+        if not cfg.no_gitflow:
+            configure_gitflow_for_new_project(root)
+
         log_success("Project initialization complete! Your Flutter starter is ready.")
         print("\nNext steps:")
         print("  1. Review changes with: git status && git diff")
-        print("  2. Run development environment: make run-dev (or flutter run --dart-define=APP_ENV=dev)")
+        print("  2. Push branches to your new remote:")
+        print("       git push -u origin main && git push -u origin develop")
+        print("  3. Run development environment: make run-dev (or flutter run --dart-define=APP_ENV=dev)")
 
     return 0
 
