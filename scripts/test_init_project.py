@@ -473,6 +473,24 @@ class TestRefactoringOperations(unittest.TestCase):
         self.assertIn("const SplashScreen()", app_router)
         self.assertIn("const AccountScreen()", app_router)
 
+    def test_clean_samples_updates_retained_auth_routes_and_tests(self):
+        redirect = self.root / "lib/app/routing/auth_redirect.dart"
+        redirect.parent.mkdir(parents=True, exist_ok=True)
+        redirect.write_text("if (isOnAuthRoute) return RoutePaths.catalog;\n")
+        test = self.root / "test/app/routing/auth_redirect_test.dart"
+        test.parent.mkdir(parents=True, exist_ok=True)
+        test.write_text("expect(result, RoutePaths.catalog);\nconst routes = [\n"
+                        "  RoutePaths.catalog,\n  RoutePaths.posts,\n  RoutePaths.postDetail,\n"
+                        "  RoutePaths.settings,\n];\n")
+        cfg = ProjectConfig(app_name="Acme Shop", dart_name="acme_shop",
+                            bundle_id="com.acme.shop", clean_samples=True)
+        clean_sample_code(self.root, cfg)
+        self.assertIn("return RoutePaths.home", redirect.read_text())
+        self.assertIn("expect(result, RoutePaths.home)", test.read_text())
+        self.assertIn("RoutePaths.settings", test.read_text())
+        for route in ("catalog", "posts", "postDetail"):
+            self.assertNotIn("RoutePaths." + route, test.read_text())
+
     def test_clean_samples_keeps_the_auth_slice(self):
         cfg = ProjectConfig(
             app_name="Acme Shop",

@@ -1,26 +1,8 @@
-# CLAUDE.md
+# FlutterCoreBase Claude Code guidance
 
-## Project Context
-This is a production-grade Flutter starter application adhering strictly to **Feature-First Clean Architecture**, **Riverpod Generator (`@riverpod`)**, and **Freezed**.
+A Flutter application template. Feature-First Clean Architecture, Riverpod Generator, and Freezed contracts live in [Architecture](docs/ARCHITECTURE.md) and [Standards](docs/STANDARD.md).
 
----
-
-## Source of Truth
-
-The engineering rules live in `docs/`, not in this file. Read the relevant document **before** implementing anything, and if a rule needs to change, edit it in `docs/` — not here — so this file never drifts out of sync with the real rules.
-
-| Read this for... | File |
-| --- | --- |
-| Layer boundaries, Riverpod patterns, dependency rules | `docs/ARCHITECTURE.md` |
-| Design system, localization, forms, storage, error handling, logging, code quality | `docs/STANDARD.md` |
-| The current inventory of `core/` (reusable widgets, utils, extensions) — check before creating anything new | `docs/CORE_MODULES.md` |
-| Steps and structure for a new feature module | `docs/FEATURE_TEMPLATE.md` |
-| Branching and commit conventions | `docs/GIT_FLOW.md` |
-
----
-
-## Commands
-- **Regenerate and format code:** `make codegen`
-- **Analyze code:** `make analyze` (Must have 0 warnings/errors)
-- **Run all tests:** `make test`
-- **Run single test:** `flutter test test/path/to/test_file.dart`
+Read [AGENTS.md](AGENTS.md) first and follow the relevant documents linked there.
+For edits under `docs/`, follow that directory's AGENTS.md when present.
+Keep workflow rules and engineering contracts in their owning documents;
+link to those sources instead of duplicating rules here.

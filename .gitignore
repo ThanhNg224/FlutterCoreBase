@@ -55,3 +55,15 @@ coverage/
 
 # Agent-generated implementation plans (local working notes, not project docs)
 docs/superpowers/
+
+# Local plans, tooling, environment and signing inputs
+/docs/plans/
+.env
+.env.*
+!*.env.example
+!*.env.*.example
+*.jks
+*.keystore
+**/keystore.properties
+**/key.properties
+**/signing.properties

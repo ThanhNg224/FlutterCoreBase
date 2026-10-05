@@ -1,44 +1,30 @@
-# AGENTS.md
+# Engineering Guidelines
 
-## Mission
+A Flutter application template. Feature-First Clean Architecture, Riverpod Generator, and Freezed contracts live in [Architecture](docs/ARCHITECTURE.md) and [Standards](docs/STANDARD.md).
 
-This document defines how AI assistants and developers should contribute to this Flutter starter project. Contributions must prioritize maintainability, consistency, strict adherence to Feature-First Clean Architecture, Riverpod best practices, and long-term code quality.
+## Workflow
 
----
+- Read only the owning documents relevant to the task, then inspect current implementation, callers, and existing tests.
+- Make the smallest complete change. Add infrastructure or abstractions only for a concrete requirement or failure mode.
+- Work in the current branch and checkout. Do not create a branch or worktree unless explicitly requested; preserve other contributors' edits.
+- Ask when unresolved intent or a tradeoff changes the work. Continue independent work while waiting.
+- Handle small and tightly coupled changes directly. Delegate only when independent tracks reduce total effort; use a reviewer for high-risk changes or when requested.
+- Use the smallest level in [Verification](docs/VERIFICATION.md). Test behavior, state, persistence, security, and concurrency when affected; do not add tests that merely mirror layout or styling.
+- Report exact commands and results. Keep local checks, archive checks, builds, remote CI, and device evidence distinct.
+- Keep rules in their owning documents and link elsewhere. Preserve active plans and decision records; keep handoff plans local under `docs/plans/` and delete them when completed.
+- Follow [Git workflow](docs/GIT_FLOW.md). Do not commit, push, tag, publish, or deploy unless explicitly requested.
 
-## Engineering Documents
+## Documents
 
-This repository is governed by multiple engineering documents located in `docs/`. Every implementation must follow all relevant documents instead of relying on assumptions.
+- [Architecture](docs/ARCHITECTURE.md): ownership, dependencies, and data flow.
+- [Verification](docs/VERIFICATION.md): risk levels, commands, side effects, and proof boundaries.
+- [Git workflow](docs/GIT_FLOW.md): existing branch, commit, and release conventions.
+- [Standards](docs/STANDARD.md): coding, API, error, and security contracts.
+- [Core modules](docs/CORE_MODULES.md): reusable inventory and integration.
+- [Feature guide](docs/FEATURE_TEMPLATE.md): adding application features.
+- [Documentation rules](docs/AGENTS.md): edits under `docs/`.
 
-| Document                       | Responsibility                                                                                                                    |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| **`docs/AGENTS.md`**           | Rules for authoring and maintaining engineering documentation.                                    |
-| **`docs/ARCHITECTURE.md`**     | Feature-First Clean Architecture, Riverpod Generator patterns, dependency boundaries, and data flow. |
-| **`docs/STANDARD.md`**         | Dart & Flutter coding conventions, formatting, design system, localization, forms, storage, error handling, logging, and code quality. |
-| **`docs/CORE_MODULES.md`**     | Core infrastructure inventory (Theme, Network, Storage, Routing, Constants, Reusable Widgets, Utils, Extensions).                 |
-| **`docs/FEATURE_TEMPLATE.md`** | Step-by-step guide and template structure for developing new feature modules.                                                    |
-| **`docs/GIT_FLOW.md`**         | Branching strategy, commit conventions, and collaboration rules.                                                                  |
+## Repository invariants
 
-Treat these documents as the project's engineering source of truth. **This file governs AI workflow and mindset — it does not restate coding or architecture rules.** If you find yourself copying a rule from one of the documents above into this file (or into `CLAUDE.md` / `.github/copilot-instructions.md`), stop and add a pointer instead: duplicated rule text drifts out of sync the next time someone updates the original.
-
----
-
-## Core Engineering Principles
-
-- **Understand before implementing:** Read existing code and the relevant document(s) above first.
-- **Reuse before creating:** Check `docs/CORE_MODULES.md` and existing features before introducing new components.
-- **Consistency over perfection:** Follow project patterns strictly.
-- **Simplicity over cleverness:** Write self-explanatory code over overly concise tricks.
-- **Separation of Concerns:** Keep UI widgets dumb; state in Riverpod notifiers; business logic in domain; platform/remote in data.
-
----
-
-## AI Workflow
-
-For every request:
-1. Understand the user's intent and business context.
-2. Identify which engineering documents apply, and read them.
-3. Explore existing implementations and search for similar patterns.
-4. Implement the smallest complete and working solution.
-5. Run `make verify` to ensure formatting, analysis, and tests have zero regressions.
-6. Perform a thorough self-review before presenting results.
+- Keep widgets focused on rendering, state in Riverpod controllers, business rules in domain, and platform/remote work in data.
+- Preserve the design system, localization, storage, redaction, and error contracts in the owning documents.

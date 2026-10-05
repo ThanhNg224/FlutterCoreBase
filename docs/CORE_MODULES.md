@@ -178,3 +178,54 @@ Always check this table before writing a new one-off widget:
 - **`ErrorHandler`**: Centralized error mapper (`handleException`, `handleDioError`) and async wrapper (`ErrorHandler.guard()`).
 - **`FailureL10n`**: Extension mapping each domain `Failure` instance to user-friendly localized copy via `failure.localizedMessage(context.l10n)`.
 
+## Integrating a crash reporter (Sentry, Crashlytics, ...)
+
+The base ships with no vendor crash-reporting dependency, but the seam is already
+wired: `lib/main.dart` calls `ErrorReporting.install(...)` once, before `runApp`,
+covering `FlutterError.onError`, `PlatformDispatcher.onError` and
+`ErrorWidget.builder` in one place. To send crashes to a real backend, implement
+`CrashReporter` (`lib/core/logging/crash_reporter.dart`) and pass it in — no other
+call site changes:
+
+```dart
+final class SentryCrashReporter implements CrashReporter {
+  const SentryCrashReporter();
+
+  @override
+  void recordError(Object error, StackTrace? stackTrace, {required bool fatal, String? context}) {
+    Sentry.captureException(error, stackTrace: stackTrace, hint: Hint.withMap({'fatal': fatal, 'context': context}));
+  }
+}
+
+// main.dart
+ErrorReporting.install(
+  reporter: const SentryCrashReporter(),
+  errorWidgetBuilder: (details) => AppErrorWidget(details: details),
+);
+```
+
+See the Logging section above for the full contract, including why the
+reporter must never be gated behind `LogPolicy`.
+
+---
+
+## Starter branding
+
+**Making it yours.** The base ships a deliberately plain placeholder mark — concentric
+rounded squares in the brand blue — so it is obvious at a glance that the branding has
+not been set yet. To replace it, overwrite these three files and re-run `make branding`:
+
+| File | Used for | Notes |
+| --- | --- | --- |
+| `assets/branding/app_icon.png` | iOS + Android launcher icon | 1024×1024, full-bleed, no transparency |
+| `assets/branding/app_icon_foreground.png` | Android adaptive icon foreground | 1024×1024, transparent, keep the mark inside the centre ~60% — launchers crop the rest |
+| `assets/branding/splash_icon.png` | Native splash (light + dark) | 1024×1024, transparent, drawn on the splash colour |
+
+Splash and adaptive-icon background colours live in `pubspec.yaml` under
+`flutter_native_splash` and `flutter_launcher_icons`; they currently match
+`AppColors.primary` / `primaryDark`.
+
+`make branding` rewrites generated files under `android/app/src/main/res/`,
+`ios/Runner/Assets.xcassets/` and `web/`. **Commit those** — a fork that changes the
+source PNGs without re-running this keeps shipping the previous project's logo on the
+splash screen, which is exactly how this base ended up displaying someone else's brand.

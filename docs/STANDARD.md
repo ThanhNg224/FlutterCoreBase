@@ -84,3 +84,7 @@ This document defines Dart & Flutter coding standards, formatting guidelines, na
 - **Code Gen Check:** Always run `make codegen` after updating `@riverpod` or `@freezed` models (or `dart run build_runner build` followed by `dart format .`).
 - **Analysis:** `make analyze` must produce **zero warnings or errors**.
 - **Tests:** Run `make test` and maintain passing tests for core logic and controllers.
+
+## Android release signing
+
+Local release builds fall back to the Android debug key when `android/key.properties` is absent. Before distributing a release, create that file with the production keystore values (`storeFile`, `storePassword`, `keyAlias`, and `keyPassword`); do not commit it to source control.

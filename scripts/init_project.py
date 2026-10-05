@@ -736,6 +736,15 @@ def clean_sample_code(root: Path, cfg: ProjectConfig) -> None:
     if not cfg.dry_run:
         route_paths_file.write_text(ROUTE_PATHS_CLEAN_TEMPLATE, encoding="utf-8")
 
+    # The retained auth redirect and its tests must use the clean landing route,
+    # not paths belonging to the removed samples.
+    auth_redirect = root / "lib" / "app" / "routing" / "auth_redirect.dart"
+    auth_redirect_test = root / "test" / "app" / "routing" / "auth_redirect_test.dart"
+    replace_in_file(auth_redirect, r"RoutePaths\.catalog", "RoutePaths.home", cfg.dry_run)
+    replace_in_file(auth_redirect_test, r"(?m)^[ \t]*RoutePaths\.(?:posts|postDetail),\n", "", cfg.dry_run)
+    replace_in_file(auth_redirect_test, r"RoutePaths\.catalog", "RoutePaths.home", cfg.dry_run)
+    replace_in_file(auth_redirect_test, r"\bcatalog\b", "home", cfg.dry_run)
+
     # Update app_router.dart. It lives under lib/app/ because routing is a
     # composition-root concern: it imports features, and lib/core/ may not.
     app_router_file = root / "lib" / "app" / "routing" / "app_router.dart"
